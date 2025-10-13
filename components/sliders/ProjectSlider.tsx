@@ -23,7 +23,7 @@ interface ImagePosition {
   left: string;
 }
 
-// Calculate random position ensuring image stays within viewport with margin
+// Calculate random position within center 50% of viewport
 function calculateRandomPosition(imageHeight: number, imageMargin: number = 20): ImagePosition {
   const viewportHeight = typeof window !== 'undefined' ? window.innerHeight : 1000;
   const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 1000;
@@ -31,11 +31,19 @@ function calculateRandomPosition(imageHeight: number, imageMargin: number = 20):
   // Approximate image width based on 3:2 aspect ratio
   const approximateImageWidth = (imageHeight * 3) / 2;
   
-  const maxTop = viewportHeight - imageHeight - imageMargin;
-  const maxLeft = viewportWidth - approximateImageWidth - imageMargin;
+  // Center 50% zone: 25% to 75% of viewport
+  const centerZoneStartY = viewportHeight * 0.15;
+  const centerZoneEndY = viewportHeight * 0.85;
+  const centerZoneStartX = viewportWidth * 0.15;
+  const centerZoneEndX = viewportWidth * 0.85;
   
-  const randomTop = Math.random() * (maxTop - imageMargin) + imageMargin;
-  const randomLeft = Math.random() * (maxLeft - imageMargin) + imageMargin;
+  // Calculate available space for image within center zone
+  const availableHeight = centerZoneEndY - centerZoneStartY - imageHeight;
+  const availableWidth = centerZoneEndX - centerZoneStartX - approximateImageWidth;
+  
+  // Random position within center 50% zone
+  const randomTop = centerZoneStartY + (Math.random() * Math.max(0, availableHeight));
+  const randomLeft = centerZoneStartX + (Math.random() * Math.max(0, availableWidth));
   
   return {
     top: `${randomTop}px`,
@@ -52,8 +60,8 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0 
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const imageHeightPx = parseInt(getComputedStyle(document.documentElement)
-      .getPropertyValue('--image-height')) || 400;
+    // Calculate actual pixel value of 40dvh
+    const imageHeightPx = window.innerHeight * 0.4; // 40dvh = 40% of viewport height
     
     const newPositions = project.images.map(() => 
       calculateRandomPosition(imageHeightPx, 20)
