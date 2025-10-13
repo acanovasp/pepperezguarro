@@ -1,0 +1,46 @@
+.aboutSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.name {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.bio {
+  font-size: 14px;
+  line-height: 1.6;
+  max-width: 600px;
+}
+
+.contact {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+}
+
+.contactLabel {
+  opacity: 0.6;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.contactItem {
+  opacity: 0.9;
+}
+
+.collaborators {
+  margin-top: var(--spacing-sm);
+}
+
+.collaboratorsList {
+  font-size: 14px;
+  line-height: 1.8;
+  max-width: 800px;
+}
+

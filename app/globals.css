@@ -1,0 +1,168 @@
+/* CSS Reset & Base Styles */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* CSS Custom Properties */
+:root {
+  /* Colors */
+  --color-bg: #ffffff;
+  --color-text: #000000;
+  --color-menu-bg: #000000;
+  --color-menu-text: #ffffff;
+  
+  /* Spacing */
+  --spacing-xs: 10px;
+  --spacing-sm: 20px;
+  --spacing-md: 40px;
+  --spacing-lg: 60px;
+  --spacing-xl: 80px;
+  
+  /* Transitions */
+  --transition-fast: 200ms;
+  --transition-medium: 400ms;
+  --transition-slow: 800ms;
+  --transition-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --transition-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Layout */
+  --image-height: 40dvh;
+  --menu-height: 40dvh;
+  --menu-collapsed-width: 6px;
+  --edge-margin: 20px;
+  --image-margin: 20px;
+  
+  /* Z-index */
+  --z-base: 1;
+  --z-menu: 100;
+  --z-overlay: 50;
+}
+
+/* Base HTML/Body */
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.5;
+  font-size: 16px;
+  overflow-x: hidden;
+  min-height: 100dvh;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: pan-y;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+button {
+  font-family: inherit;
+  font-size: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  padding: 0;
+}
+
+/* Image optimization */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Performance optimizations */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* GPU-accelerated animations */
+* {
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* Optimize animations */
+@media (prefers-reduced-motion: no-preference) {
+  * {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Layout optimization */
+main {
+  contain: layout style paint;
+}
+
+/* Smooth scrolling */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Utility classes */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Swiper global overrides */
+.swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-slide {
+  opacity: 0 !important;
+  transition: opacity var(--transition-slow) ease-in-out !important;
+}
+
+.swiper-slide-active {
+  opacity: 1 !important;
+}
+
+/* Project swiper specific */
+.project-swiper .swiper-slide {
+  opacity: 0 !important;
+  transition: opacity var(--transition-slow) ease-in-out !important;
+}
+
+.project-swiper .swiper-slide-active {
+  opacity: 1 !important;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  :root {
+    --image-height: 30dvh;
+  }
+}

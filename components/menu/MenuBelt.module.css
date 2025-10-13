@@ -1,0 +1,89 @@
+.menuBelt {
+  position: fixed;
+  left: var(--edge-margin);
+  top: 50%;
+  transform: translateY(-50%);
+  height: var(--menu-height);
+  background-color: var(--color-menu-bg);
+  color: var(--color-menu-text);
+  z-index: var(--z-menu);
+  transition: width var(--transition-slow) var(--transition-spring);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  will-change: width;
+}
+
+.menuBelt.collapsed {
+  width: var(--menu-collapsed-width);
+  cursor: pointer;
+}
+
+.menuBelt.expanded {
+  width: calc(100vw - (var(--edge-margin) * 2));
+  cursor: default;
+}
+
+.menuContent {
+  width: 100%;
+  height: 100%;
+  padding: var(--spacing-md);
+  opacity: 0;
+  transition: opacity var(--transition-medium) var(--transition-ease);
+  display: flex;
+  gap: var(--spacing-lg);
+}
+
+.menuBelt.expanded .menuContent {
+  opacity: 1;
+  transition-delay: 300ms;
+}
+
+.leftSection {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.rightSection {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.sectionTitle {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: var(--spacing-sm);
+  opacity: 0.6;
+}
+
+.toggleButton {
+  font-size: 14px;
+  text-decoration: underline;
+  opacity: 0.8;
+  transition: opacity var(--transition-fast);
+  text-align: left;
+  margin-top: var(--spacing-sm);
+}
+
+.toggleButton:hover {
+  opacity: 1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .menuContent {
+    flex-direction: column;
+    padding: var(--spacing-sm);
+  }
+  
+  .leftSection,
+  .rightSection {
+    flex: none;
+  }
+}
+

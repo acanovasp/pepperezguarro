@@ -1,0 +1,72 @@
+.homeSlider {
+  width: 100vw;
+  height: 100dvh;
+  position: relative;
+  transform: translateZ(0);
+  will-change: contents;
+}
+
+.slide {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: relative;
+}
+
+.imageContainer {
+  position: relative;
+  width: auto;
+  height: var(--image-height);
+  margin-bottom: var(--spacing-md);
+}
+
+.slideImage {
+  height: var(--image-height);
+  width: auto;
+  object-fit: contain;
+}
+
+.caption {
+  display: flex;
+  gap: var(--spacing-md);
+  font-size: 14px;
+  align-items: center;
+}
+
+.imageCounter {
+  opacity: 0.6;
+}
+
+.openProject {
+  text-decoration: underline;
+  transition: opacity var(--transition-fast);
+}
+
+.openProject:hover {
+  opacity: 0.6;
+}
+
+/* Swiper styles moved to globals.css */
+
+/* Navigation arrows */
+.navigationHint {
+  position: absolute;
+  bottom: var(--spacing-md);
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  opacity: 0.4;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+@media (max-width: 768px) {
+  .caption {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+}
+

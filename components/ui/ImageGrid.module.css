@@ -1,0 +1,98 @@
+.gridContainer {
+  width: 100vw;
+  min-height: 100dvh;
+  padding: calc(var(--spacing-xl) + 40px) var(--spacing-md) var(--spacing-xl);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-sm);
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.gridItem {
+  position: relative;
+  aspect-ratio: 3/2;
+  cursor: pointer;
+  overflow: hidden;
+  transition: opacity var(--transition-fast);
+}
+
+.gridItem:hover {
+  opacity: 0.7;
+}
+
+.gridImage {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.imageNumber {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background-color: rgba(255, 255, 255, 0.9);
+  color: var(--color-text);
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.caption {
+  position: fixed;
+  bottom: var(--edge-margin);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: var(--spacing-md);
+  font-size: 14px;
+  align-items: center;
+  z-index: var(--z-base);
+}
+
+.toggleView {
+  text-decoration: underline;
+  transition: opacity var(--transition-fast);
+}
+
+.toggleView:hover {
+  opacity: 0.6;
+}
+
+.closeProject {
+  text-decoration: underline;
+  transition: opacity var(--transition-fast);
+}
+
+.closeProject:hover {
+  opacity: 0.6;
+}
+
+/* Responsive grid columns */
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (min-width: 1025px) {
+  .grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+

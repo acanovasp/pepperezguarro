@@ -1,0 +1,53 @@
+.projectInfoSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 400;
+}
+
+.meta {
+  font-size: 14px;
+  opacity: 0.6;
+}
+
+.description {
+  font-size: 16px;
+  line-height: 1.6;
+  max-width: 600px;
+}
+
+.stats {
+  display: flex;
+  gap: var(--spacing-md);
+  font-size: 14px;
+  margin-top: var(--spacing-sm);
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.statLabel {
+  opacity: 0.6;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 12px;
+}
+
+.statValue {
+  font-size: 16px;
+}
+
+.collaboration {
+  font-size: 14px;
+  font-style: italic;
+  opacity: 0.8;
+  margin-top: var(--spacing-sm);
+}
+

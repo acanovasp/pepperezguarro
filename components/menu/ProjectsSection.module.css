@@ -1,0 +1,46 @@
+.projectsSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.projectList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.projectItem {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: baseline;
+}
+
+.projectNumber {
+  font-size: 14px;
+  opacity: 0.6;
+  min-width: 30px;
+}
+
+.projectLink {
+  font-size: 16px;
+  transition: opacity var(--transition-fast);
+  flex: 1;
+}
+
+.projectLink:hover {
+  opacity: 0.6;
+}
+
+.projectLink.active {
+  text-decoration: underline;
+}
+
+.projectMeta {
+  font-size: 14px;
+  opacity: 0.6;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
