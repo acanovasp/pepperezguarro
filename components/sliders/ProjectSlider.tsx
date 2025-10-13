@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Keyboard } from 'swiper/modules';
+import { Keyboard, EffectFade } from 'swiper/modules';
 import type { Swiper as SwiperType } from 'swiper';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -10,6 +10,7 @@ import styles from './ProjectSlider.module.css';
 import { Project } from '@/lib/types';
 
 import 'swiper/css';
+import 'swiper/css/effect-fade';
 
 interface ProjectSliderProps {
   project: Project;
@@ -45,7 +46,6 @@ function calculateRandomPosition(imageHeight: number, imageMargin: number = 20):
 export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0 }: ProjectSliderProps) {
   const [activeIndex, setActiveIndex] = useState(initialSlide);
   const [positions, setPositions] = useState<ImagePosition[]>([]);
-  const [prevPosition, setPrevPosition] = useState<ImagePosition | null>(null);
   const swiperRef = useRef<SwiperType | null>(null);
 
   // Generate random positions for all images
@@ -62,14 +62,7 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0 
   }, [project.images]);
 
   const handleSlideChange = (swiper: SwiperType) => {
-    const newIndex = swiper.realIndex;
-    
-    // Save previous position for ghost effect
-    if (positions[activeIndex]) {
-      setPrevPosition(positions[activeIndex]);
-    }
-    
-    setActiveIndex(newIndex);
+    setActiveIndex(swiper.realIndex);
   };
 
   const handleGhostClick = (e: React.MouseEvent) => {
@@ -88,7 +81,11 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0 
   return (
     <div className={styles.projectSlider}>
       <Swiper
-        modules={[Keyboard]}
+        modules={[Keyboard, EffectFade]}
+        effect="fade"
+        fadeEffect={{
+          crossFade: true
+        }}
         speed={800}
         loop={true}
         initialSlide={initialSlide}
@@ -105,18 +102,23 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0 
         {project.images.map((image, index) => {
           const position = positions[index];
           
+          // Calculate ghost image index (previous slide)
+          const ghostIndex = activeIndex === 0 ? project.images.length - 1 : activeIndex - 1;
+          const ghostPosition = positions[ghostIndex];
+          const isActiveSlide = activeIndex === index;
+          
           return (
             <SwiperSlide key={image.id}>
               <div className={styles.slide} onClick={handleSlideClick}>
-                {/* Ghost image (previous slide) */}
-                {activeIndex === index && prevPosition && activeIndex > 0 && (
+                {/* Ghost image (previous slide) - only show on active slide */}
+                {isActiveSlide && ghostPosition && (
                   <div
                     className={styles.ghostImage}
-                    style={prevPosition}
+                    style={ghostPosition}
                     onClick={handleGhostClick}
                   >
                     <Image
-                      src={project.images[activeIndex - 1]?.url || project.images[project.images.length - 1].url}
+                      src={project.images[ghostIndex].url}
                       alt="Previous"
                       width={1200}
                       height={800}

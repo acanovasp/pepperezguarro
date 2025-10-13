@@ -22,7 +22,18 @@ export interface MenuBeltRef {
 const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ projects, currentProject }, ref) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeSection, setActiveSection] = useState<MenuSection>('projects');
+  const [detectedProject, setDetectedProject] = useState<Project | null>(currentProject || null);
   const params = useParams();
+
+  // Detect current project from URL
+  useEffect(() => {
+    if (params?.slug) {
+      const project = projects.find(p => p.slug === params.slug);
+      setDetectedProject(project || null);
+    } else {
+      setDetectedProject(null);
+    }
+  }, [params?.slug, projects]);
 
   // Expose methods to parent components
   useImperativeHandle(ref, () => ({
@@ -43,6 +54,19 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
     window.addEventListener('keydown', handleEscape);
     return () => window.removeEventListener('keydown', handleEscape);
   }, [isExpanded]);
+
+  // Listen for custom event to open menu sections
+  useEffect(() => {
+    const handleOpenSection = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const section = customEvent.detail as MenuSection;
+      setActiveSection(section);
+      setIsExpanded(true);
+    };
+
+    window.addEventListener('openMenuSection', handleOpenSection);
+    return () => window.removeEventListener('openMenuSection', handleOpenSection);
+  }, []);
 
   // Reset to projects section when menu closes
   useEffect(() => {
@@ -78,7 +102,7 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
               <>
                 <ProjectsSection 
                   projects={projects} 
-                  currentSlug={currentProject?.slug || (params?.slug as string) || null}
+                  currentSlug={detectedProject?.slug || null}
                 />
                 <button 
                   className={styles.toggleButton}
@@ -101,9 +125,9 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
               </>
             )}
             
-            {activeSection === 'project-info' && currentProject && (
+            {activeSection === 'project-info' && detectedProject && (
               <>
-                <ProjectInfoSection project={currentProject} />
+                <ProjectInfoSection project={detectedProject} />
                 <button 
                   className={styles.toggleButton}
                   onClick={() => toggleSection('projects')}

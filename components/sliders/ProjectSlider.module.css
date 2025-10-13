@@ -25,6 +25,7 @@
   width: auto;
   object-fit: contain;
   display: block;
+  z-index: 1;
 }
 
 .ghostImage {
@@ -34,7 +35,7 @@
   width: auto;
   cursor: pointer;
   transition: opacity var(--transition-fast);
-  z-index: 1;
+  z-index: 0;
 }
 
 .ghostImage:hover {

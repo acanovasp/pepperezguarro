@@ -32,13 +32,24 @@ export default function ProjectPage() {
     setViewMode('slideshow');
   };
 
+  const handleOpenProjectInfo = () => {
+    // This will be handled by the menu belt via a global event or context
+    // For now, we can use a custom event
+    window.dispatchEvent(new CustomEvent('openMenuSection', { detail: 'project-info' }));
+  };
+
   if (!project) {
     return <div>Loading...</div>;
   }
 
   return (
     <main>
-      {viewMode === 'slideshow' && <ProjectInfo project={project} />}
+      {viewMode === 'slideshow' && (
+        <ProjectInfo 
+          project={project} 
+          onOpenProjectInfo={handleOpenProjectInfo}
+        />
+      )}
       
       {viewMode === 'slideshow' ? (
         <ProjectSlider 
