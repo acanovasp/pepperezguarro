@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Keyboard, Mousewheel } from 'swiper/modules';
+import { Keyboard } from 'swiper/modules';
 import type { Swiper as SwiperType } from 'swiper';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -72,25 +72,28 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0 
     setActiveIndex(newIndex);
   };
 
-  const handleGhostClick = () => {
+  const handleGhostClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent triggering slide click
     if (swiperRef.current) {
       swiperRef.current.slidePrev();
+    }
+  };
+
+  const handleSlideClick = () => {
+    if (swiperRef.current) {
+      swiperRef.current.slideNext();
     }
   };
 
   return (
     <div className={styles.projectSlider}>
       <Swiper
-        modules={[Keyboard, Mousewheel]}
+        modules={[Keyboard]}
         speed={800}
         loop={true}
         initialSlide={initialSlide}
         keyboard={{
           enabled: true,
-        }}
-        mousewheel={{
-          enabled: true,
-          forceToAxis: true,
         }}
         onSlideChange={handleSlideChange}
         onSwiper={(swiper) => {
@@ -104,7 +107,7 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0 
           
           return (
             <SwiperSlide key={image.id}>
-              <div className={styles.slide}>
+              <div className={styles.slide} onClick={handleSlideClick}>
                 {/* Ghost image (previous slide) */}
                 {activeIndex === index && prevPosition && activeIndex > 0 && (
                   <div

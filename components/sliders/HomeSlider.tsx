@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Keyboard, Mousewheel, EffectFade } from 'swiper/modules';
+import { Keyboard, EffectFade } from 'swiper/modules';
 import type { Swiper as SwiperType } from 'swiper';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -30,6 +30,8 @@ function getRandomImage(project: Project): { image: ProjectImage; index: number 
 export default function HomeSlider({ projects }: HomeSliderProps) {
   const [randomImages, setRandomImages] = useState<Map<string, { image: ProjectImage; index: number }>>(new Map());
   const [activeIndex, setActiveIndex] = useState(0);
+  const [cursorStyle, setCursorStyle] = useState<'w-resize' | 'e-resize'>('w-resize');
+  const swiperRef = useRef<SwiperType | null>(null);
 
   // Generate random images when component mounts and when slide changes
   useEffect(() => {
@@ -51,13 +53,44 @@ export default function HomeSlider({ projects }: HomeSliderProps) {
     }
   };
 
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const mouseX = e.clientX;
+    const screenWidth = window.innerWidth;
+    
+    if (mouseX < screenWidth / 2) {
+      setCursorStyle('w-resize');
+    } else {
+      setCursorStyle('e-resize');
+    }
+  };
+
+  const handleClick = (e: React.MouseEvent) => {
+    if (!swiperRef.current) return;
+    
+    const clickX = e.clientX;
+    const screenWidth = window.innerWidth;
+    
+    if (clickX < screenWidth / 2) {
+      swiperRef.current.slidePrev();
+    } else {
+      swiperRef.current.slideNext();
+    }
+  };
+
   const activeProject = projects[activeIndex];
 
   return (
-    <div className={styles.homeSlider} role="region" aria-label="Project gallery">
+    <div 
+      className={styles.homeSlider} 
+      role="region" 
+      aria-label="Project gallery"
+      onClick={handleClick}
+      onMouseMove={handleMouseMove}
+      style={{ cursor: cursorStyle }}
+    >
       {activeProject && <ProjectInfo project={activeProject} />}
       <Swiper
-        modules={[Keyboard, Mousewheel, EffectFade]}
+        modules={[Keyboard, EffectFade]}
         effect="fade"
         fadeEffect={{
           crossFade: true
@@ -67,12 +100,11 @@ export default function HomeSlider({ projects }: HomeSliderProps) {
         keyboard={{
           enabled: true,
         }}
-        mousewheel={{
-          enabled: true,
-          forceToAxis: true,
-        }}
         onSlideChange={handleSlideChange}
-        onSwiper={(swiper) => setActiveIndex(swiper.realIndex)}
+        onSwiper={(swiper) => {
+          swiperRef.current = swiper;
+          setActiveIndex(swiper.realIndex);
+        }}
         aria-label="Project slideshow"
       >
         {projects.map((project) => {
