@@ -153,9 +153,10 @@ export default function HomeSlider({ projects }: HomeSliderProps) {
                       width={1200}
                       height={800}
                       className={styles.slideImage}
-                      priority={projects.indexOf(project) < 2}
-                      placeholder="blur"
-                      blurDataURL={image.blurDataURL}
+                      priority={projects.indexOf(project) === 0}
+                      fetchPriority={projects.indexOf(project) === 0 ? 'high' : 'auto'}
+                      placeholder={projects.indexOf(project) < 2 ? 'blur' : 'empty'}
+                      blurDataURL={projects.indexOf(project) < 2 ? image.blurDataURL : undefined}
                     />
                   </div>
                   

@@ -54,6 +54,7 @@ function calculateRandomPosition(imageHeight: number, imageMargin: number = 20):
 export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0 }: ProjectSliderProps) {
   const [activeIndex, setActiveIndex] = useState(initialSlide);
   const [positions, setPositions] = useState<ImagePosition[]>([]);
+  const [hasInteracted, setHasInteracted] = useState(false);
   const swiperRef = useRef<SwiperType | null>(null);
 
   // Generate random positions for all images
@@ -88,6 +89,7 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0 
 
   const handleSlideChange = (swiper: SwiperType) => {
     setActiveIndex(swiper.realIndex);
+    setHasInteracted(true);
   };
 
   const handleGhostClick = (e: React.MouseEvent) => {
@@ -101,6 +103,7 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0 
     if (swiperRef.current) {
       swiperRef.current.slideNext();
     }
+    setHasInteracted(true);
   };
 
   return (
@@ -135,8 +138,8 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0 
           return (
             <SwiperSlide key={image.id}>
               <div className={styles.slide} onClick={handleSlideClick}>
-                {/* Ghost image (previous slide) - only show on active slide */}
-                {isActiveSlide && ghostPosition && (
+                {/* Ghost image (previous slide) - only show on active slide after interaction */}
+                {isActiveSlide && ghostPosition && hasInteracted && (
                   <div
                     className={styles.ghostImage}
                     style={ghostPosition}
@@ -162,9 +165,10 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0 
                         width={1200}
                         height={800}
                         className={styles.slideImage}
-                        priority={index < 2}
-                        placeholder="blur"
-                        blurDataURL={image.blurDataURL}
+                        priority={index === 0}
+                        fetchPriority={index === 0 ? 'high' : 'auto'}
+                        placeholder={index < 2 ? 'blur' : 'empty'}
+                        blurDataURL={index < 2 ? image.blurDataURL : undefined}
                       />
                     </div>
                     {/* Caption always rendered, fades with parent slide */}

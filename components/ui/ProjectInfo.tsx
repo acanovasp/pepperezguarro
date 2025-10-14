@@ -1,5 +1,3 @@
-'use client';
-
 import styles from './ProjectInfo.module.css';
 import { Project } from '@/lib/types';
 
