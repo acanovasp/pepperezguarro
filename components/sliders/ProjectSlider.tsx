@@ -135,19 +135,37 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0 
                   </div>
                 )}
 
-                {/* Current image */}
+                {/* Image with caption - caption fades with image */}
                 {position && (
-                  <div className={styles.imageContainer} style={position}>
-                    <Image
-                      src={image.url}
-                      alt={image.alt}
-                      width={1200}
-                      height={800}
-                      className={styles.slideImage}
-                      priority={index < 2}
-                      placeholder="blur"
-                      blurDataURL={image.blurDataURL}
-                    />
+                  <div className={styles.imageWithCaption} style={position}>
+                    <div className={styles.imageContainer}>
+                      <Image
+                        src={image.url}
+                        alt={image.alt}
+                        width={1200}
+                        height={800}
+                        className={styles.slideImage}
+                        priority={index < 2}
+                        placeholder="blur"
+                        blurDataURL={image.blurDataURL}
+                      />
+                    </div>
+                    {/* Caption always rendered, fades with parent slide */}
+                    <div className={styles.imageCaption}>
+                      <button 
+                        className={styles.imageCounter}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onToggleGrid();
+                        }}
+                        title="Toggle grid view"
+                      >
+                        {String(index + 1).padStart(2, '0')}/{String(project.images.length).padStart(2, '0')}
+                      </button>
+                      <Link href="/" className={styles.closeProject} onClick={(e) => e.stopPropagation()}>
+                        Close project
+                      </Link>
+                    </div>
                   </div>
                 )}
               </div>
@@ -155,19 +173,6 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0 
           );
         })}
       </Swiper>
-
-      <div className={styles.caption}>
-        <button 
-          className={styles.imageCounter}
-          onClick={onToggleGrid}
-          title="Toggle grid view"
-        >
-          {String(activeIndex + 1).padStart(2, '0')}/{String(project.images.length).padStart(2, '0')}
-        </button>
-        <Link href="/" className={styles.closeProject}>
-          Close project
-        </Link>
-      </div>
     </div>
   );
 }
