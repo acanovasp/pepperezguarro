@@ -7,8 +7,9 @@
 .projectList {
   list-style: none;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: var(--spacing-xs);
+  flex-wrap: wrap;
 }
 
 .projectItem {
@@ -21,6 +22,12 @@
   font-size: 14px;
   opacity: 0.6;
   min-width: 30px;
+}
+
+.projectInfoContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
 }
 
 .projectLink {
@@ -40,7 +47,7 @@
 .projectMeta {
   font-size: 14px;
   opacity: 0.6;
-  margin-left: auto;
+  margin-left: 0;
   white-space: nowrap;
 }
 

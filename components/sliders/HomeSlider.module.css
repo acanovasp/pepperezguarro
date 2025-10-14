@@ -54,20 +54,6 @@
   opacity: 0.6;
 }
 
-/* Swiper styles moved to globals.css */
-
-/* Navigation arrows */
-.navigationHint {
-  position: absolute;
-  bottom: var(--spacing-md);
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 12px;
-  opacity: 0.4;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-}
-
 @media (max-width: 768px) {
   .caption {
     flex-direction: column;

@@ -99,47 +99,38 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
         <div className={styles.menuContent}>
           <div className={styles.leftSection}>
             {activeSection === 'projects' && (
-              <>
-                <ProjectsSection 
-                  projects={projects} 
-                  currentSlug={detectedProject?.slug || null}
-                />
-                <button 
-                  className={styles.toggleButton}
-                  onClick={() => toggleSection('about')}
-                >
-                  About
-                </button>
-              </>
+              <ProjectsSection 
+                projects={projects} 
+                currentSlug={detectedProject?.slug || null}
+              />
             )}
             
             {activeSection === 'about' && (
-              <>
-                <AboutSection />
-                <button 
-                  className={styles.toggleButton}
-                  onClick={() => toggleSection('projects')}
-                >
-                  ← Back to Projects
-                </button>
-              </>
+              <AboutSection />
             )}
             
             {activeSection === 'project-info' && detectedProject && (
-              <>
-                <ProjectInfoSection project={detectedProject} />
-                <button 
-                  className={styles.toggleButton}
-                  onClick={() => toggleSection('projects')}
-                >
-                  ← Back to Projects
-                </button>
-              </>
+              <ProjectInfoSection project={detectedProject} />
             )}
           </div>
 
           <div className={styles.rightSection}>
-            {/* Right section can be used for additional content if needed */}
+            {/* Single toggle button that changes based on active section */}
+            {activeSection === 'projects' ? (
+              <button 
+                className={styles.toggleButton}
+                onClick={() => toggleSection('about')}
+              >
+                About
+              </button>
+            ) : (
+              <button 
+                className={styles.toggleButton}
+                onClick={() => toggleSection('projects')}
+              >
+                Projects
+              </button>
+            )}
           </div>
         </div>
       )}

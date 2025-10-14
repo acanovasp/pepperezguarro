@@ -1,6 +1,6 @@
 .aboutSection {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: var(--spacing-md);
 }
 
@@ -44,3 +44,8 @@
   max-width: 800px;
 }
 
+.bioContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}

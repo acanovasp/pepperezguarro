@@ -163,7 +163,7 @@ export default function HomeSlider({ projects }: HomeSliderProps) {
                     <span className={styles.imageCounter}>
                       {String(index + 1).padStart(2, '0')}/{String(project.images.length).padStart(2, '0')}
                     </span>
-                    <Link href={`/projects/${project.slug}`} className={styles.openProject}>
+                    <Link href={`/projects/${project.slug}`} className={styles.openProject} onClick={(e) => e.stopPropagation()}>
                       Open project
                     </Link>
                   </div>
@@ -174,9 +174,6 @@ export default function HomeSlider({ projects }: HomeSliderProps) {
         })}
       </Swiper>
 
-      <div className={styles.navigationHint}>
-        Use arrows or scroll to navigate
-      </div>
     </div>
   );
 }

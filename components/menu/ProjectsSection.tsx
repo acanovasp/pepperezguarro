@@ -16,15 +16,17 @@ export default function ProjectsSection({ projects, currentSlug }: ProjectsSecti
             <span className={styles.projectNumber}>
               {String(index + 1).padStart(2, '0')}
             </span>
-            <Link 
-              href={`/projects/${project.slug}`}
-              className={`${styles.projectLink} ${currentSlug === project.slug ? styles.active : ''}`}
-            >
-              {project.title}
-            </Link>
-            <span className={styles.projectMeta}>
-              {project.location}, {project.year}
-            </span>
+            <div className={styles.projectInfoContainer}>
+              <Link 
+                href={`/projects/${project.slug}`}
+                className={`${styles.projectLink} ${currentSlug === project.slug ? styles.active : ''}`}
+              >
+                {project.title}
+              </Link>
+              <span className={styles.projectMeta}>
+                {project.location}, {project.year}
+              </span>
+            </div>
           </li>
         ))}
       </ul>
