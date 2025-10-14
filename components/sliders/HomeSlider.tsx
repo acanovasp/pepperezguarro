@@ -116,26 +116,28 @@ export default function HomeSlider({ projects }: HomeSliderProps) {
           return (
             <SwiperSlide key={project.id}>
               <div className={styles.slide}>
-                <div className={styles.imageContainer}>
-                  <Image
-                    src={image.url}
-                    alt={image.alt}
-                    width={1200}
-                    height={800}
-                    className={styles.slideImage}
-                    priority={projects.indexOf(project) < 2}
-                    placeholder="blur"
-                    blurDataURL={image.blurDataURL}
-                  />
-                </div>
-                
-                <div className={styles.caption}>
-                  <span className={styles.imageCounter}>
-                    {String(index + 1).padStart(2, '0')}/{String(project.images.length).padStart(2, '0')}
-                  </span>
-                  <Link href={`/projects/${project.slug}`} className={styles.openProject}>
-                    Open project
-                  </Link>
+                <div className={styles.imageWithCaption}>
+                  <div className={styles.imageContainer}>
+                    <Image
+                      src={image.url}
+                      alt={image.alt}
+                      width={1200}
+                      height={800}
+                      className={styles.slideImage}
+                      priority={projects.indexOf(project) < 2}
+                      placeholder="blur"
+                      blurDataURL={image.blurDataURL}
+                    />
+                  </div>
+                  
+                  <div className={styles.caption}>
+                    <span className={styles.imageCounter}>
+                      {String(index + 1).padStart(2, '0')}/{String(project.images.length).padStart(2, '0')}
+                    </span>
+                    <Link href={`/projects/${project.slug}`} className={styles.openProject}>
+                      Open project
+                    </Link>
+                  </div>
                 </div>
               </div>
             </SwiperSlide>

@@ -12,15 +12,20 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
   position: relative;
+}
+
+.imageWithCaption {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
 }
 
 .imageContainer {
   position: relative;
   width: auto;
   height: var(--image-height);
-  margin-bottom: var(--spacing-md);
 }
 
 .slideImage {
