@@ -60,13 +60,30 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0 
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    // Calculate actual pixel value of 40dvh
-    const imageHeightPx = window.innerHeight * 0.4; // 40dvh = 40% of viewport height
-    
-    const newPositions = project.images.map(() => 
-      calculateRandomPosition(imageHeightPx, 20)
-    );
-    setPositions(newPositions);
+    const calculatePositions = () => {
+      // Calculate actual pixel value of 40dvh
+      const imageHeightPx = window.innerHeight * 0.4; // 40dvh = 40% of viewport height
+      
+      const newPositions = project.images.map(() => 
+        calculateRandomPosition(imageHeightPx, 20)
+      );
+      setPositions(newPositions);
+    };
+
+    calculatePositions();
+
+    // Recalculate on resize with debounce
+    let resizeTimeout: NodeJS.Timeout;
+    const handleResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(calculatePositions, 200);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(resizeTimeout);
+    };
   }, [project.images]);
 
   const handleSlideChange = (swiper: SwiperType) => {

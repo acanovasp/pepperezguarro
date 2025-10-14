@@ -32,8 +32,9 @@ export default function HomeSlider({ projects }: HomeSliderProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [cursorStyle, setCursorStyle] = useState<'w-resize' | 'e-resize'>('w-resize');
   const swiperRef = useRef<SwiperType | null>(null);
+  const isUserInteractionRef = useRef(true); // Track if slide change is from user interaction
 
-  // Generate random images when component mounts and when slide changes
+  // Generate random images ONCE when component mounts
   useEffect(() => {
     const newRandomImages = new Map<string, { image: ProjectImage; index: number }>();
     projects.forEach(project => {
@@ -45,13 +46,39 @@ export default function HomeSlider({ projects }: HomeSliderProps) {
   const handleSlideChange = (swiper: SwiperType) => {
     setActiveIndex(swiper.realIndex);
     
-    // Generate new random image for the active project
+    // Only generate new random image if it's from user interaction (not resize)
+    if (!isUserInteractionRef.current) return;
+    
     const activeProject = projects[swiper.realIndex];
     if (activeProject) {
       const newRandom = getRandomImage(activeProject);
       setRandomImages(prev => new Map(prev).set(activeProject.id, newRandom));
     }
   };
+
+  // Prevent random image changes during resize
+  useEffect(() => {
+    let resizeTimeout: NodeJS.Timeout;
+    
+    const handleResize = () => {
+      // Disable random image changes immediately
+      isUserInteractionRef.current = false;
+      
+      // Clear previous timeout
+      clearTimeout(resizeTimeout);
+      
+      // Re-enable only after resize stops (300ms of no resize events)
+      resizeTimeout = setTimeout(() => {
+        isUserInteractionRef.current = true;
+      }, 300);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(resizeTimeout);
+    };
+  }, []);
 
   const handleMouseMove = (e: React.MouseEvent) => {
     const mouseX = e.clientX;
@@ -64,7 +91,9 @@ export default function HomeSlider({ projects }: HomeSliderProps) {
     }
   };
 
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    // Only trigger on actual clicks, not during drags or resizes
+    if (e.button !== 0) return; // Only left click
     if (!swiperRef.current) return;
     
     const clickX = e.clientX;
