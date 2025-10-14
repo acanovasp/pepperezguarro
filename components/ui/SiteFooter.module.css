@@ -1,0 +1,32 @@
+.siteFooter {
+  position: fixed;
+  bottom: var(--edge-margin);
+  left: var(--edge-margin);
+  z-index: 5;
+  display: flex;
+  gap: 40px;
+  font-size: 14px;
+  pointer-events: none;
+  user-select: none;
+}
+
+.contactInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.copyright {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+@media (max-width: 768px) {
+  .siteFooter {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    font-size: 12px;
+  }
+}
+

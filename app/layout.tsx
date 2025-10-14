@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import MenuBelt from "@/components/menu/MenuBelt";
+import SiteHeader from "@/components/ui/SiteHeader";
+import SiteFooter from "@/components/ui/SiteFooter";
 import { getProjects } from "@/lib/data";
 
 export const metadata: Metadata = {
@@ -29,6 +31,8 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body>
+        <SiteHeader />
+        <SiteFooter />
         <MenuBelt projects={projects} />
         {children}
       </body>

@@ -1,0 +1,11 @@
+.siteHeader {
+  position: fixed;
+  top: var(--edge-margin);
+  left: var(--edge-margin);
+  z-index: 5;
+  font-size: 16px;
+  font-weight: 400;
+  pointer-events: none;
+  user-select: none;
+}
+
