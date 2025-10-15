@@ -32,7 +32,7 @@ export default function HomeSlider({ projects, onActiveProjectChange }: HomeSlid
   const [activeIndex, setActiveIndex] = useState(0);
   const [cursorStyle, setCursorStyle] = useState<'w-resize' | 'e-resize'>('w-resize');
   const swiperRef = useRef<SwiperType | null>(null);
-  const isUserInteractionRef = useRef(true); // Track if slide change is from user interaction
+  const prevIndexRef = useRef<number>(0); // Track previous index to detect actual changes
 
   // Generate random images ONCE when component mounts
   useEffect(() => {
@@ -44,46 +44,27 @@ export default function HomeSlider({ projects, onActiveProjectChange }: HomeSlid
   }, [projects]);
 
   const handleSlideChange = (swiper: SwiperType) => {
-    setActiveIndex(swiper.realIndex);
+    const newIndex = swiper.realIndex;
     
-    // Notify parent of active project change
-    const activeProject = projects[swiper.realIndex];
-    if (activeProject && onActiveProjectChange) {
-      onActiveProjectChange(activeProject);
-    }
-    
-    // Only generate new random image if it's from user interaction (not resize)
-    if (!isUserInteractionRef.current) return;
-    
-    if (activeProject) {
-      const newRandom = getRandomImage(activeProject);
-      setRandomImages(prev => new Map(prev).set(activeProject.id, newRandom));
+    // Only update if index actually changed (prevents flickering during drag/resize)
+    if (prevIndexRef.current !== newIndex) {
+      setActiveIndex(newIndex);
+      prevIndexRef.current = newIndex;
+      
+      // Notify parent of active project change
+      const activeProject = projects[newIndex];
+      if (activeProject && onActiveProjectChange) {
+        onActiveProjectChange(activeProject);
+      }
+      
+      // Generate new random image for the newly active slide
+      if (activeProject) {
+        const newRandom = getRandomImage(activeProject);
+        setRandomImages(prev => new Map(prev).set(activeProject.id, newRandom));
+      }
     }
   };
 
-  // Prevent random image changes during resize
-  useEffect(() => {
-    let resizeTimeout: NodeJS.Timeout;
-    
-    const handleResize = () => {
-      // Disable random image changes immediately
-      isUserInteractionRef.current = false;
-      
-      // Clear previous timeout
-      clearTimeout(resizeTimeout);
-      
-      // Re-enable only after resize stops (300ms of no resize events)
-      resizeTimeout = setTimeout(() => {
-        isUserInteractionRef.current = true;
-      }, 300);
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      clearTimeout(resizeTimeout);
-    };
-  }, []);
 
   const handleMouseMove = (e: React.MouseEvent) => {
     const mouseX = e.clientX;
@@ -134,9 +115,11 @@ export default function HomeSlider({ projects, onActiveProjectChange }: HomeSlid
         onSlideChange={handleSlideChange}
         onSwiper={(swiper) => {
           swiperRef.current = swiper;
-          setActiveIndex(swiper.realIndex);
+          const initialIndex = swiper.realIndex;
+          setActiveIndex(initialIndex);
+          prevIndexRef.current = initialIndex;
           // Notify parent of initial active project
-          const initialProject = projects[swiper.realIndex];
+          const initialProject = projects[initialIndex];
           if (initialProject && onActiveProjectChange) {
             onActiveProjectChange(initialProject);
           }
