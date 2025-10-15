@@ -111,9 +111,6 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0 
       <Swiper
         modules={[Keyboard, EffectFade]}
         effect="fade"
-        fadeEffect={{
-          crossFade: true
-        }}
         speed={800}
         loop={true}
         initialSlide={initialSlide}

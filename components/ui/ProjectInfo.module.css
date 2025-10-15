@@ -13,17 +13,17 @@
   opacity: 1;
 }
 
-.title {
-  font-size: 18px;
+.number {
+  font-size: 14px;
   font-weight: 400;
   margin-bottom: 4px;
-  view-transition-name: project-title;
+  opacity: 0.6;
 }
 
-.meta {
-  font-size: 14px;
-  opacity: 0.6;
-  view-transition-name: project-meta;
+.details {
+  font-size: 18px;
+  font-weight: 400;
+  view-transition-name: project-details;
 }
 
 .link {

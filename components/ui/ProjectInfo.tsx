@@ -3,15 +3,20 @@ import { Project } from '@/lib/types';
 
 interface ProjectInfoProps {
   project: Project;
+  projectNumber?: number;
   onOpenProjectInfo?: () => void;
 }
 
-export default function ProjectInfo({ project, onOpenProjectInfo }: ProjectInfoProps) {
+export default function ProjectInfo({ project, projectNumber, onOpenProjectInfo }: ProjectInfoProps) {
   return (
     <div className={styles.projectInfo}>
-      <h1 className={styles.title}>{project.title}</h1>
-      <p className={styles.meta}>
-        {project.location}, {project.year}
+      {projectNumber && (
+        <div className={styles.number}>
+          {String(projectNumber).padStart(2, '0')}
+        </div>
+      )}
+      <p className={styles.details}>
+        {project.title}. {project.location}, {project.year}
       </p>
       {onOpenProjectInfo && (
         <button 

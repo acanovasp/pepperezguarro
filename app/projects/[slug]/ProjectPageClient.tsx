@@ -9,9 +9,10 @@ import { Project } from '@/lib/types';
 
 interface ProjectPageClientProps {
   project: Project;
+  projectNumber: number;
 }
 
-export default function ProjectPageClient({ project }: ProjectPageClientProps) {
+export default function ProjectPageClient({ project, projectNumber }: ProjectPageClientProps) {
   const [viewMode, setViewMode] = useState<'slideshow' | 'grid'>('slideshow');
   const [initialSlide, setInitialSlide] = useState(0);
   const [showProjectInfo, setShowProjectInfo] = useState(true); // Always show by default
@@ -33,7 +34,8 @@ export default function ProjectPageClient({ project }: ProjectPageClientProps) {
     <>
       {showProjectInfo && (
         <ProjectInfo 
-          project={project} 
+          project={project}
+          projectNumber={projectNumber}
           onOpenProjectInfo={handleOpenProjectInfo}
         />
       )}

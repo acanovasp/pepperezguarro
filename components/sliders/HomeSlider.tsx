@@ -104,9 +104,6 @@ export default function HomeSlider({ projects, onActiveProjectChange }: HomeSlid
       <Swiper
         modules={[Keyboard, EffectFade]}
         effect="fade"
-        fadeEffect={{
-          crossFade: true
-        }}
         speed={800}
         loop={true}
         keyboard={{

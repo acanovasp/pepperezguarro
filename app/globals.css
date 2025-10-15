@@ -1,3 +1,20 @@
+/* Font Face Declarations */
+@font-face {
+  font-family: 'Executive';
+  src: url('/fonts/Executive-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Lector';
+  src: url('/fonts/LectorFSL-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* CSS Reset & Base Styles */
 *,
 *::before,
@@ -50,11 +67,12 @@ html {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: 'Lector', serif;
   background-color: var(--color-bg);
   color: var(--color-text);
   line-height: 1.5;
   font-size: 16px;
+  font-variant-numeric: lining-nums proportional-nums;
   overflow-x: hidden;
   min-height: 100dvh;
   -webkit-tap-highlight-color: transparent;

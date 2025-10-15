@@ -12,10 +12,13 @@ interface HomePageClientProps {
 
 export default function HomePageClient({ projects }: HomePageClientProps) {
   const [activeProject, setActiveProject] = useState<Project>(projects[0]);
+  
+  // Get the active project number (index + 1)
+  const activeProjectNumber = projects.findIndex(p => p.id === activeProject.id) + 1;
 
   return (
     <main>
-      <ProjectInfo project={activeProject} />
+      <ProjectInfo project={activeProject} projectNumber={activeProjectNumber} />
       <FadeTransition>
         <HomeSlider 
           projects={projects} 
