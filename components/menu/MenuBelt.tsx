@@ -23,6 +23,7 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeSection, setActiveSection] = useState<MenuSection>('projects');
   const [detectedProject, setDetectedProject] = useState<Project | null>(currentProject || null);
+  const [isNavigating, setIsNavigating] = useState(false);
   const params = useParams();
 
   // Detect current project from URL
@@ -68,6 +69,21 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
     return () => window.removeEventListener('openMenuSection', handleOpenSection);
   }, []);
 
+  // Listen for page transitions to keep menu open during navigation
+  useEffect(() => {
+    const handleTransitionStart = () => {
+      setIsNavigating(true);
+    };
+
+    window.addEventListener('startPageTransition', handleTransitionStart);
+    return () => window.removeEventListener('startPageTransition', handleTransitionStart);
+  }, []);
+
+  // Reset navigation state after route change
+  useEffect(() => {
+    setIsNavigating(false);
+  }, [params?.slug]);
+
   // Reset to projects section when menu closes
   useEffect(() => {
     if (!isExpanded) {
@@ -80,7 +96,10 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
   };
 
   const handleMouseLeave = () => {
-    setIsExpanded(false);
+    // Don't close menu if we're navigating to a new page
+    if (!isNavigating) {
+      setIsExpanded(false);
+    }
   };
 
   const toggleSection = (section: MenuSection) => {

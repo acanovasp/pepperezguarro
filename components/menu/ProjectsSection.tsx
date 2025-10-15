@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import TransitionLink from '@/components/transitions/TransitionLink';
 import styles from './ProjectsSection.module.css';
 import { Project } from '@/lib/types';
 
@@ -17,12 +17,12 @@ export default function ProjectsSection({ projects, currentSlug }: ProjectsSecti
               {String(index + 1).padStart(2, '0')}
             </span>
             <div className={styles.projectInfoContainer}>
-              <Link 
+              <TransitionLink 
                 href={`/projects/${project.slug}`}
                 className={`${styles.projectLink} ${currentSlug === project.slug ? styles.active : ''}`}
               >
                 {project.title}
-              </Link>
+              </TransitionLink>
               <span className={styles.projectMeta}>
                 {project.location}, {project.year}
               </span>

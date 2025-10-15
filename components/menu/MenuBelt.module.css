@@ -7,7 +7,7 @@
   background-color: var(--color-menu-bg);
   color: var(--color-menu-text);
   z-index: var(--z-menu);
-  transition: width var(--transition-slow) var(--transition-spring);
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
   display: flex;
   align-items: center;

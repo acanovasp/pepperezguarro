@@ -6,6 +6,7 @@
   text-align: center;
   z-index: var(--z-base);
   transition: opacity var(--transition-fast);
+  view-transition-name: project-info;
 }
 
 .projectInfo:hover .link {
@@ -16,11 +17,13 @@
   font-size: 18px;
   font-weight: 400;
   margin-bottom: 4px;
+  view-transition-name: project-title;
 }
 
 .meta {
   font-size: 14px;
   opacity: 0.6;
+  view-transition-name: project-meta;
 }
 
 .link {

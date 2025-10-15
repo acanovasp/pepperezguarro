@@ -4,6 +4,7 @@ import { useState } from 'react';
 import ProjectSlider from '@/components/sliders/ProjectSlider';
 import ImageGrid from '@/components/ui/ImageGrid';
 import ProjectInfo from '@/components/ui/ProjectInfo';
+import FadeTransition from '@/components/transitions/FadeTransition';
 import { Project } from '@/lib/types';
 
 interface ProjectPageClientProps {
@@ -37,19 +38,21 @@ export default function ProjectPageClient({ project }: ProjectPageClientProps) {
         />
       )}
       
-      {viewMode === 'slideshow' ? (
-        <ProjectSlider 
-          project={project} 
-          onToggleGrid={handleToggleView}
-          initialSlide={initialSlide}
-        />
-      ) : (
-        <ImageGrid 
-          project={project} 
-          onImageClick={handleImageClick}
-          onToggleView={handleToggleView}
-        />
-      )}
+      <FadeTransition>
+        {viewMode === 'slideshow' ? (
+          <ProjectSlider 
+            project={project} 
+            onToggleGrid={handleToggleView}
+            initialSlide={initialSlide}
+          />
+        ) : (
+          <ImageGrid 
+            project={project} 
+            onImageClick={handleImageClick}
+            onToggleView={handleToggleView}
+          />
+        )}
+      </FadeTransition>
     </>
   );
 }

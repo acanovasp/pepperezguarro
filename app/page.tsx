@@ -1,12 +1,8 @@
 import { getProjects } from '@/lib/data';
-import HomeSlider from '@/components/sliders/HomeSlider';
+import HomePageClient from './HomePageClient';
 
 export default async function HomePage() {
   const projects = await getProjects();
 
-  return (
-    <main>
-      <HomeSlider projects={projects} />
-    </main>
-  );
+  return <HomePageClient projects={projects} />;
 }

@@ -5,9 +5,8 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Keyboard, EffectFade } from 'swiper/modules';
 import type { Swiper as SwiperType } from 'swiper';
 import Image from 'next/image';
-import Link from 'next/link';
 import styles from './HomeSlider.module.css';
-import ProjectInfo from '@/components/ui/ProjectInfo';
+import TransitionLink from '@/components/transitions/TransitionLink';
 import { Project, ProjectImage } from '@/lib/types';
 
 // Import Swiper styles
@@ -16,6 +15,7 @@ import 'swiper/css/effect-fade';
 
 interface HomeSliderProps {
   projects: Project[];
+  onActiveProjectChange?: (project: Project) => void;
 }
 
 // Get random image from project
@@ -27,7 +27,7 @@ function getRandomImage(project: Project): { image: ProjectImage; index: number 
   };
 }
 
-export default function HomeSlider({ projects }: HomeSliderProps) {
+export default function HomeSlider({ projects, onActiveProjectChange }: HomeSliderProps) {
   const [randomImages, setRandomImages] = useState<Map<string, { image: ProjectImage; index: number }>>(new Map());
   const [activeIndex, setActiveIndex] = useState(0);
   const [cursorStyle, setCursorStyle] = useState<'w-resize' | 'e-resize'>('w-resize');
@@ -46,10 +46,15 @@ export default function HomeSlider({ projects }: HomeSliderProps) {
   const handleSlideChange = (swiper: SwiperType) => {
     setActiveIndex(swiper.realIndex);
     
+    // Notify parent of active project change
+    const activeProject = projects[swiper.realIndex];
+    if (activeProject && onActiveProjectChange) {
+      onActiveProjectChange(activeProject);
+    }
+    
     // Only generate new random image if it's from user interaction (not resize)
     if (!isUserInteractionRef.current) return;
     
-    const activeProject = projects[swiper.realIndex];
     if (activeProject) {
       const newRandom = getRandomImage(activeProject);
       setRandomImages(prev => new Map(prev).set(activeProject.id, newRandom));
@@ -106,8 +111,6 @@ export default function HomeSlider({ projects }: HomeSliderProps) {
     }
   };
 
-  const activeProject = projects[activeIndex];
-
   return (
     <div 
       className={styles.homeSlider} 
@@ -117,7 +120,6 @@ export default function HomeSlider({ projects }: HomeSliderProps) {
       onMouseMove={handleMouseMove}
       style={{ cursor: cursorStyle }}
     >
-      {activeProject && <ProjectInfo project={activeProject} />}
       <Swiper
         modules={[Keyboard, EffectFade]}
         effect="fade"
@@ -133,6 +135,11 @@ export default function HomeSlider({ projects }: HomeSliderProps) {
         onSwiper={(swiper) => {
           swiperRef.current = swiper;
           setActiveIndex(swiper.realIndex);
+          // Notify parent of initial active project
+          const initialProject = projects[swiper.realIndex];
+          if (initialProject && onActiveProjectChange) {
+            onActiveProjectChange(initialProject);
+          }
         }}
         aria-label="Project slideshow"
       >
@@ -164,9 +171,9 @@ export default function HomeSlider({ projects }: HomeSliderProps) {
                     <span className={styles.imageCounter}>
                       {String(index + 1).padStart(2, '0')}/{String(project.images.length).padStart(2, '0')}
                     </span>
-                    <Link href={`/projects/${project.slug}`} className={styles.openProject} onClick={(e) => e.stopPropagation()}>
+                    <TransitionLink href={`/projects/${project.slug}`} className={styles.openProject} onClick={(e) => e.stopPropagation()}>
                       Open project
-                    </Link>
+                    </TransitionLink>
                   </div>
                 </div>
               </div>
