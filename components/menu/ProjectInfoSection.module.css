@@ -5,13 +5,7 @@
 }
 
 .title {
-  font-size: 24px;
   font-weight: 400;
-}
-
-.meta {
-  font-size: 14px;
-  opacity: 0.6;
 }
 
 .description {
@@ -51,3 +45,21 @@
   margin-top: var(--spacing-sm);
 }
 
+.projectInfoHeader {
+  display: flex;
+  gap: var(--spacing-xs);
+  align-items: flex-start;
+}
+
+.projectNumber {
+  padding-top: 4px;
+}
+
+.projectInfoContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--project-title-meta-gap);
+  font-family: var(--project-font-family);
+  font-size: var(--project-font-size);
+  line-height: var(--project-line-height);
+}

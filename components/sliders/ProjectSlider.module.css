@@ -42,9 +42,10 @@
 }
 
 .imageCaption {
+  position: relative;
   display: flex;
-  gap: var(--spacing-md);
-  font-size: 14px;
+  justify-content: center;
+  width: 100%;
   align-items: center;
 }
 
@@ -69,13 +70,16 @@
   transform: translateX(-50%);
   display: flex;
   gap: var(--spacing-md);
-  font-size: 14px;
   align-items: center;
   z-index: var(--z-base);
 }
 
 .imageCounter {
-  opacity: 0.6;
+  position: absolute;
+  left: 0;
+  font-family: 'Executive', sans-serif;
+  font-size: 0.75rem;
+  line-height: 1.1;
   cursor: pointer;
   transition: opacity var(--transition-fast);
 }
@@ -86,7 +90,7 @@
 }
 
 .closeProject {
-  text-decoration: underline;
+  text-decoration: none;
   transition: opacity var(--transition-fast);
 }
 

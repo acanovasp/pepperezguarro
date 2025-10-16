@@ -13,20 +13,18 @@ export default function ProjectsSection({ projects, currentSlug }: ProjectsSecti
       <ul className={styles.projectList}>
         {projects.map((project, index) => (
           <li key={project.id} className={styles.projectItem}>
-            <span className={styles.projectNumber}>
+            <p className={styles.projectNumber}>
               {String(index + 1).padStart(2, '0')}
-            </span>
-            <div className={styles.projectInfoContainer}>
-              <TransitionLink 
-                href={`/projects/${project.slug}`}
-                className={`${styles.projectLink} ${currentSlug === project.slug ? styles.active : ''}`}
-              >
-                {project.title}
-              </TransitionLink>
+            </p>
+            <TransitionLink 
+              href={`/projects/${project.slug}`}
+              className={`${styles.projectInfoContainer} ${styles.projectLink} ${currentSlug === project.slug ? styles.active : ''}`}
+            >
+              {project.title}
               <span className={styles.projectMeta}>
                 {project.location}, {project.year}
               </span>
-            </div>
+            </TransitionLink>
           </li>
         ))}
       </ul>

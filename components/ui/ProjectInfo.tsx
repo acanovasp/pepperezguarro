@@ -11,13 +11,13 @@ export default function ProjectInfo({ project, projectNumber, onOpenProjectInfo 
   return (
     <div className={styles.projectInfo}>
       {projectNumber && (
-        <div className={styles.number}>
+        <h1 className={styles.number}>
           {String(projectNumber).padStart(2, '0')}
-        </div>
+        </h1>
       )}
-      <p className={styles.details}>
+      <h1 className={styles.details}>
         {project.title}. {project.location}, {project.year}
-      </p>
+      </h1>
       {onOpenProjectInfo && (
         <button 
           className={styles.link}

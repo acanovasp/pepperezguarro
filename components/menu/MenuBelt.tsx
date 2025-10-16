@@ -129,7 +129,10 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
             )}
             
             {activeSection === 'project-info' && detectedProject && (
-              <ProjectInfoSection project={detectedProject} />
+              <ProjectInfoSection 
+                project={detectedProject} 
+                projectNumber={projects.findIndex(p => p.id === detectedProject.id) + 1}
+              />
             )}
           </div>
 

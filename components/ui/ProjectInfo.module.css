@@ -13,25 +13,19 @@
   opacity: 1;
 }
 
-.number {
-  font-size: 14px;
-  font-weight: 400;
-  margin-bottom: 4px;
-  opacity: 0.6;
-}
 
 .details {
-  font-size: 18px;
-  font-weight: 400;
   view-transition-name: project-details;
 }
 
 .link {
-  font-size: 14px;
-  text-decoration: underline;
+  font-family: 'Executive', sans-serif;
+  font-size: 0.75rem;
+  line-height: 1.1;
+  text-decoration: none;
   opacity: 0;
   transition: opacity var(--transition-fast);
-  margin-top: 8px;
+  margin-top: 4px;
   display: inline-block;
 }
 

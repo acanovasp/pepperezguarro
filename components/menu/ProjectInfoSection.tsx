@@ -3,16 +3,22 @@ import { Project } from '@/lib/types';
 
 interface ProjectInfoSectionProps {
   project: Project;
+  projectNumber: number;
 }
 
-export default function ProjectInfoSection({ project }: ProjectInfoSectionProps) {
+export default function ProjectInfoSection({ project, projectNumber }: ProjectInfoSectionProps) {
   return (
     <div className={styles.projectInfoSection}>
-      <div>
-        <h2 className={styles.title}>{project.title}</h2>
-        <p className={styles.meta}>
-          {project.location}, {project.year}
+      <div className={styles.projectInfoHeader}>
+        <p className={styles.projectNumber}>
+          {String(projectNumber).padStart(2, '0')}
         </p>
+        <div className={styles.projectInfoContainer}>
+          <h1 className={styles.title}>{project.title}</h1>
+          <h1 className={styles.meta}>
+            {project.location}, {project.year}
+          </h1>
+        </div>
       </div>
 
       <p className={styles.description}>

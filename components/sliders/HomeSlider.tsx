@@ -148,9 +148,9 @@ export default function HomeSlider({ projects, onActiveProjectChange }: HomeSlid
                   </div>
                   
                   <div className={styles.caption}>
-                    <span className={styles.imageCounter}>
+                    <p className={styles.imageCounter}>
                       {String(index + 1).padStart(2, '0')}/{String(project.images.length).padStart(2, '0')}
-                    </span>
+                    </p>
                     <TransitionLink href={`/projects/${project.slug}`} className={styles.openProject} onClick={(e) => e.stopPropagation()}>
                       Open project
                     </TransitionLink>

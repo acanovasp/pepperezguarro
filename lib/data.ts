@@ -71,9 +71,18 @@ const aboutInfo: AboutInfo = {
   name: 'Pep Perez Guarro',
   bio: 'Pep is based between Paris and Barcelona. His approach to photography and directing is shaped by an exploration of timelessness, texture and authenticity.',
   contact: {
-    email: 'info@pepperezguarro.com',
-    phone: 'ES 0034 681 378 920',
-    instagram: '@pepperezguarro'
+    email: {
+      display: 'info@pepperezguarro.com',
+      link: 'mailto:info@pepperezguarro.com'
+    },
+    phone: {
+      display: 'ES +34 681 378 920',
+      link: 'tel:+34681378920'
+    },
+    instagram: {
+      display: '@pepperezguarro',
+      link: 'https://instagram.com/pepperezguarro'
+    }
   },
   collaborators: [
     'ARKET',

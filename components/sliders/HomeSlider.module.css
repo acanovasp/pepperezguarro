@@ -20,6 +20,7 @@
   flex-direction: column;
   gap: 12px;
   align-items: center;
+  padding-top: 25px;
 }
 
 .imageContainer {
@@ -35,18 +36,20 @@
 }
 
 .caption {
+  position: relative;
   display: flex;
-  gap: var(--spacing-md);
-  font-size: 14px;
+  justify-content: center;
+  width: 100%;
   align-items: center;
 }
 
 .imageCounter {
-  opacity: 0.6;
+  position: absolute;
+  left: 0;
 }
 
 .openProject {
-  text-decoration: underline;
+  text-decoration: none;
   transition: opacity var(--transition-fast);
 }
 

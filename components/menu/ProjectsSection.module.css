@@ -8,26 +8,27 @@
   list-style: none;
   display: flex;
   flex-direction: row;
-  gap: var(--spacing-xs);
+  gap: var(--spacing-md);
   flex-wrap: wrap;
 }
 
 .projectItem {
   display: flex;
-  gap: var(--spacing-sm);
-  align-items: baseline;
+  gap: var(--spacing-xs);
+  align-items: flex-start;
 }
 
 .projectNumber {
-  font-size: 14px;
-  opacity: 0.6;
-  min-width: 30px;
+  padding-top: 4px;
 }
 
 .projectInfoContainer {
   display: flex;
   flex-direction: column;
-  gap: 0px;
+  gap: var(--project-title-meta-gap);
+  font-family: var(--project-font-family);
+  font-size: var(--project-font-size);
+  line-height: var(--project-line-height);
 }
 
 .projectLink {
@@ -42,12 +43,5 @@
 
 .projectLink.active {
   text-decoration: underline;
-}
-
-.projectMeta {
-  font-size: 14px;
-  opacity: 0.6;
-  margin-left: 0;
-  white-space: nowrap;
 }
 
