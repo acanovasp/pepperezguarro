@@ -121,6 +121,7 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
               <ProjectsSection 
                 projects={projects} 
                 currentSlug={detectedProject?.slug || null}
+                onOpenProjectInfo={() => toggleSection('project-info')}
               />
             )}
             

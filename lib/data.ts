@@ -34,7 +34,8 @@ const projects: Project[] = [
     location: 'Barcelona',
     year: 'Ongoing',
     description: 'An ongoing daily self-portrait project exploring identity, time, and self-perception through 366 different mirrors across Barcelona.',
-    images: generateProjectImages('366-miralls', 12)
+    images: generateProjectImages('366-miralls', 12),
+    collaboration: 'In collaboration with Ana Gallart'
   },
   {
     id: 'project-3',

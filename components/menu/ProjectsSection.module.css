@@ -18,8 +18,23 @@
   align-items: flex-start;
 }
 
+.projectItemContent {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+}
+
 .projectNumber {
   padding-top: 4px;
+  position: relative;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.arrow {
+  font-size: 6px;
 }
 
 .projectInfoContainer {
@@ -41,7 +56,18 @@
   opacity: 0.6;
 }
 
-.projectLink.active {
-  text-decoration: underline;
+.extraInfo {
+  display: flex;
+  padding-top: 3px;
+  gap: var(--spacing-xs);
+}
+
+.projectInfoLink {
+  text-decoration: none;
+  transition: opacity var(--transition-fast);
+}
+
+.projectInfoLink:hover {
+  opacity: 0.6;
 }
 

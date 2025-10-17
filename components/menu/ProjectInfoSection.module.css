@@ -1,6 +1,6 @@
 .projectInfoSection {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: var(--spacing-md);
 }
 
@@ -9,9 +9,7 @@
 }
 
 .description {
-  font-size: 16px;
-  line-height: 1.6;
-  max-width: 600px;
+  max-width: 50%;
 }
 
 .stats {
@@ -25,24 +23,6 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-}
-
-.statLabel {
-  opacity: 0.6;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-size: 12px;
-}
-
-.statValue {
-  font-size: 16px;
-}
-
-.collaboration {
-  font-size: 14px;
-  font-style: italic;
-  opacity: 0.8;
-  margin-top: var(--spacing-sm);
 }
 
 .projectInfoHeader {
@@ -62,4 +42,10 @@
   font-family: var(--project-font-family);
   font-size: var(--project-font-size);
   line-height: var(--project-line-height);
+} 
+
+.statsContainer {
+  display: flex;
+  flex-direction: row;
+  gap: var(--spacing-md);
 }
