@@ -16,6 +16,7 @@ export default function ProjectPageClient({ project, projectNumber }: ProjectPag
   const [viewMode, setViewMode] = useState<'slideshow' | 'grid'>('slideshow');
   const [initialSlide, setInitialSlide] = useState(0);
   const [showProjectInfo, setShowProjectInfo] = useState(true); // Always show by default
+  const [navigationArrow, setNavigationArrow] = useState<'left' | 'right' | null>(null);
 
   const handleToggleView = () => {
     setViewMode(prev => prev === 'slideshow' ? 'grid' : 'slideshow');
@@ -30,6 +31,10 @@ export default function ProjectPageClient({ project, projectNumber }: ProjectPag
     window.dispatchEvent(new CustomEvent('openMenuSection', { detail: 'project-info' }));
   };
 
+  const handleNavigationArrowChange = (direction: 'left' | 'right' | null) => {
+    setNavigationArrow(direction);
+  };
+
   return (
     <>
       {showProjectInfo && (
@@ -37,6 +42,7 @@ export default function ProjectPageClient({ project, projectNumber }: ProjectPag
           project={project}
           projectNumber={projectNumber}
           onOpenProjectInfo={handleOpenProjectInfo}
+          navigationArrow={viewMode === 'slideshow' ? navigationArrow : null}
         />
       )}
       
@@ -46,6 +52,7 @@ export default function ProjectPageClient({ project, projectNumber }: ProjectPag
             project={project} 
             onToggleGrid={handleToggleView}
             initialSlide={initialSlide}
+            onNavigationArrowChange={handleNavigationArrowChange}
           />
         ) : (
           <ImageGrid 

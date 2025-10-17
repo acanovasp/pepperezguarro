@@ -9,6 +9,38 @@
   view-transition-name: project-info;
 }
 
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 6px;
+  animation: fadeIn 200ms ease-in-out;
+}
+
+.arrowLeft {
+  left: -20px;
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.arrowRight {
+  right: -20px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .projectInfo:hover .link {
   opacity: 1;
 }
@@ -25,7 +57,7 @@
   text-decoration: none;
   opacity: 0;
   transition: opacity var(--transition-fast);
-  margin-top: 4px;
+  margin-top: 8px;
   display: inline-block;
 }
 

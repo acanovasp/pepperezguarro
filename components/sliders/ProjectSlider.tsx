@@ -16,6 +16,7 @@ interface ProjectSliderProps {
   project: Project;
   onToggleGrid: () => void;
   initialSlide?: number;
+  onNavigationArrowChange?: (direction: 'left' | 'right' | null) => void;
 }
 
 interface ImagePosition {
@@ -51,11 +52,12 @@ function calculateRandomPosition(imageHeight: number, imageMargin: number = 20):
   };
 }
 
-export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0 }: ProjectSliderProps) {
+export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0, onNavigationArrowChange }: ProjectSliderProps) {
   const [activeIndex, setActiveIndex] = useState(initialSlide);
   const [positions, setPositions] = useState<ImagePosition[]>([]);
   const [hasInteracted, setHasInteracted] = useState(false);
   const swiperRef = useRef<SwiperType | null>(null);
+  const inactivityTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Generate random positions for all images
   useEffect(() => {
@@ -92,6 +94,52 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0 
     setHasInteracted(true);
   };
 
+  // Handle mouse movement for navigation arrow display
+  const handleMouseMove = () => {
+    // Clear existing timeout
+    if (inactivityTimeoutRef.current) {
+      clearTimeout(inactivityTimeoutRef.current);
+    }
+
+    // Set new timeout to hide arrow after 2000ms of inactivity
+    inactivityTimeoutRef.current = setTimeout(() => {
+      onNavigationArrowChange?.(null);
+    }, 2000);
+  };
+
+  const handleGhostMouseEnter = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent slide handler from firing
+    onNavigationArrowChange?.('left');
+    handleMouseMove();
+  };
+
+  const handleGhostMouseLeave = () => {
+    // When leaving ghost, show right arrow (since we're still on slide)
+    onNavigationArrowChange?.('right');
+    handleMouseMove();
+  };
+
+  const handleSlideMouseEnter = () => {
+    onNavigationArrowChange?.('right');
+    handleMouseMove();
+  };
+
+  const handleMouseLeave = () => {
+    if (inactivityTimeoutRef.current) {
+      clearTimeout(inactivityTimeoutRef.current);
+    }
+    onNavigationArrowChange?.(null);
+  };
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (inactivityTimeoutRef.current) {
+        clearTimeout(inactivityTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const handleGhostClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent triggering slide click
     if (swiperRef.current) {
@@ -107,7 +155,10 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0 
   };
 
   return (
-    <div className={styles.projectSlider}>
+    <div 
+      className={styles.projectSlider}
+      onMouseLeave={handleMouseLeave}
+    >
       <Swiper
         modules={[Keyboard, EffectFade]}
         effect="fade"
@@ -134,13 +185,21 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0 
           
           return (
             <SwiperSlide key={image.id}>
-              <div className={styles.slide} onClick={handleSlideClick}>
+              <div 
+                className={styles.slide} 
+                onClick={handleSlideClick}
+                onMouseEnter={handleSlideMouseEnter}
+                onMouseMove={handleMouseMove}
+              >
                 {/* Ghost image (previous slide) - only show on active slide after interaction */}
                 {isActiveSlide && ghostPosition && hasInteracted && (
                   <div
                     className={styles.ghostImage}
                     style={ghostPosition}
                     onClick={handleGhostClick}
+                    onMouseEnter={handleGhostMouseEnter}
+                    onMouseLeave={handleGhostMouseLeave}
+                    onMouseMove={handleMouseMove}
                   >
                     <Image
                       src={project.images[ghostIndex].url}
