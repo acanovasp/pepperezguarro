@@ -52,9 +52,9 @@
 .rightSection {
   flex: 0 1 0%;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: var(--spacing-sm);
-  align-items: flex-end;
+  align-items: flex-start;
 }
 
 .sectionTitle {

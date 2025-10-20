@@ -36,6 +36,18 @@ export default function ProjectInfoSection({ project, projectNumber }: ProjectIn
             {project.collaboration}
           </p>
         )}
+        <div className={styles.clientDateContainer}>
+          {project.client && (
+            <p className={styles.client}>
+              {project.client}
+            </p>
+          )}
+          {project.date && (
+            <p className={styles.date}>
+              {project.date}
+            </p>
+          )}
+        </div>
       </div>
     </>
   );

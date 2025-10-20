@@ -25,7 +25,9 @@ const projects: Project[] = [
     year: '2025',
     description: 'Last October, I traveled to India for a photography assignment for a brand. Taking advantage of the trip, I decided to explore the north of the country for a few days. Along the way, already in the Kashmir region, I saw a small oven where roti was being baked in a tandoor using a wood fire. The place, entirely made of wood, had beautiful lighting. I immediately approached and asked if I could photograph the process. Ana, my partner, is the biggest bread lover I know. Our travels revolve around it: we seek out bakeries, so that Ana can learn their techniques, share her love for bread, and photograph the processes. However, Ana wasn’t with me on this trip. When I found that oven, I felt her presence through my camera. I started photographing every bakery I came across. It was my way of stepping into her shoes, though I soon realized that without her curiosity and her need to understand every gram of the process, something was missing.',
     images: generateProjectImages('ladakhi-bakers', 17),
-    collaboration: 'In collaboration with Ana Gallart'
+    collaboration: 'In collaboration with Ana Gallart',
+    client: 'Personal Project',
+    date: 'Shot between April 12 - May 2'
   },
   {
     id: 'project-2',
@@ -35,7 +37,9 @@ const projects: Project[] = [
     year: 'Ongoing',
     description: 'An ongoing daily self-portrait project exploring identity, time, and self-perception through 366 different mirrors across Barcelona.',
     images: generateProjectImages('366-miralls', 12),
-    collaboration: 'In collaboration with Ana Gallart'
+    collaboration: 'In collaboration with Ana Gallart',
+    client: 'Personal Project',
+    date: 'Shot between April 12 - May 2'
   },
   {
     id: 'project-3',
@@ -53,7 +57,9 @@ const projects: Project[] = [
     location: 'India',
     year: '2025',
     description: 'A documentary series showcasing sustainable fashion production in India, highlighting the ethical practices and craftsmanship of Thinking Mu factories.',
-    images: generateProjectImages('factory-thinking-mu', 20)
+    images: generateProjectImages('factory-thinking-mu', 20),
+    client: 'Thinking Mu',
+    date: 'Shot between April 12 - May 2'
   },
   {
     id: 'project-5',
@@ -63,7 +69,9 @@ const projects: Project[] = [
     year: '2024',
     description: 'A brief but intense visual journey through the spiritual heart of India, capturing the essence of Varanasi in just two days.',
     images: generateProjectImages('varanasi', 14),
-    collaboration: 'In collaboration with Marius Uhlig'
+    collaboration: 'In collaboration with Marius Uhlig',
+    client: 'Personal Project',
+    date: 'Shot between April 12 - May 2'
   }
 ];
 

@@ -31,6 +31,16 @@ export default function ProjectPageClient({ project, projectNumber }: ProjectPag
     };
   }, [viewMode]);
 
+  // Listen for toggle grid view event from menu belt
+  useEffect(() => {
+    const handleToggleGrid = () => {
+      handleToggleView();
+    };
+
+    window.addEventListener('toggleGridView', handleToggleGrid);
+    return () => window.removeEventListener('toggleGridView', handleToggleGrid);
+  }, [viewMode]); // Include viewMode as dependency
+
   const handleToggleView = () => {
     setViewMode(prev => prev === 'slideshow' ? 'grid' : 'slideshow');
   };

@@ -48,4 +48,18 @@
   display: flex;
   flex-direction: row;
   gap: var(--spacing-md);
+  align-items: flex-end;
+}
+
+.clientDateContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.imageCounter,
+.collaboration,
+.client,
+.date {
+  margin: 0;
 }

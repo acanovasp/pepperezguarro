@@ -25,6 +25,7 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
   const [detectedProject, setDetectedProject] = useState<Project | null>(currentProject || null);
   const [isNavigating, setIsNavigating] = useState(false);
   const [hoveredProject, setHoveredProject] = useState<Project | null>(null);
+  const [forceClose, setForceClose] = useState(false);
   const params = useParams();
 
   // Detect current project from URL
@@ -93,7 +94,10 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
   }, [isExpanded]);
 
   const handleMouseEnter = () => {
-    setIsExpanded(true);
+    // Don't reopen if force close is active
+    if (!forceClose) {
+      setIsExpanded(true);
+    }
   };
 
   const handleMouseLeave = () => {
@@ -101,6 +105,8 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
     if (!isNavigating) {
       setIsExpanded(false);
     }
+    // Reset force close flag when mouse leaves
+    setForceClose(false);
   };
 
   const toggleSection = (section: MenuSection) => {
@@ -109,6 +115,12 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
 
   const handleProjectHover = (project: Project | null) => {
     setHoveredProject(project);
+  };
+
+  const handleToggleThumbnails = () => {
+    window.dispatchEvent(new CustomEvent('toggleGridView'));
+    setIsExpanded(false);
+    setForceClose(true); // Prevent menu from reopening while hovering
   };
 
   return (
@@ -158,6 +170,16 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
                 onClick={() => toggleSection('projects')}
               >
                 Projects
+              </button>
+            )}
+            
+            {/* Thumbnails button - only show in project-info section */}
+            {activeSection === 'project-info' && (
+              <button 
+                className={styles.toggleButton}
+                onClick={handleToggleThumbnails}
+              >
+                Thumbnails
               </button>
             )}
           </div>

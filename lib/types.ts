@@ -19,6 +19,8 @@ export interface Project {
   description: string;
   images: ProjectImage[];
   collaboration?: string;
+  client?: string;
+  date?: string;
 }
 
 export interface ContactInfo {
