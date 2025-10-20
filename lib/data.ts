@@ -63,7 +63,7 @@ const projects: Project[] = [
     year: '2024',
     description: 'A brief but intense visual journey through the spiritual heart of India, capturing the essence of Varanasi in just two days.',
     images: generateProjectImages('varanasi', 14),
-    collaboration: '95/98 Project Info'
+    collaboration: 'In collaboration with Marius Uhlig'
   }
 ];
 

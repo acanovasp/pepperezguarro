@@ -104,7 +104,7 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
     // Set new timeout to hide arrow after 2000ms of inactivity
     inactivityTimeoutRef.current = setTimeout(() => {
       onNavigationArrowChange?.(null);
-    }, 2000);
+    }, 1000);
   };
 
   const handleGhostMouseEnter = (e: React.MouseEvent) => {

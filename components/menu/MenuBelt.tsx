@@ -24,6 +24,7 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
   const [activeSection, setActiveSection] = useState<MenuSection>('projects');
   const [detectedProject, setDetectedProject] = useState<Project | null>(currentProject || null);
   const [isNavigating, setIsNavigating] = useState(false);
+  const [hoveredProject, setHoveredProject] = useState<Project | null>(null);
   const params = useParams();
 
   // Detect current project from URL
@@ -106,6 +107,10 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
     setActiveSection(section);
   };
 
+  const handleProjectHover = (project: Project | null) => {
+    setHoveredProject(project);
+  };
+
   return (
     <nav
       className={`${styles.menuBelt} ${isExpanded ? styles.expanded : styles.collapsed}`}
@@ -122,6 +127,7 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
                 projects={projects} 
                 currentSlug={detectedProject?.slug || null}
                 onOpenProjectInfo={() => toggleSection('project-info')}
+                onProjectHover={handleProjectHover}
               />
             )}
             
@@ -155,6 +161,20 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
               </button>
             )}
           </div>
+        </div>
+      )}
+
+      {/* Stats container for hovered project in projects section */}
+      {isExpanded && activeSection === 'projects' && hoveredProject && (
+        <div className={styles.statsContainer}>
+          <p className={styles.imageCounter}>
+            {String(hoveredProject.images.length).padStart(2, '0')} Images 
+          </p>
+          {hoveredProject.collaboration && (
+            <p className={styles.collaboration}>
+              {hoveredProject.collaboration}
+            </p>
+          )}
         </div>
       )}
     </nav>
