@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ProjectSlider from '@/components/sliders/ProjectSlider';
 import ImageGrid from '@/components/ui/ImageGrid';
 import ProjectInfo from '@/components/ui/ProjectInfo';
@@ -17,6 +17,19 @@ export default function ProjectPageClient({ project, projectNumber }: ProjectPag
   const [initialSlide, setInitialSlide] = useState(0);
   const [showProjectInfo, setShowProjectInfo] = useState(true); // Always show by default
   const [navigationArrow, setNavigationArrow] = useState<'left' | 'right' | null>(null);
+
+  // Set data attribute on body to control gradient visibility
+  useEffect(() => {
+    if (viewMode === 'slideshow') {
+      document.body.setAttribute('data-view-mode', 'slideshow');
+    } else {
+      document.body.removeAttribute('data-view-mode');
+    }
+
+    return () => {
+      document.body.removeAttribute('data-view-mode');
+    };
+  }, [viewMode]);
 
   const handleToggleView = () => {
     setViewMode(prev => prev === 'slideshow' ? 'grid' : 'slideshow');
@@ -37,16 +50,16 @@ export default function ProjectPageClient({ project, projectNumber }: ProjectPag
 
   return (
     <>
-      {showProjectInfo && (
+      {showProjectInfo && viewMode === 'slideshow' && (
         <ProjectInfo 
           project={project}
           projectNumber={projectNumber}
           onOpenProjectInfo={handleOpenProjectInfo}
-          navigationArrow={viewMode === 'slideshow' ? navigationArrow : null}
+          navigationArrow={navigationArrow}
         />
       )}
       
-      <FadeTransition>
+      <FadeTransition key={viewMode}>
         {viewMode === 'slideshow' ? (
           <ProjectSlider 
             project={project} 

@@ -23,7 +23,7 @@ const projects: Project[] = [
     title: 'Ladakhi Bakers',
     location: 'India',
     year: '2025',
-    description: 'A photographic exploration of traditional bread-making practices in the Ladakh region of India, documenting the daily rituals and craftsmanship of local bakers.',
+    description: 'Last October, I traveled to India for a photography assignment for a brand. Taking advantage of the trip, I decided to explore the north of the country for a few days. Along the way, already in the Kashmir region, I saw a small oven where roti was being baked in a tandoor using a wood fire. The place, entirely made of wood, had beautiful lighting. I immediately approached and asked if I could photograph the process. Ana, my partner, is the biggest bread lover I know. Our travels revolve around it: we seek out bakeries, so that Ana can learn their techniques, share her love for bread, and photograph the processes. However, Ana wasn’t with me on this trip. When I found that oven, I felt her presence through my camera. I started photographing every bakery I came across. It was my way of stepping into her shoes, though I soon realized that without her curiosity and her need to understand every gram of the process, something was missing.',
     images: generateProjectImages('ladakhi-bakers', 17),
     collaboration: 'In collaboration with Ana Gallart'
   },
@@ -43,7 +43,7 @@ const projects: Project[] = [
     title: 'Moro(cc)o',
     location: 'Morocco',
     year: '2023',
-    description: 'Capturing the vibrant street life and architectural beauty of Morocco, this series explores the interplay of light and shadow in daily urban scenes.',
+    description: 'Morocco is written with two consecutive c’s. (Cc) Is a two-letter abbreviation for the term "cubic centimeters." Just as a car’s engine displacement is measured in liters, a motorcycle engine displacement is measured in cubic centimeters. Moro[cc]o is a project made for the joy of traveling and taking photos during two short trips in Morocco.',
     images: generateProjectImages('morocco', 15)
   },
   {

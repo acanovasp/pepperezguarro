@@ -7,6 +7,26 @@
   pointer-events: auto;
 }
 
+.siteHeader::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--spacing-xxl);
+  background: linear-gradient(to bottom, var(--color-bg) 25%, transparent 100%);
+  pointer-events: none;
+  z-index: -1;
+  opacity: 1;
+  transition: opacity var(--transition-fast);
+}
+
+/* Hide gradient when in slideshow mode or on homepage */
+body[data-view-mode="slideshow"] .siteHeader::after,
+body[data-page="home"] .siteHeader::after {
+  opacity: 0;
+}
+
 .siteHeader.disabled {
   pointer-events: none;
 }

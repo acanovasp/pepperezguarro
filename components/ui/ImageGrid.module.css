@@ -1,44 +1,46 @@
 .gridContainer {
   width: 100vw;
   min-height: 100dvh;
-  padding: calc(var(--spacing-xl) + 40px) var(--spacing-md) var(--spacing-xl);
+  padding: var(--spacing-xxl);
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: var(--spacing-sm);
-  max-width: 1600px;
-  margin: 0 auto;
+  grid-template-columns: repeat(4, 110px);
+  column-gap: calc((100vw - (2 * var(--spacing-xxl)) - (4 * 110px)) / 3);
+  row-gap: 190px;
+  justify-content: start;
 }
 
 .gridItem {
-  position: relative;
-  aspect-ratio: 3/2;
+  display: flex;
+  flex-direction: column;
   cursor: pointer;
-  overflow: hidden;
   transition: opacity var(--transition-fast);
+  align-items: flex-start;
+  content-visibility: auto;
+  contain-intrinsic-size: 110px 100px;
 }
 
 .gridItem:hover {
-  opacity: 0.7;
+  opacity: 0.6;
+}
+
+.imageWrapper {
+  width: 100%;
+  max-width: 110px;
 }
 
 .gridImage {
-  object-fit: cover;
   width: 100%;
-  height: 100%;
+  height: auto;
+  display: block;
+  will-change: opacity;
+  transform: translateZ(0);
 }
 
 .imageNumber {
-  position: absolute;
-  bottom: 8px;
-  right: 8px;
-  background-color: rgba(255, 255, 255, 0.9);
-  color: var(--color-text);
-  padding: 4px 8px;
-  font-size: 12px;
-  font-weight: 500;
+  margin-top: 12px;
 }
 
 .caption {
@@ -71,28 +73,28 @@
   opacity: 0.6;
 }
 
-/* Responsive grid columns */
-@media (max-width: 480px) {
+/* Responsive grid columns - reduce when column gap would be less than 110px */
+/* Breakpoint: (110px * 4) + (110px * 3) + (20px * 2) = 810px */
+@media (max-width: 810px) {
   .grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 110px);
+    column-gap: calc((100vw - (2 * var(--spacing-xxl)) - (3 * 110px)) / 2);
   }
 }
 
-@media (min-width: 481px) and (max-width: 768px) {
+/* Breakpoint: (110px * 3) + (110px * 2) + (20px * 2) = 590px */
+@media (max-width: 590px) {
   .grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 110px);
+    column-gap: calc((100vw - (2 * var(--spacing-xxl)) - (2 * 110px)) / 1);
   }
 }
 
-@media (min-width: 769px) and (max-width: 1024px) {
+/* Breakpoint: (110px * 2) + (110px * 1) + (20px * 2) = 370px */
+@media (max-width: 370px) {
   .grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-@media (min-width: 1025px) {
-  .grid {
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(1, 110px);
+    column-gap: 0;
   }
 }
 

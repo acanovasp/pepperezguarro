@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import HomeSlider from '@/components/sliders/HomeSlider';
 import ProjectInfo from '@/components/ui/ProjectInfo';
 import FadeTransition from '@/components/transitions/FadeTransition';
@@ -15,6 +15,15 @@ export default function HomePageClient({ projects }: HomePageClientProps) {
   
   // Get the active project number (index + 1)
   const activeProjectNumber = projects.findIndex(p => p.id === activeProject.id) + 1;
+
+  // Set data attribute on body to hide gradients on homepage
+  useEffect(() => {
+    document.body.setAttribute('data-page', 'home');
+
+    return () => {
+      document.body.removeAttribute('data-page');
+    };
+  }, []);
 
   return (
     <main>

@@ -39,6 +39,7 @@
   --spacing-md: 30px;
   --spacing-lg: 60px;
   --spacing-xl: 80px;
+  --spacing-xxl: 100px;
   
   /* Transitions */
   --transition-fast: 200ms;
