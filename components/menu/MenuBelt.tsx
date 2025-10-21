@@ -134,25 +134,27 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
       {isExpanded && (
         <div className={styles.menuContent}>
           <div className={styles.leftSection}>
-            {activeSection === 'projects' && (
-              <ProjectsSection 
-                projects={projects} 
-                currentSlug={detectedProject?.slug || null}
-                onOpenProjectInfo={() => toggleSection('project-info')}
-                onProjectHover={handleProjectHover}
-              />
-            )}
-            
-            {activeSection === 'about' && (
-              <AboutSection />
-            )}
-            
-            {activeSection === 'project-info' && detectedProject && (
-              <ProjectInfoSection 
-                project={detectedProject} 
-                projectNumber={projects.findIndex(p => p.id === detectedProject.id) + 1}
-              />
-            )}
+            <div key={activeSection} className={styles.sectionContent}>
+              {activeSection === 'projects' && (
+                <ProjectsSection 
+                  projects={projects} 
+                  currentSlug={detectedProject?.slug || null}
+                  onOpenProjectInfo={() => toggleSection('project-info')}
+                  onProjectHover={handleProjectHover}
+                />
+              )}
+              
+              {activeSection === 'about' && (
+                <AboutSection />
+              )}
+              
+              {activeSection === 'project-info' && detectedProject && (
+                <ProjectInfoSection 
+                  project={detectedProject} 
+                  projectNumber={projects.findIndex(p => p.id === detectedProject.id) + 1}
+                />
+              )}
+            </div>
           </div>
 
           <div className={styles.rightSection}>

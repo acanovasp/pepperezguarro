@@ -63,3 +63,13 @@
 .date {
   margin: 0;
 }
+
+@media (max-width: 768px) {
+  .projectInfoSection {
+    flex-direction: column;
+  }
+
+  .description {
+    max-width: 100%;
+  }
+}

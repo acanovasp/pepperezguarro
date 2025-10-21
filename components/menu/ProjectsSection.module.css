@@ -86,3 +86,9 @@
   opacity: 0.6 !important;
 }
 
+@media (max-width: 768px) {
+  .projectList {
+    gap: var(--spacing-xxs);
+    flex-direction: column;
+  }
+}

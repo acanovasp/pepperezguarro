@@ -31,3 +31,8 @@ body[data-page="home"] .siteHeader::after {
   pointer-events: none;
 }
 
+@media (max-width: 768px) {
+  .siteHeader {
+    display: none;
+  }
+}

@@ -50,3 +50,16 @@
 .contactLabel {
   min-width: 35px;
 }
+
+@media (max-width: 768px) {
+  .aboutSection {
+    flex-direction: column;
+  }
+
+  .bioContainer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    max-width: 100%;
+  }
+}
