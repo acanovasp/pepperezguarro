@@ -62,4 +62,9 @@
     gap: var(--spacing-sm);
     max-width: 100%;
   }
+
+  .name {
+    display: none;
+  }
+
 }

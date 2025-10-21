@@ -6,6 +6,8 @@ import styles from './MenuBelt.module.css';
 import ProjectsSection from './ProjectsSection';
 import AboutSection from './AboutSection';
 import ProjectInfoSection from './ProjectInfoSection';
+import SiteHeader from '@/components/ui/SiteHeader';
+import SiteFooter from '@/components/ui/SiteFooter';
 import { Project } from '@/lib/types';
 
 type MenuSection = 'projects' | 'about' | 'project-info';
@@ -126,6 +128,7 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
   return (
     <nav
       className={`${styles.menuBelt} ${isExpanded ? styles.expanded : styles.collapsed}`}
+      data-section={activeSection}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       aria-label="Main navigation"
@@ -133,6 +136,39 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
     >
       {isExpanded && (
         <div className={styles.menuContent}>
+          {/* Mobile-only header with navigation */}
+          <div className={styles.mobileHeader}>
+            <SiteHeader />
+            <div className={styles.mobileNav}>
+              {/* Single toggle button that changes based on active section */}
+              {activeSection === 'projects' ? (
+                <button 
+                  className={styles.toggleButton}
+                  onClick={() => toggleSection('about')}
+                >
+                  About
+                </button>
+              ) : (
+                <button 
+                  className={styles.toggleButton}
+                  onClick={() => toggleSection('projects')}
+                >
+                  Projects
+                </button>
+              )}
+              
+              {/* Thumbnails button - only show in project-info section */}
+              {activeSection === 'project-info' && (
+                <button 
+                  className={styles.toggleButton}
+                  onClick={handleToggleThumbnails}
+                >
+                  Thumbnails
+                </button>
+              )}
+            </div>
+          </div>
+
           <div className={styles.leftSection}>
             <div key={activeSection} className={styles.sectionContent}>
               {activeSection === 'projects' && (
@@ -184,6 +220,11 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
                 Thumbnails
               </button>
             )}
+          </div>
+
+          {/* Mobile-only footer */}
+          <div className={styles.mobileFooter} data-section={activeSection}>
+            <SiteFooter />
           </div>
         </div>
       )}

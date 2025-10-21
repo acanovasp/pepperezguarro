@@ -33,6 +33,7 @@
   transition: opacity var(--transition-medium) var(--transition-ease);
   display: flex;
   gap: var(--spacing-lg);
+  position: relative;
 }
 
 .menuBelt.expanded .menuContent {
@@ -84,6 +85,11 @@
   flex-direction: row;
   gap: var(--spacing-sm);
   align-items: flex-start;
+}
+
+.mobileHeader,
+.mobileFooter {
+  display: none;
 }
 
 .sectionTitle {
@@ -141,6 +147,7 @@
     transform: none;
     height: var(--menu-collapsed-width);
     will-change: height;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .menuBelt.collapsed {
@@ -148,26 +155,91 @@
   }
 
   .menuBelt.expanded {
-    height: 60%;
+    height: auto;
+  }
+
+  /* Different max-heights for each section */
+  .menuBelt.expanded[data-section="projects"] {
+    height: 60vh;
+  }
+
+  .menuBelt.expanded[data-section="about"] {
+    height: 75vh;
+  }
+
+  .menuBelt.expanded[data-section="project-info"] {
+    height: 65vh;
   }
 
   .menuContent {
     flex-direction: column;
-    padding: var(--spacing-sm);
+    padding: var(--edge-margin);
+    gap: var(--spacing-md);
+    max-height: 80vh;
+    overflow: hidden;
   }
   
-  .leftSection,
-  .rightSection {
-    flex: none;
+  .mobileHeader {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-shrink: 0;
   }
 
-  .rightSection {
-    position: absolute;
-    top: var(--edge-margin);
-    right: var(--edge-margin);
+  /* Override SiteHeader fixed positioning when inside menu */
+  .mobileHeader :global(a) {
+    position: static !important;
+    display: block;
+  }
+
+  .mobileHeader :global(a)::after {
+    display: none !important;
+  }
+
+  .mobileNav {
+    display: flex;
     flex-direction: row;
     gap: var(--spacing-sm);
     align-items: flex-start;
+  }
+
+  .leftSection {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  .rightSection {
+    display: none;
+  }
+
+  .mobileFooter {
+    display: block;
+    flex-shrink: 0;
+  }
+
+  /* Override all SiteFooter styles when inside menu */
+  .mobileFooter > div {
+    position: static !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: var(--spacing-sm) !important;
+    font-size: 12px !important;
+    bottom: auto !important;
+    left: auto !important;
+    z-index: auto !important;
+  }
+
+  /* Hide gradient pseudo-element */
+  .mobileFooter > div::after {
+    display: none !important;
+  }
+
+  /* Hide copyright on specific sections - target second div child */
+  .mobileFooter[data-section="projects"] > div > div:last-child,
+  .mobileFooter[data-section="project-info"] > div > div:last-child {
+    display: none;
   }
   
 }
