@@ -15,32 +15,6 @@
   align-items: center;
 }
 
-.arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 6px;
-  animation: fadeIn 200ms ease-in-out;
-}
-
-.arrowLeft {
-  left: -20px;
-  transform: translateY(-50%) rotate(180deg);
-}
-
-.arrowRight {
-  right: -20px;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
 .projectInfo:hover .link {
   opacity: 1;
 }
@@ -55,13 +29,9 @@
   font-size: 0.75rem;
   line-height: 1.1;
   text-decoration: none;
-  opacity: 0;
+  opacity: 1;
   transition: opacity var(--transition-fast);
   margin-top: 8px;
   display: inline-block;
-}
-
-.link:hover {
-  opacity: 0.6 !important;
 }
 

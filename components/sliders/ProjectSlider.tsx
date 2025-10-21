@@ -17,6 +17,7 @@ interface ProjectSliderProps {
   onToggleGrid: () => void;
   initialSlide?: number;
   onNavigationArrowChange?: (direction: 'left' | 'right' | null) => void;
+  navigationArrow?: 'left' | 'right' | null;
 }
 
 interface ImagePosition {
@@ -52,7 +53,7 @@ function calculateRandomPosition(imageHeight: number, imageMargin: number = 20):
   };
 }
 
-export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0, onNavigationArrowChange }: ProjectSliderProps) {
+export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0, onNavigationArrowChange, navigationArrow }: ProjectSliderProps) {
   const [activeIndex, setActiveIndex] = useState(initialSlide);
   const [positions, setPositions] = useState<ImagePosition[]>([]);
   const [hasInteracted, setHasInteracted] = useState(false);
@@ -229,16 +230,20 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
                     </div>
                     {/* Caption always rendered, fades with parent slide */}
                     <div className={styles.imageCaption}>
-                      <button 
-                        className={styles.imageCounter}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onToggleGrid();
-                        }}
-                        title="Toggle grid view"
-                      >
-                        {String(index + 1).padStart(2, '0')}/{String(project.images.length).padStart(2, '0')}
-                      </button>
+                      <div className={styles.imageCounterWrapper}>
+                        <span className={`${styles.arrow} ${styles.arrowLeft} ${navigationArrow === 'left' ? styles.arrowVisible : ''}`}>►</span>
+                        <button 
+                          className={styles.imageCounter}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onToggleGrid();
+                          }}
+                          title="Toggle grid view"
+                        >
+                          {String(index + 1).padStart(2, '0')}/{String(project.images.length).padStart(2, '0')}
+                        </button>
+                        <span className={`${styles.arrow} ${styles.arrowRight} ${navigationArrow === 'right' ? styles.arrowVisible : ''}`}>►</span>
+                      </div>
                       <TransitionLink href="/" className={styles.closeProject} onClick={(e) => e.stopPropagation()}>
                         Close project
                       </TransitionLink>

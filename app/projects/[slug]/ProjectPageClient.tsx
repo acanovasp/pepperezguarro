@@ -76,6 +76,7 @@ export default function ProjectPageClient({ project, projectNumber }: ProjectPag
             onToggleGrid={handleToggleView}
             initialSlide={initialSlide}
             onNavigationArrowChange={handleNavigationArrowChange}
+            navigationArrow={navigationArrow}
           />
         ) : (
           <ImageGrid 

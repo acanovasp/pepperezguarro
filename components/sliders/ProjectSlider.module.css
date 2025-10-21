@@ -49,6 +49,40 @@
   align-items: center;
 }
 
+.imageCounterWrapper {
+  position: absolute;
+  left: 0;
+  display: flex;
+  align-items: center;
+  transition: width 200ms ease-in-out;
+}
+
+.arrow {
+  font-size: 6px;
+  opacity: 0;
+  width: 0;
+  margin: 0;
+  transition: width 200ms ease-in-out, margin 200ms ease-in-out, opacity 200ms ease-in-out;
+  overflow: hidden;
+}
+
+.arrowVisible {
+  opacity: 1;
+  width: auto;
+}
+
+.arrowLeft {
+  transform: rotate(180deg);
+}
+
+.arrowLeft.arrowVisible {
+  margin-right: 8px;
+}
+
+.arrowRight.arrowVisible {
+  margin-left: 8px;
+}
+
 .ghostImage {
   opacity: 0.05;
   position: absolute;
@@ -75,13 +109,11 @@
 }
 
 .imageCounter {
-  position: absolute;
-  left: 0;
   font-family: 'Executive', sans-serif;
   font-size: 0.75rem;
   line-height: 1.1;
   cursor: pointer;
-  transition: opacity var(--transition-fast);
+  transition: opacity var(--transition-fast), transform 200ms ease-in-out;
 }
 
 .imageCounter:hover {

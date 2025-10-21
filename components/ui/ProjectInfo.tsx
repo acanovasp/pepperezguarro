@@ -11,13 +11,6 @@ interface ProjectInfoProps {
 export default function ProjectInfo({ project, projectNumber, onOpenProjectInfo, navigationArrow }: ProjectInfoProps) {
   return (
     <div className={styles.projectInfo}>
-      {navigationArrow === 'left' && (
-        <span className={`${styles.arrow} ${styles.arrowLeft}`}>►</span>
-      )}
-      {navigationArrow === 'right' && (
-        <span className={`${styles.arrow} ${styles.arrowRight}`}>►</span>
-      )}
-      
       <div className={styles.content}>
         {projectNumber && (
           <h1 className={styles.number}>
