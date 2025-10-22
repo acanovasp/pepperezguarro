@@ -48,7 +48,10 @@ export default function ProjectsSection({ projects, currentSlug, onOpenProjectIn
                     </p>
                     <button 
                       className={styles.projectInfoLink}
-                      onClick={onOpenProjectInfo}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onOpenProjectInfo?.();
+                      }}
                     >
                       Project info
                     </button>

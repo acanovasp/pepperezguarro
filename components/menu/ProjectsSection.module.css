@@ -93,11 +93,15 @@
   }
 
   .openProjectLink {
-    height: 0;
+    display: none;
   }
   
   .projectItem:hover .openProjectLink {
     height: auto;
+  }
+
+  .arrow {
+    display: none;
   }
   
 }

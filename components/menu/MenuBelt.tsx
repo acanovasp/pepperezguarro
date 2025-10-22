@@ -28,7 +28,30 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
   const [isNavigating, setIsNavigating] = useState(false);
   const [hoveredProject, setHoveredProject] = useState<Project | null>(null);
   const [forceClose, setForceClose] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [touchStart, setTouchStart] = useState<{ y: number; time: number } | null>(null);
   const params = useParams();
+
+  // Detect mobile viewport
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    
+    let resizeTimeout: NodeJS.Timeout;
+    const handleResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(checkMobile, 100);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(resizeTimeout);
+    };
+  }, []);
 
   // Detect current project from URL
   useEffect(() => {
@@ -95,6 +118,84 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
     }
   }, [isExpanded]);
 
+  // Click-outside detection for mobile
+  useEffect(() => {
+    if (!isMobile || !isExpanded) return;
+
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const menuElement = document.querySelector('[data-section]') as HTMLElement;
+      
+      if (menuElement && !menuElement.contains(target)) {
+        setIsExpanded(false);
+      }
+    };
+
+    // Delay adding listener to avoid immediate close
+    const timeout = setTimeout(() => {
+      document.addEventListener('click', handleClickOutside);
+    }, 100);
+
+    return () => {
+      clearTimeout(timeout);
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [isMobile, isExpanded]);
+
+  // Swipe gesture detection for mobile
+  useEffect(() => {
+    if (!isMobile) return;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      setTouchStart({
+        y: e.touches[0].clientY,
+        time: Date.now()
+      });
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (!touchStart) return;
+
+      const touchEnd = e.changedTouches[0].clientY;
+      const deltaY = touchStart.y - touchEnd;
+      const deltaTime = Date.now() - touchStart.time;
+      const velocity = Math.abs(deltaY) / deltaTime;
+
+      // Minimum swipe distance: 50px
+      // Or fast swipe with velocity > 0.5px/ms
+      const isSignificantSwipe = Math.abs(deltaY) >= 50 || velocity > 0.5;
+
+      if (isSignificantSwipe) {
+        if (deltaY > 0 && !isExpanded) {
+          // Swipe up - open menu
+          setIsExpanded(true);
+        } else if (deltaY < 0 && isExpanded) {
+          // Swipe down - close menu
+          setIsExpanded(false);
+        }
+      }
+
+      setTouchStart(null);
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      // Prevent default scroll behavior during swipe to avoid page bounce
+      if (touchStart && Math.abs(touchStart.y - e.touches[0].clientY) > 10) {
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener('touchstart', handleTouchStart, { passive: true });
+    document.addEventListener('touchend', handleTouchEnd, { passive: true });
+    document.addEventListener('touchmove', handleTouchMove, { passive: false });
+
+    return () => {
+      document.removeEventListener('touchstart', handleTouchStart);
+      document.removeEventListener('touchend', handleTouchEnd);
+      document.removeEventListener('touchmove', handleTouchMove);
+    };
+  }, [isMobile, isExpanded, touchStart]);
+
   const handleMouseEnter = () => {
     // Don't reopen if force close is active
     if (!forceClose) {
@@ -125,17 +226,36 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
     setForceClose(true); // Prevent menu from reopening while hovering
   };
 
+  const handleMenuClick = (e: React.MouseEvent) => {
+    if (!isMobile) return;
+    
+    // If menu is collapsed, expand it
+    if (!isExpanded) {
+      setIsExpanded(true);
+      e.stopPropagation();
+    }
+    // If expanded, clicks inside don't close (handled by click-outside)
+  };
+
   return (
     <nav
       className={`${styles.menuBelt} ${isExpanded ? styles.expanded : styles.collapsed}`}
       data-section={activeSection}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      {...(!isMobile && {
+        onMouseEnter: handleMouseEnter,
+        onMouseLeave: handleMouseLeave
+      })}
+      {...(isMobile && {
+        onClick: handleMenuClick
+      })}
       aria-label="Main navigation"
       role="navigation"
     >
       {isExpanded && (
-        <div className={styles.menuContent}>
+        <div 
+          className={styles.menuContent}
+          onClick={(e) => e.stopPropagation()}
+        >
           {/* Mobile-only header with navigation */}
           <div className={styles.mobileHeader}>
             <SiteHeader />
