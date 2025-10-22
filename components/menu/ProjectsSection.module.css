@@ -88,9 +88,16 @@
 
 @media (max-width: 768px) {
   .projectList {
-    gap: var(--spacing-xxs);
+    gap: var(--spacing-sm);
     flex-direction: column;
   }
 
+  .openProjectLink {
+    height: 0;
+  }
+  
+  .projectItem:hover .openProjectLink {
+    height: auto;
+  }
   
 }

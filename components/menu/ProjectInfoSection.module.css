@@ -72,4 +72,13 @@
   .description {
     max-width: 100%;
   }
+
+  .statsContainer {
+    flex-wrap: wrap;
+    row-gap: var(--spacing-xs);
+  }
+
+  .imageCounter {
+    text-wrap: nowrap;
+  }
 }

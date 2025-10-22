@@ -26,7 +26,7 @@ export default function ProjectsSection({ projects, currentSlug, onOpenProjectIn
               onMouseLeave={() => onProjectHover?.(null)}
             >
               <p className={styles.projectNumber}>
-                {active && <span className={styles.arrow}>► </span>}
+                {active && <span className={styles.arrow}>● </span>}
                 {String(index + 1).padStart(2, '0')}
               </p>
               <div className={styles.projectItemContent}>

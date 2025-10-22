@@ -5,10 +5,9 @@ interface ProjectInfoProps {
   project: Project;
   projectNumber?: number;
   onOpenProjectInfo?: () => void;
-  navigationArrow?: 'left' | 'right' | null;
 }
 
-export default function ProjectInfo({ project, projectNumber, onOpenProjectInfo, navigationArrow }: ProjectInfoProps) {
+export default function ProjectInfo({ project, projectNumber, onOpenProjectInfo }: ProjectInfoProps) {
   return (
     <div className={styles.projectInfo}>
       <div className={styles.content}>

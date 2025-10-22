@@ -237,10 +237,27 @@
   }
 
   /* Hide copyright on specific sections - target second div child */
-  .mobileFooter[data-section="projects"] > div > div:last-child,
-  .mobileFooter[data-section="project-info"] > div > div:last-child {
+  .mobileFooter[data-section="projects"],
+  .mobileFooter[data-section="project-info"] > div > div:last-child,
+  .mobileFooter[data-section="project-info"] {
+    display: none;
+  }
+
+  .imageCounter {
     display: none;
   }
   
+  .sectionContent {
+    gap: var(--spacing-md);
+  }
+
+  @keyframes sectionMarginIn {
+    from {
+      margin-left: 0;
+    }
+    to {
+      margin-left: 0;
+    }
+  }
 }
 

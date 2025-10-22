@@ -201,6 +201,6 @@ main {
 /* Mobile optimizations */
 @media (max-width: 768px) {
   :root {
-    --image-height: 30dvh;
+    --image-height: 20dvh;
   }
 }

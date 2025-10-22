@@ -71,16 +71,12 @@
   width: auto;
 }
 
-.arrowLeft {
-  transform: rotate(180deg);
-}
-
 .arrowLeft.arrowVisible {
-  margin-right: 8px;
+  margin: 0 8px 3px 0;
 }
 
 .arrowRight.arrowVisible {
-  margin-left: 8px;
+  margin: 0 0 3px 8px;
 }
 
 .ghostImage {
@@ -132,6 +128,27 @@
 /* Swiper styles moved to globals.css */
 
 @media (max-width: 768px) {
+  /* Center images on mobile like HomeSlider */
+  .slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .imageWithCaption {
+    position: static !important;
+    align-items: center;
+    padding-top: 25px;
+  }
+
+  .imageContainer {
+    position: relative !important;
+  }
+
+  .ghostImage {
+    display: none;
+  }
+
   .caption {
     flex-direction: column;
     gap: var(--spacing-sm);

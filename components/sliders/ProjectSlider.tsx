@@ -60,11 +60,17 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
   const swiperRef = useRef<SwiperType | null>(null);
   const inactivityTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Generate random positions for all images
+  // Generate random positions for all images (desktop only)
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
     const calculatePositions = () => {
+      // Skip calculation on mobile (≤768px) - positions overridden by CSS
+      if (window.innerWidth <= 768) {
+        setPositions([]);
+        return;
+      }
+
       // Calculate actual pixel value of 40dvh
       const imageHeightPx = window.innerHeight * 0.4; // 40dvh = 40% of viewport height
       
@@ -213,8 +219,7 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
                 )}
 
                 {/* Image with caption - caption fades with image */}
-                {position && (
-                  <div className={styles.imageWithCaption} style={position}>
+                <div className={styles.imageWithCaption} style={position || undefined}>
                     <div className={styles.imageContainer}>
                       <Image
                         src={image.url}
@@ -231,7 +236,7 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
                     {/* Caption always rendered, fades with parent slide */}
                     <div className={styles.imageCaption}>
                       <div className={styles.imageCounterWrapper}>
-                        <span className={`${styles.arrow} ${styles.arrowLeft} ${navigationArrow === 'left' ? styles.arrowVisible : ''}`}>►</span>
+                        <span className={`${styles.arrow} ${styles.arrowLeft} ${navigationArrow === 'left' ? styles.arrowVisible : ''}`}>●</span>
                         <button 
                           className={styles.imageCounter}
                           onClick={(e) => {
@@ -242,14 +247,13 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
                         >
                           {String(index + 1).padStart(2, '0')}/{String(project.images.length).padStart(2, '0')}
                         </button>
-                        <span className={`${styles.arrow} ${styles.arrowRight} ${navigationArrow === 'right' ? styles.arrowVisible : ''}`}>►</span>
+                        <span className={`${styles.arrow} ${styles.arrowRight} ${navigationArrow === 'right' ? styles.arrowVisible : ''}`}>●</span>
                       </div>
                       <TransitionLink href="/" className={styles.closeProject} onClick={(e) => e.stopPropagation()}>
                         Close project
                       </TransitionLink>
                     </div>
-                  </div>
-                )}
+                </div>
               </div>
             </SwiperSlide>
           );
