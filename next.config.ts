@@ -2,18 +2,21 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    // Allow placeholder images from picsum.photos
+    // Allow images from external sources
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'picsum.photos',
       },
+      {
+        protocol: 'https',
+        hostname: 'cdn.sanity.io',
+      },
     ],
     // Image optimization
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    imageSizes: [16, 32, 48, 64, 96, 110, 128, 256, 384],
-    minimumCacheTTL: 60 * 60 * 24 * 365, // 1 year cache for optimized images
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
   
   // Performance optimizations

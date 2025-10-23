@@ -5,8 +5,9 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Keyboard, EffectFade } from 'swiper/modules';
 import type { Swiper as SwiperType } from 'swiper';
 import Image from 'next/image';
+import Link from 'next/link';
 import styles from './HomeSlider.module.css';
-import TransitionLink from '@/components/transitions/TransitionLink';
+import ProjectInfo from '@/components/ui/ProjectInfo';
 import { Project, ProjectImage } from '@/lib/types';
 
 // Import Swiper styles
@@ -15,7 +16,6 @@ import 'swiper/css/effect-fade';
 
 interface HomeSliderProps {
   projects: Project[];
-  onActiveProjectChange?: (project: Project) => void;
 }
 
 // Get random image from project
@@ -27,12 +27,12 @@ function getRandomImage(project: Project): { image: ProjectImage; index: number 
   };
 }
 
-export default function HomeSlider({ projects, onActiveProjectChange }: HomeSliderProps) {
+export default function HomeSlider({ projects }: HomeSliderProps) {
   const [randomImages, setRandomImages] = useState<Map<string, { image: ProjectImage; index: number }>>(new Map());
   const [activeIndex, setActiveIndex] = useState(0);
   const [cursorStyle, setCursorStyle] = useState<'w-resize' | 'e-resize'>('w-resize');
   const swiperRef = useRef<SwiperType | null>(null);
-  const prevIndexRef = useRef<number>(0); // Track previous index to detect actual changes
+  const isUserInteractionRef = useRef(true); // Track if slide change is from user interaction
 
   // Generate random images ONCE when component mounts
   useEffect(() => {
@@ -44,27 +44,41 @@ export default function HomeSlider({ projects, onActiveProjectChange }: HomeSlid
   }, [projects]);
 
   const handleSlideChange = (swiper: SwiperType) => {
-    const newIndex = swiper.realIndex;
+    setActiveIndex(swiper.realIndex);
     
-    // Only update if index actually changed (prevents flickering during drag/resize)
-    if (prevIndexRef.current !== newIndex) {
-      setActiveIndex(newIndex);
-      prevIndexRef.current = newIndex;
-      
-      // Notify parent of active project change
-      const activeProject = projects[newIndex];
-      if (activeProject && onActiveProjectChange) {
-        onActiveProjectChange(activeProject);
-      }
-      
-      // Generate new random image for the newly active slide
-      if (activeProject) {
-        const newRandom = getRandomImage(activeProject);
-        setRandomImages(prev => new Map(prev).set(activeProject.id, newRandom));
-      }
+    // Only generate new random image if it's from user interaction (not resize)
+    if (!isUserInteractionRef.current) return;
+    
+    const activeProject = projects[swiper.realIndex];
+    if (activeProject) {
+      const newRandom = getRandomImage(activeProject);
+      setRandomImages(prev => new Map(prev).set(activeProject.id, newRandom));
     }
   };
 
+  // Prevent random image changes during resize
+  useEffect(() => {
+    let resizeTimeout: NodeJS.Timeout;
+    
+    const handleResize = () => {
+      // Disable random image changes immediately
+      isUserInteractionRef.current = false;
+      
+      // Clear previous timeout
+      clearTimeout(resizeTimeout);
+      
+      // Re-enable only after resize stops (300ms of no resize events)
+      resizeTimeout = setTimeout(() => {
+        isUserInteractionRef.current = true;
+      }, 300);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(resizeTimeout);
+    };
+  }, []);
 
   const handleMouseMove = (e: React.MouseEvent) => {
     const mouseX = e.clientX;
@@ -92,6 +106,8 @@ export default function HomeSlider({ projects, onActiveProjectChange }: HomeSlid
     }
   };
 
+  const activeProject = projects[activeIndex];
+
   return (
     <div 
       className={styles.homeSlider} 
@@ -101,9 +117,13 @@ export default function HomeSlider({ projects, onActiveProjectChange }: HomeSlid
       onMouseMove={handleMouseMove}
       style={{ cursor: cursorStyle }}
     >
+      {activeProject && <ProjectInfo project={activeProject} />}
       <Swiper
         modules={[Keyboard, EffectFade]}
         effect="fade"
+        fadeEffect={{
+          crossFade: true
+        }}
         speed={800}
         loop={true}
         keyboard={{
@@ -112,14 +132,7 @@ export default function HomeSlider({ projects, onActiveProjectChange }: HomeSlid
         onSlideChange={handleSlideChange}
         onSwiper={(swiper) => {
           swiperRef.current = swiper;
-          const initialIndex = swiper.realIndex;
-          setActiveIndex(initialIndex);
-          prevIndexRef.current = initialIndex;
-          // Notify parent of initial active project
-          const initialProject = projects[initialIndex];
-          if (initialProject && onActiveProjectChange) {
-            onActiveProjectChange(initialProject);
-          }
+          setActiveIndex(swiper.realIndex);
         }}
         aria-label="Project slideshow"
       >
@@ -140,21 +153,19 @@ export default function HomeSlider({ projects, onActiveProjectChange }: HomeSlid
                       width={1200}
                       height={800}
                       className={styles.slideImage}
-                      sizes="(max-width: 768px) 100vw, 80vw"
-                      priority={projects.indexOf(project) === 0}
-                      loading={projects.indexOf(project) === 0 ? 'eager' : 'lazy'}
-                      placeholder={projects.indexOf(project) === 0 ? 'blur' : 'empty'}
-                      blurDataURL={projects.indexOf(project) === 0 ? image.blurDataURL : undefined}
+                      priority={projects.indexOf(project) < 2}
+                      placeholder="blur"
+                      blurDataURL={image.blurDataURL}
                     />
                   </div>
                   
                   <div className={styles.caption}>
-                    <p className={styles.imageCounter}>
+                    <span className={styles.imageCounter}>
                       {String(index + 1).padStart(2, '0')}/{String(project.images.length).padStart(2, '0')}
-                    </p>
-                    <TransitionLink href={`/projects/${project.slug}`} className={styles.openProject} onClick={(e) => e.stopPropagation()}>
+                    </span>
+                    <Link href={`/projects/${project.slug}`} className={styles.openProject} onClick={(e) => e.stopPropagation()}>
                       Open project
-                    </TransitionLink>
+                    </Link>
                   </div>
                 </div>
               </div>

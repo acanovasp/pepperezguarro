@@ -5,8 +5,8 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Keyboard, EffectFade } from 'swiper/modules';
 import type { Swiper as SwiperType } from 'swiper';
 import Image from 'next/image';
+import Link from 'next/link';
 import styles from './ProjectSlider.module.css';
-import TransitionLink from '@/components/transitions/TransitionLink';
 import { Project } from '@/lib/types';
 
 import 'swiper/css';
@@ -16,8 +16,6 @@ interface ProjectSliderProps {
   project: Project;
   onToggleGrid: () => void;
   initialSlide?: number;
-  onNavigationArrowChange?: (direction: 'left' | 'right' | null) => void;
-  navigationArrow?: 'left' | 'right' | null;
 }
 
 interface ImagePosition {
@@ -53,24 +51,16 @@ function calculateRandomPosition(imageHeight: number, imageMargin: number = 20):
   };
 }
 
-export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0, onNavigationArrowChange, navigationArrow }: ProjectSliderProps) {
+export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0 }: ProjectSliderProps) {
   const [activeIndex, setActiveIndex] = useState(initialSlide);
   const [positions, setPositions] = useState<ImagePosition[]>([]);
-  const [hasInteracted, setHasInteracted] = useState(false);
   const swiperRef = useRef<SwiperType | null>(null);
-  const inactivityTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Generate random positions for all images (desktop only)
+  // Generate random positions for all images
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
     const calculatePositions = () => {
-      // Skip calculation on mobile (≤768px) - positions overridden by CSS
-      if (window.innerWidth <= 768) {
-        setPositions([]);
-        return;
-      }
-
       // Calculate actual pixel value of 40dvh
       const imageHeightPx = window.innerHeight * 0.4; // 40dvh = 40% of viewport height
       
@@ -98,54 +88,7 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
 
   const handleSlideChange = (swiper: SwiperType) => {
     setActiveIndex(swiper.realIndex);
-    setHasInteracted(true);
   };
-
-  // Handle mouse movement for navigation arrow display
-  const handleMouseMove = () => {
-    // Clear existing timeout
-    if (inactivityTimeoutRef.current) {
-      clearTimeout(inactivityTimeoutRef.current);
-    }
-
-    // Set new timeout to hide arrow after 2000ms of inactivity
-    inactivityTimeoutRef.current = setTimeout(() => {
-      onNavigationArrowChange?.(null);
-    }, 1000);
-  };
-
-  const handleGhostMouseEnter = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent slide handler from firing
-    onNavigationArrowChange?.('left');
-    handleMouseMove();
-  };
-
-  const handleGhostMouseLeave = () => {
-    // When leaving ghost, show right arrow (since we're still on slide)
-    onNavigationArrowChange?.('right');
-    handleMouseMove();
-  };
-
-  const handleSlideMouseEnter = () => {
-    onNavigationArrowChange?.('right');
-    handleMouseMove();
-  };
-
-  const handleMouseLeave = () => {
-    if (inactivityTimeoutRef.current) {
-      clearTimeout(inactivityTimeoutRef.current);
-    }
-    onNavigationArrowChange?.(null);
-  };
-
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (inactivityTimeoutRef.current) {
-        clearTimeout(inactivityTimeoutRef.current);
-      }
-    };
-  }, []);
 
   const handleGhostClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent triggering slide click
@@ -158,17 +101,16 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
     if (swiperRef.current) {
       swiperRef.current.slideNext();
     }
-    setHasInteracted(true);
   };
 
   return (
-    <div 
-      className={styles.projectSlider}
-      onMouseLeave={handleMouseLeave}
-    >
+    <div className={styles.projectSlider}>
       <Swiper
         modules={[Keyboard, EffectFade]}
         effect="fade"
+        fadeEffect={{
+          crossFade: true
+        }}
         speed={800}
         loop={true}
         initialSlide={initialSlide}
@@ -192,21 +134,13 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
           
           return (
             <SwiperSlide key={image.id}>
-              <div 
-                className={styles.slide} 
-                onClick={handleSlideClick}
-                onMouseEnter={handleSlideMouseEnter}
-                onMouseMove={handleMouseMove}
-              >
-                {/* Ghost image (previous slide) - only show on active slide after interaction */}
-                {isActiveSlide && ghostPosition && hasInteracted && (
+              <div className={styles.slide} onClick={handleSlideClick}>
+                {/* Ghost image (previous slide) - only show on active slide */}
+                {isActiveSlide && ghostPosition && (
                   <div
                     className={styles.ghostImage}
                     style={ghostPosition}
                     onClick={handleGhostClick}
-                    onMouseEnter={handleGhostMouseEnter}
-                    onMouseLeave={handleGhostMouseLeave}
-                    onMouseMove={handleMouseMove}
                   >
                     <Image
                       src={project.images[ghostIndex].url}
@@ -214,14 +148,13 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
                       width={1200}
                       height={800}
                       className={styles.slideImage}
-                      sizes="(max-width: 768px) 90vw, 50vw"
-                      loading="lazy"
                     />
                   </div>
                 )}
 
                 {/* Image with caption - caption fades with image */}
-                <div className={styles.imageWithCaption} style={position || undefined}>
+                {position && (
+                  <div className={styles.imageWithCaption} style={position}>
                     <div className={styles.imageContainer}>
                       <Image
                         src={image.url}
@@ -229,34 +162,29 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
                         width={1200}
                         height={800}
                         className={styles.slideImage}
-                        sizes="(max-width: 768px) 90vw, 50vw"
-                        priority={index === initialSlide}
-                        loading={index === initialSlide ? 'eager' : 'lazy'}
-                        placeholder={index === initialSlide ? 'blur' : 'empty'}
-                        blurDataURL={index === initialSlide ? image.blurDataURL : undefined}
+                        priority={index < 2}
+                        placeholder="blur"
+                        blurDataURL={image.blurDataURL}
                       />
                     </div>
                     {/* Caption always rendered, fades with parent slide */}
                     <div className={styles.imageCaption}>
-                      <div className={styles.imageCounterWrapper}>
-                        <span className={`${styles.arrow} ${styles.arrowLeft} ${navigationArrow === 'left' ? styles.arrowVisible : ''}`}>●</span>
-                        <button 
-                          className={styles.imageCounter}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onToggleGrid();
-                          }}
-                          title="Toggle grid view"
-                        >
-                          {String(index + 1).padStart(2, '0')}/{String(project.images.length).padStart(2, '0')}
-                        </button>
-                        <span className={`${styles.arrow} ${styles.arrowRight} ${navigationArrow === 'right' ? styles.arrowVisible : ''}`}>●</span>
-                      </div>
-                      <TransitionLink href="/" className={styles.closeProject} onClick={(e) => e.stopPropagation()}>
+                      <button 
+                        className={styles.imageCounter}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onToggleGrid();
+                        }}
+                        title="Toggle grid view"
+                      >
+                        {String(index + 1).padStart(2, '0')}/{String(project.images.length).padStart(2, '0')}
+                      </button>
+                      <Link href="/" className={styles.closeProject} onClick={(e) => e.stopPropagation()}>
                         Close project
-                      </TransitionLink>
+                      </Link>
                     </div>
-                </div>
+                  </div>
+                )}
               </div>
             </SwiperSlide>
           );

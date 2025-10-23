@@ -16,7 +16,6 @@ export default function ProjectPageClient({ project, projectNumber }: ProjectPag
   const [viewMode, setViewMode] = useState<'slideshow' | 'grid'>('slideshow');
   const [initialSlide, setInitialSlide] = useState(0);
   const [showProjectInfo, setShowProjectInfo] = useState(true); // Always show by default
-  const [navigationArrow, setNavigationArrow] = useState<'left' | 'right' | null>(null);
 
   // Set data attribute on body to control gradient visibility
   useEffect(() => {
@@ -54,10 +53,6 @@ export default function ProjectPageClient({ project, projectNumber }: ProjectPag
     window.dispatchEvent(new CustomEvent('openMenuSection', { detail: 'project-info' }));
   };
 
-  const handleNavigationArrowChange = (direction: 'left' | 'right' | null) => {
-    setNavigationArrow(direction);
-  };
-
   return (
     <>
       {showProjectInfo && viewMode === 'slideshow' && (
@@ -65,7 +60,6 @@ export default function ProjectPageClient({ project, projectNumber }: ProjectPag
           project={project}
           projectNumber={projectNumber}
           onOpenProjectInfo={handleOpenProjectInfo}
-          navigationArrow={navigationArrow}
         />
       )}
       
@@ -75,8 +69,6 @@ export default function ProjectPageClient({ project, projectNumber }: ProjectPag
             project={project} 
             onToggleGrid={handleToggleView}
             initialSlide={initialSlide}
-            onNavigationArrowChange={handleNavigationArrowChange}
-            navigationArrow={navigationArrow}
           />
         ) : (
           <ImageGrid 

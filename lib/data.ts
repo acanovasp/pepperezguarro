@@ -1,11 +1,16 @@
 import { Project, ProjectImage, AboutInfo } from './types';
+import { client } from '../sanity/client';
+import { urlForImage } from '../sanity/client';
+import type { SanityProject, SanityAbout, SanityImageAsset } from '../sanity/types';
 
 /**
  * Data abstraction layer for portfolio content
- * This layer is designed to be swapped with CMS (Sanity.io) without changing components
+ * Fetches from Sanity CMS with fallback to placeholder data
  */
 
-// Helper to generate placeholder images
+const USE_SANITY = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID && process.env.NEXT_PUBLIC_SANITY_PROJECT_ID !== 'your_project_id';
+
+// Helper to generate placeholder images (fallback)
 function generateProjectImages(projectId: string, count: number): ProjectImage[] {
   return Array.from({ length: count }, (_, i) => ({
     id: `${projectId}-${i + 1}`,
@@ -15,15 +20,15 @@ function generateProjectImages(projectId: string, count: number): ProjectImage[]
   }));
 }
 
-// Placeholder projects data
-const projects: Project[] = [
+// Placeholder projects data (fallback when Sanity is not configured)
+const placeholderProjects: Project[] = [
   {
     id: 'project-1',
     slug: 'ladakhi-bakers',
     title: 'Ladakhi Bakers',
     location: 'India',
     year: '2025',
-    description: 'Last October, I traveled to India for a photography assignment for a brand. Taking advantage of the trip, I decided to explore the north of the country for a few days. Along the way, already in the Kashmir region, I saw a small oven where roti was being baked in a tandoor using a wood fire. The place, entirely made of wood, had beautiful lighting. I immediately approached and asked if I could photograph the process. Ana, my partner, is the biggest bread lover I know. Our travels revolve around it: we seek out bakeries, so that Ana can learn their techniques, share her love for bread, and photograph the processes. However, Ana wasn’t with me on this trip. When I found that oven, I felt her presence through my camera. I started photographing every bakery I came across. It was my way of stepping into her shoes, though I soon realized that without her curiosity and her need to understand every gram of the process, something was missing.',
+    description: 'Last October, I traveled to India for a photography assignment for a brand. Taking advantage of the trip, I decided to explore the north of the country for a few days. Along the way, already in the Kashmir region, I saw a small oven where roti was being baked in a tandoor using a wood fire. The place, entirely made of wood, had beautiful lighting. I immediately approached and asked if I could photograph the process. Ana, my partner, is the biggest bread lover I know. Our travels revolve around it: we seek out bakeries, so that Ana can learn their techniques, share her love for bread, and photograph the processes. However, Ana wasn\'t with me on this trip. When I found that oven, I felt her presence through my camera. I started photographing every bakery I came across. It was my way of stepping into her shoes, though I soon realized that without her curiosity and her need to understand every gram of the process, something was missing.',
     images: generateProjectImages('ladakhi-bakers', 17),
     collaboration: 'In collaboration with Ana Gallart',
     client: 'Personal Project',
@@ -47,7 +52,7 @@ const projects: Project[] = [
     title: 'Moro(cc)o',
     location: 'Morocco',
     year: '2023',
-    description: 'Morocco is written with two consecutive c’s. (Cc) Is a two-letter abbreviation for the term "cubic centimeters." Just as a car’s engine displacement is measured in liters, a motorcycle engine displacement is measured in cubic centimeters. Moro[cc]o is a project made for the joy of traveling and taking photos during two short trips in Morocco.',
+    description: 'Morocco is written with two consecutive c\'s. (Cc) Is a two-letter abbreviation for the term "cubic centimeters." Just as a car\'s engine displacement is measured in liters, a motorcycle engine displacement is measured in cubic centimeters. Moro[cc]o is a project made for the joy of traveling and taking photos during two short trips in Morocco.',
     images: generateProjectImages('morocco', 15)
   },
   {
@@ -75,8 +80,8 @@ const projects: Project[] = [
   }
 ];
 
-// About information
-const aboutInfo: AboutInfo = {
+// Placeholder about information (fallback)
+const placeholderAbout: AboutInfo = {
   name: 'Pep Perez Guarro',
   bio: 'Pep is based between Paris and Barcelona. His approach to photography and directing is shaped by an exploration of timelessness, texture and authenticity.',
   contact: {
@@ -121,35 +126,225 @@ const aboutInfo: AboutInfo = {
 };
 
 /**
+ * Transform Sanity image to ProjectImage format
+ * Generates optimized URLs and blur placeholders
+ */
+function transformSanityImage(
+  image: SanityImageAsset,
+  projectTitle: string,
+  index: number
+): ProjectImage {
+  const imageUrl = urlForImage(image).width(1200).height(800).url();
+  const blurDataURL = image.metadata?.lqip || undefined;
+  
+  // Format: "ProjectTitle-01"
+  const imageNumber = String(index + 1).padStart(2, '0');
+  const alt = `${projectTitle}-${imageNumber}`;
+
+  return {
+    id: `${projectTitle.toLowerCase().replace(/\s+/g, '-')}-${index + 1}`,
+    url: imageUrl,
+    alt,
+    blurDataURL,
+  };
+}
+
+/**
+ * Transform Sanity project to Project format
+ */
+function transformProject(sanityProject: SanityProject): Project {
+  return {
+    id: sanityProject._id,
+    slug: sanityProject.slug.current,
+    title: sanityProject.title,
+    location: sanityProject.location,
+    year: sanityProject.year,
+    description: sanityProject.description,
+    images: sanityProject.images.map((img, index) =>
+      transformSanityImage(img, sanityProject.title, index)
+    ),
+    collaboration: sanityProject.collaboration,
+    client: sanityProject.client,
+    date: sanityProject.date,
+  };
+}
+
+/**
+ * Transform Sanity about to AboutInfo format
+ */
+function transformAbout(sanityAbout: SanityAbout): AboutInfo {
+  // Remove @ symbol if present and clean phone number
+  const instagramHandle = sanityAbout.instagram.startsWith('@') 
+    ? sanityAbout.instagram 
+    : `@${sanityAbout.instagram}`;
+  
+  const instagramUsername = instagramHandle.replace('@', '');
+
+  return {
+    name: sanityAbout.name,
+    bio: sanityAbout.bio,
+    contact: {
+      email: {
+        display: sanityAbout.email,
+        link: `mailto:${sanityAbout.email}`,
+      },
+      phone: {
+        display: sanityAbout.phone,
+        link: `tel:${sanityAbout.phone.replace(/\s+/g, '')}`,
+      },
+      instagram: {
+        display: instagramHandle,
+        link: `https://instagram.com/${instagramUsername}`,
+      },
+    },
+    collaborators: sanityAbout.collaborators || [],
+    publications: sanityAbout.publications || [],
+  };
+}
+
+/**
  * Get all projects
- * This function can be easily swapped to fetch from CMS
+ * Fetches from Sanity or returns placeholder data
  */
 export async function getProjects(): Promise<Project[]> {
-  // Simulate async operation (for future CMS integration)
-  return Promise.resolve(projects);
+  if (!USE_SANITY) {
+    console.log('Using placeholder data (Sanity not configured)');
+    return Promise.resolve(placeholderProjects);
+  }
+
+  try {
+    const query = `*[_type == "project"] | order(number asc) {
+      _id,
+      _type,
+      number,
+      title,
+      slug,
+      location,
+      year,
+      description,
+      "images": images[]{
+        ...,
+        "metadata": asset->metadata
+      },
+      collaboration,
+      client,
+      date
+    }`;
+
+    const sanityProjects: SanityProject[] = await client.fetch(query);
+    
+    if (!sanityProjects || sanityProjects.length === 0) {
+      console.warn('No projects found in Sanity, using placeholder data');
+      return placeholderProjects;
+    }
+
+    return sanityProjects.map(transformProject);
+  } catch (error) {
+    console.error('Error fetching projects from Sanity:', error);
+    return placeholderProjects;
+  }
 }
 
 /**
  * Get single project by slug
- * This function can be easily swapped to fetch from CMS
+ * Fetches from Sanity or returns placeholder data
  */
 export async function getProjectBySlug(slug: string): Promise<Project | null> {
-  const project = projects.find(p => p.slug === slug);
-  return Promise.resolve(project || null);
+  if (!USE_SANITY) {
+    const project = placeholderProjects.find(p => p.slug === slug);
+    return Promise.resolve(project || null);
+  }
+
+  try {
+    const query = `*[_type == "project" && slug.current == $slug][0] {
+      _id,
+      _type,
+      number,
+      title,
+      slug,
+      location,
+      year,
+      description,
+      "images": images[]{
+        ...,
+        "metadata": asset->metadata
+      },
+      collaboration,
+      client,
+      date
+    }`;
+
+    const sanityProject: SanityProject | null = await client.fetch(query, { slug });
+    
+    if (!sanityProject) {
+      // Fallback to placeholder data
+      const project = placeholderProjects.find(p => p.slug === slug);
+      return project || null;
+    }
+
+    return transformProject(sanityProject);
+  } catch (error) {
+    console.error('Error fetching project from Sanity:', error);
+    const project = placeholderProjects.find(p => p.slug === slug);
+    return project || null;
+  }
 }
 
 /**
  * Get about information
- * This function can be easily swapped to fetch from CMS
+ * Fetches from Sanity or returns placeholder data
  */
 export async function getAboutInfo(): Promise<AboutInfo> {
-  return Promise.resolve(aboutInfo);
+  if (!USE_SANITY) {
+    return Promise.resolve(placeholderAbout);
+  }
+
+  try {
+    const query = `*[_type == "about"][0] {
+      _id,
+      _type,
+      name,
+      bio,
+      email,
+      phone,
+      instagram,
+      collaborators,
+      publications
+    }`;
+
+    const sanityAbout: SanityAbout | null = await client.fetch(query);
+    
+    if (!sanityAbout) {
+      console.warn('No about info found in Sanity, using placeholder data');
+      return placeholderAbout;
+    }
+
+    return transformAbout(sanityAbout);
+  } catch (error) {
+    console.error('Error fetching about info from Sanity:', error);
+    return placeholderAbout;
+  }
 }
 
 /**
  * Get all project slugs (for static generation)
  */
 export async function getAllProjectSlugs(): Promise<string[]> {
-  return Promise.resolve(projects.map(p => p.slug));
-}
+  if (!USE_SANITY) {
+    return Promise.resolve(placeholderProjects.map(p => p.slug));
+  }
 
+  try {
+    const query = `*[_type == "project"].slug.current`;
+    const slugs: string[] = await client.fetch(query);
+    
+    if (!slugs || slugs.length === 0) {
+      return placeholderProjects.map(p => p.slug);
+    }
+
+    return slugs;
+  } catch (error) {
+    console.error('Error fetching project slugs from Sanity:', error);
+    return placeholderProjects.map(p => p.slug);
+  }
+}
