@@ -214,6 +214,8 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
                       width={1200}
                       height={800}
                       className={styles.slideImage}
+                      sizes="(max-width: 768px) 90vw, 50vw"
+                      loading="lazy"
                     />
                   </div>
                 )}
@@ -227,10 +229,11 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
                         width={1200}
                         height={800}
                         className={styles.slideImage}
-                        priority={index === 0}
-                        fetchPriority={index === 0 ? 'high' : 'auto'}
-                        placeholder={index < 2 ? 'blur' : 'empty'}
-                        blurDataURL={index < 2 ? image.blurDataURL : undefined}
+                        sizes="(max-width: 768px) 90vw, 50vw"
+                        priority={index === initialSlide}
+                        loading={index === initialSlide ? 'eager' : 'lazy'}
+                        placeholder={index === initialSlide ? 'blur' : 'empty'}
+                        blurDataURL={index === initialSlide ? image.blurDataURL : undefined}
                       />
                     </div>
                     {/* Caption always rendered, fades with parent slide */}

@@ -10,8 +10,8 @@ interface ImageGridProps {
 }
 
 export default function ImageGrid({ project, onImageClick, onToggleView }: ImageGridProps) {
-  // Calculate how many images to prioritize (first 2-3 rows = 8-12 images)
-  const priorityCount = 12;
+  // Calculate how many images to prioritize (first visible row = 6-8 images)
+  const priorityCount = 8;
   
   return (
     <div className={styles.gridContainer}>

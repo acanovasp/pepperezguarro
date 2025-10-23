@@ -140,10 +140,11 @@ export default function HomeSlider({ projects, onActiveProjectChange }: HomeSlid
                       width={1200}
                       height={800}
                       className={styles.slideImage}
+                      sizes="(max-width: 768px) 100vw, 80vw"
                       priority={projects.indexOf(project) === 0}
-                      fetchPriority={projects.indexOf(project) === 0 ? 'high' : 'auto'}
-                      placeholder={projects.indexOf(project) < 2 ? 'blur' : 'empty'}
-                      blurDataURL={projects.indexOf(project) < 2 ? image.blurDataURL : undefined}
+                      loading={projects.indexOf(project) === 0 ? 'eager' : 'lazy'}
+                      placeholder={projects.indexOf(project) === 0 ? 'blur' : 'empty'}
+                      blurDataURL={projects.indexOf(project) === 0 ? image.blurDataURL : undefined}
                     />
                   </div>
                   
