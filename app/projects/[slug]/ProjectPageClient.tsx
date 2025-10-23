@@ -17,6 +17,7 @@ export default function ProjectPageClient({ project, projectNumber }: ProjectPag
   const [initialSlide, setInitialSlide] = useState(0);
   const [showProjectInfo, setShowProjectInfo] = useState(true); // Always show by default
   const [navigationArrow, setNavigationArrow] = useState<'left' | 'right' | null>(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   // Set data attribute on body to control gradient visibility
   useEffect(() => {
@@ -42,12 +43,34 @@ export default function ProjectPageClient({ project, projectNumber }: ProjectPag
   }, [viewMode]); // Include viewMode as dependency
 
   const handleToggleView = () => {
-    setViewMode(prev => prev === 'slideshow' ? 'grid' : 'slideshow');
+    if (isTransitioning) return; // Prevent double-clicks
+    
+    setIsTransitioning(true);
+    
+    // Trigger fade out
+    window.dispatchEvent(new Event('startPageTransition'));
+    
+    // Wait for fade out (800ms) then change view
+    setTimeout(() => {
+      setViewMode(prev => prev === 'slideshow' ? 'grid' : 'slideshow');
+      setIsTransitioning(false);
+    }, 800);
   };
 
   const handleImageClick = (index: number) => {
-    setInitialSlide(index);
-    setViewMode('slideshow');
+    if (isTransitioning) return; // Prevent clicks during transition
+    
+    setIsTransitioning(true);
+    
+    // Trigger fade out
+    window.dispatchEvent(new Event('startPageTransition'));
+    
+    // Wait for fade out (800ms) then change view
+    setTimeout(() => {
+      setInitialSlide(index);
+      setViewMode('slideshow');
+      setIsTransitioning(false);
+    }, 800);
   };
 
   const handleOpenProjectInfo = () => {
