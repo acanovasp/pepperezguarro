@@ -4,11 +4,32 @@
   padding: var(--spacing-xxl);
 }
 
+/* Mobile gradient overlay - separate element for proper fixed positioning */
+.mobileGradient {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  background: linear-gradient(to top, #ffffff 0%, #ffffff 20%, rgba(255, 255, 255, 0) 100%);
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+/* Show gradient only on mobile */
+@media (max-width: 768px) {
+  .mobileGradient {
+    opacity: 1;
+  }
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(4, 110px);
   column-gap: calc((100vw - (2 * var(--spacing-xxl)) - (4 * 110px)) / 3);
-  row-gap: 190px;
+  row-gap: 120px;
   justify-content: start;
 }
 
@@ -75,7 +96,7 @@
 
 /* Responsive grid columns - reduce when column gap would be less than 110px */
 /* Breakpoint: (110px * 4) + (110px * 3) + (20px * 2) = 810px */
-@media (max-width: 810px) {
+@media (max-width: 1024px) {
   .grid {
     grid-template-columns: repeat(3, 110px);
     column-gap: calc((100vw - (2 * var(--spacing-xxl)) - (3 * 110px)) / 2);
@@ -83,18 +104,18 @@
 }
 
 /* Breakpoint: (110px * 3) + (110px * 2) + (20px * 2) = 590px */
-@media (max-width: 590px) {
+@media (max-width: 768px) {
   .grid {
-    grid-template-columns: repeat(2, 110px);
-    column-gap: calc((100vw - (2 * var(--spacing-xxl)) - (2 * 110px)) / 1);
-  }
-}
+    grid-template-columns: repeat(2, 80px);
+    column-gap: 20vw;
+    row-gap: 80px;
 
-/* Breakpoint: (110px * 2) + (110px * 1) + (20px * 2) = 370px */
-@media (max-width: 370px) {
-  .grid {
-    grid-template-columns: repeat(1, 110px);
-    column-gap: 0;
   }
+
+  .gridContainer {
+    padding: var(--spacing-xl);
+    justify-items: center;
+  }
+  
 }
 

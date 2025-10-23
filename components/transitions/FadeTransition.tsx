@@ -13,14 +13,14 @@ export default function FadeTransition({ children }: FadeTransitionProps) {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Fade in on mount or when children change (view mode change)
+    // Fade in on mount or route change
     setIsVisible(false);
     const timer = setTimeout(() => {
       setIsVisible(true);
     }, 50); // Small delay to ensure CSS transition triggers
 
     return () => clearTimeout(timer);
-  }, [children, pathname]); // Add children to dependencies to trigger on view change
+  }, [pathname]);
 
   useEffect(() => {
     // Listen for page transition event to fade out
