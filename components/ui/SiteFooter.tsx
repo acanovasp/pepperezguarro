@@ -1,18 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { getAboutInfo } from '@/lib/data';
 import { AboutInfo } from '@/lib/types';
 import styles from './SiteFooter.module.css';
 
-export default function SiteFooter() {
-  const [aboutInfo, setAboutInfo] = useState<AboutInfo | null>(null);
+interface SiteFooterProps {
+  aboutInfo: AboutInfo;
+}
 
-  useEffect(() => {
-    getAboutInfo().then(setAboutInfo);
-  }, []);
-
-  if (!aboutInfo) return null;
+export default function SiteFooter({ aboutInfo }: SiteFooterProps) {
 
   return (
     <div className={styles.siteFooter}>

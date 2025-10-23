@@ -9,21 +9,19 @@ import { config } from './config';
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
 
 /**
- * Public client for fetching published content (client-side safe)
+ * Server client for fetching data (used in server components)
+ * Uses direct API connection without CDN to avoid CORS issues
  */
 export const client = createClient({
-  ...config,
-  useCdn: true, // Use CDN for public client
-});
-
-/**
- * Server client with API token for fetching draft content
- * Only use in server-side functions
- */
-export const serverClient = createClient({
-  ...config,
+  projectId: config.projectId,
+  dataset: config.dataset,
+  apiVersion: config.apiVersion,
   useCdn: false,
-  token: process.env.SANITY_API_TOKEN,
+  // Token is optional for reading published content
+  // Only needed if dataset is private
+  ...(process.env.SANITY_API_TOKEN && { token: process.env.SANITY_API_TOKEN }),
+  perspective: 'published',
+  ignoreBrowserTokenWarning: true,
 });
 
 /**

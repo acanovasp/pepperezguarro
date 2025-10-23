@@ -11,6 +11,6 @@ export const config = {
   projectId,
   dataset,
   apiVersion,
-  useCdn: process.env.NODE_ENV === 'production', // Use CDN in production
+  useCdn: false, // Don't use CDN to avoid CORS and caching issues in Next.js
 };
 

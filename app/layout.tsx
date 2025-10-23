@@ -3,7 +3,7 @@ import "./globals.css";
 import MenuBelt from "@/components/menu/MenuBelt";
 import SiteHeader from "@/components/ui/SiteHeader";
 import SiteFooter from "@/components/ui/SiteFooter";
-import { getProjects } from "@/lib/data";
+import { getProjects, getAboutInfo } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "Pep Perez Guarro",
@@ -27,13 +27,14 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const projects = await getProjects();
+  const aboutInfo = await getAboutInfo();
 
   return (
     <html lang="en">
       <body>
         <SiteHeader />
-        <SiteFooter />
-        <MenuBelt projects={projects} />
+        <SiteFooter aboutInfo={aboutInfo} />
+        <MenuBelt projects={projects} aboutInfo={aboutInfo} />
         {children}
       </body>
     </html>

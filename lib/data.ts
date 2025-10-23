@@ -315,13 +315,16 @@ export async function getAboutInfo(): Promise<AboutInfo> {
     const sanityAbout: SanityAbout | null = await client.fetch(query);
     
     if (!sanityAbout) {
-      console.warn('No about info found in Sanity, using placeholder data');
+      console.warn('No about document found in Sanity. Create one in Sanity Studio.');
       return placeholderAbout;
     }
 
     return transformAbout(sanityAbout);
   } catch (error) {
     console.error('Error fetching about info from Sanity:', error);
+    if (error instanceof Error) {
+      console.error('Error details:', error.message);
+    }
     return placeholderAbout;
   }
 }
