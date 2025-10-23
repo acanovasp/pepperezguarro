@@ -1,0 +1,15 @@
+.viewContainer {
+  width: 100vw;
+  transition: opacity 800ms ease-in-out;
+  will-change: opacity;
+}
+
+.viewContainer.visible {
+  opacity: 1;
+}
+
+.viewContainer.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+

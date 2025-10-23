@@ -1,18 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import styles from './AboutSection.module.css';
 import { AboutInfo } from '@/lib/types';
-import { getAboutInfo } from '@/lib/data';
 
-export default function AboutSection() {
-  const [aboutInfo, setAboutInfo] = useState<AboutInfo | null>(null);
+interface AboutSectionProps {
+  aboutInfo: AboutInfo;
+}
 
-  useEffect(() => {
-    getAboutInfo().then(setAboutInfo);
-  }, []);
-
-  if (!aboutInfo) return null;
+export default function AboutSection({ aboutInfo }: AboutSectionProps) {
 
   return (
     <div className={styles.aboutSection}>

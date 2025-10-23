@@ -8,12 +8,13 @@ import AboutSection from './AboutSection';
 import ProjectInfoSection from './ProjectInfoSection';
 import SiteHeader from '@/components/ui/SiteHeader';
 import SiteFooter from '@/components/ui/SiteFooter';
-import { Project } from '@/lib/types';
+import { Project, AboutInfo } from '@/lib/types';
 
 type MenuSection = 'projects' | 'about' | 'project-info';
 
 interface MenuBeltProps {
   projects: Project[];
+  aboutInfo: AboutInfo;
   currentProject?: Project | null;
 }
 
@@ -21,7 +22,7 @@ export interface MenuBeltRef {
   openSection: (section: MenuSection) => void;
 }
 
-const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ projects, currentProject }, ref) {
+const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ projects, aboutInfo, currentProject }, ref) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeSection, setActiveSection] = useState<MenuSection>('projects');
   const [detectedProject, setDetectedProject] = useState<Project | null>(currentProject || null);
@@ -301,7 +302,7 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
               )}
               
               {activeSection === 'about' && (
-                <AboutSection />
+                <AboutSection aboutInfo={aboutInfo} />
               )}
               
               {activeSection === 'project-info' && detectedProject && (
@@ -344,7 +345,7 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
 
           {/* Mobile-only footer */}
           <div className={styles.mobileFooter} data-section={activeSection}>
-            <SiteFooter />
+            <SiteFooter aboutInfo={aboutInfo} />
           </div>
         </div>
       )}

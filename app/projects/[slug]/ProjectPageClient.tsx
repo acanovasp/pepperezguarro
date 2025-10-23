@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import ProjectSlider from '@/components/sliders/ProjectSlider';
 import ImageGrid from '@/components/ui/ImageGrid';
 import ProjectInfo from '@/components/ui/ProjectInfo';
-import FadeTransition from '@/components/transitions/FadeTransition';
 import { Project } from '@/lib/types';
+import styles from './ProjectPageClient.module.css';
 
 interface ProjectPageClientProps {
   project: Project;
@@ -15,8 +15,10 @@ interface ProjectPageClientProps {
 export default function ProjectPageClient({ project, projectNumber }: ProjectPageClientProps) {
   const [viewMode, setViewMode] = useState<'slideshow' | 'grid'>('slideshow');
   const [initialSlide, setInitialSlide] = useState(0);
-  const [showProjectInfo, setShowProjectInfo] = useState(true); // Always show by default
+  const [showProjectInfo, setShowProjectInfo] = useState(true);
   const [navigationArrow, setNavigationArrow] = useState<'left' | 'right' | null>(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
 
   // Set data attribute on body to control gradient visibility
   useEffect(() => {
@@ -39,15 +41,35 @@ export default function ProjectPageClient({ project, projectNumber }: ProjectPag
 
     window.addEventListener('toggleGridView', handleToggleGrid);
     return () => window.removeEventListener('toggleGridView', handleToggleGrid);
-  }, [viewMode]); // Include viewMode as dependency
+  }, [isTransitioning]);
 
   const handleToggleView = () => {
-    setViewMode(prev => prev === 'slideshow' ? 'grid' : 'slideshow');
+    if (isTransitioning) return;
+    
+    setIsTransitioning(true);
+    setIsVisible(false); // Start fade out immediately
+    
+    // After fade out completes (800ms), switch views
+    setTimeout(() => {
+      setViewMode(prev => prev === 'slideshow' ? 'grid' : 'slideshow');
+      setIsVisible(true); // Trigger fade in
+      setIsTransitioning(false);
+    }, 800);
   };
 
   const handleImageClick = (index: number) => {
-    setInitialSlide(index);
-    setViewMode('slideshow');
+    if (isTransitioning) return;
+    
+    setIsTransitioning(true);
+    setIsVisible(false); // Start fade out immediately
+    
+    // After fade out completes (800ms), switch views
+    setTimeout(() => {
+      setInitialSlide(index);
+      setViewMode('slideshow');
+      setIsVisible(true); // Trigger fade in
+      setIsTransitioning(false);
+    }, 800);
   };
 
   const handleOpenProjectInfo = () => {
@@ -59,33 +81,32 @@ export default function ProjectPageClient({ project, projectNumber }: ProjectPag
   };
 
   return (
-    <>
+    <div className={`${styles.viewContainer} ${isVisible ? styles.visible : styles.hidden}`}>
+      {/* ProjectInfo fades with the slider */}
       {showProjectInfo && viewMode === 'slideshow' && (
         <ProjectInfo 
           project={project}
           projectNumber={projectNumber}
           onOpenProjectInfo={handleOpenProjectInfo}
-          navigationArrow={navigationArrow}
         />
       )}
       
-      <FadeTransition key={viewMode}>
-        {viewMode === 'slideshow' ? (
-          <ProjectSlider 
-            project={project} 
-            onToggleGrid={handleToggleView}
-            initialSlide={initialSlide}
-            onNavigationArrowChange={handleNavigationArrowChange}
-            navigationArrow={navigationArrow}
-          />
-        ) : (
-          <ImageGrid 
-            project={project} 
-            onImageClick={handleImageClick}
-            onToggleView={handleToggleView}
-          />
-        )}
-      </FadeTransition>
-    </>
+      {/* Main content */}
+      {viewMode === 'slideshow' ? (
+        <ProjectSlider 
+          project={project} 
+          onToggleGrid={handleToggleView}
+          initialSlide={initialSlide}
+          onNavigationArrowChange={handleNavigationArrowChange}
+          navigationArrow={navigationArrow}
+        />
+      ) : (
+        <ImageGrid 
+          project={project} 
+          onImageClick={handleImageClick}
+          onToggleView={handleToggleView}
+        />
+      )}
+    </div>
   );
 }

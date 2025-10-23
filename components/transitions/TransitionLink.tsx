@@ -30,6 +30,7 @@ export default function TransitionLink({ href, children, className, onClick }: T
 
       // Wait for slider fade out (800ms) then use View Transition API
       setTimeout(() => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (document as any).startViewTransition(() => {
           startTransition(() => {
             router.push(href);

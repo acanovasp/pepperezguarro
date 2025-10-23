@@ -2,13 +2,14 @@ import { getProjectBySlug, getProjects } from '@/lib/data';
 import ProjectPageClient from '@/app/projects/[slug]/ProjectPageClient';
 
 interface ProjectPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
-  const project = await getProjectBySlug(params.slug);
+  const { slug } = await params;
+  const project = await getProjectBySlug(slug);
   const projects = await getProjects();
 
   if (!project) {
