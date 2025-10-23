@@ -11,6 +11,6 @@ export const config = {
   projectId,
   dataset,
   apiVersion,
-  useCdn: false, // Don't use CDN to avoid CORS and caching issues in Next.js
+  useCdn: true, // Use CDN for faster delivery and better caching
 };
 

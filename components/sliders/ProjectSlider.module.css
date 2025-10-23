@@ -23,19 +23,19 @@
 .imageWithCaption .imageContainer {
   position: relative;
   height: var(--image-height);
-  width: auto;
+  width: var(--image-width, auto);
 }
 
 .imageContainer {
   position: absolute;
   height: var(--image-height);
-  width: auto;
+  width: var(--image-width, auto);
   transition: all var(--transition-slow) var(--transition-ease);
 }
 
 .slideImage {
   height: var(--image-height);
-  width: auto;
+  width: var(--image-width, auto);
   object-fit: contain;
   display: block;
   z-index: 1;
@@ -83,7 +83,7 @@
   opacity: 0.05;
   position: absolute;
   height: var(--image-height);
-  width: auto;
+  width: var(--image-width, auto);
   cursor: pointer;
   transition: opacity var(--transition-fast);
   z-index: 0;

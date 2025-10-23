@@ -25,13 +25,13 @@
 
 .imageContainer {
   position: relative;
-  width: auto;
+  width: var(--image-width, auto);
   height: var(--image-height);
 }
 
 .slideImage {
   height: var(--image-height);
-  width: auto;
+  width: var(--image-width, auto);
   object-fit: contain;
 }
 

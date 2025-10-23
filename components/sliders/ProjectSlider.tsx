@@ -169,12 +169,16 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
       <Swiper
         modules={[Keyboard, EffectFade]}
         effect="fade"
+        fadeEffect={{
+          crossFade: true,
+        }}
         speed={800}
         loop={true}
         initialSlide={initialSlide}
         keyboard={{
           enabled: true,
         }}
+        watchSlidesProgress={true}
         onSlideChange={handleSlideChange}
         onSwiper={(swiper) => {
           swiperRef.current = swiper;
@@ -211,10 +215,10 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
                     <Image
                       src={project.images[ghostIndex].url}
                       alt="Previous"
-                      width={1200}
-                      height={800}
+                      width={900}
+                      height={600}
                       className={styles.slideImage}
-                      sizes="(max-width: 768px) 90vw, 50vw"
+                      sizes="(max-width: 768px) 70vw, 45vw"
                       loading="lazy"
                     />
                   </div>
@@ -226,11 +230,12 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
                       <Image
                         src={image.url}
                         alt={image.alt}
-                        width={1200}
-                        height={800}
+                        width={900}
+                        height={600}
                         className={styles.slideImage}
-                        sizes="(max-width: 768px) 90vw, 50vw"
+                        sizes="(max-width: 768px) 70vw, 45vw"
                         priority={index === initialSlide}
+                        fetchPriority={index === initialSlide ? 'high' : 'auto'}
                         loading={index === initialSlide ? 'eager' : 'lazy'}
                         placeholder={index === initialSlide ? 'blur' : 'empty'}
                         blurDataURL={index === initialSlide ? image.blurDataURL : undefined}

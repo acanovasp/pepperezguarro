@@ -103,11 +103,15 @@ export default function HomeSlider({ projects, onActiveProjectChange }: HomeSlid
       <Swiper
         modules={[Keyboard, EffectFade]}
         effect="fade"
+        fadeEffect={{
+          crossFade: true,
+        }}
         speed={800}
         loop={true}
         keyboard={{
           enabled: true,
         }}
+        watchSlidesProgress={true}
         onSlideChange={handleSlideChange}
         onSwiper={(swiper) => {
           swiperRef.current = swiper;
@@ -136,11 +140,12 @@ export default function HomeSlider({ projects, onActiveProjectChange }: HomeSlid
                     <Image
                       src={image.url}
                       alt={image.alt}
-                      width={1200}
-                      height={800}
+                      width={900}
+                      height={600}
                       className={styles.slideImage}
-                      sizes="(max-width: 768px) 100vw, 80vw"
+                      sizes="(max-width: 768px) 70vw, 55vw"
                       priority={projects.indexOf(project) === 0}
+                      fetchPriority={projects.indexOf(project) === 0 ? 'high' : 'auto'}
                       loading={projects.indexOf(project) === 0 ? 'eager' : 'lazy'}
                       placeholder={projects.indexOf(project) === 0 ? 'blur' : 'empty'}
                       blurDataURL={projects.indexOf(project) === 0 ? image.blurDataURL : undefined}

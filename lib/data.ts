@@ -134,7 +134,13 @@ function transformSanityImage(
   projectTitle: string,
   index: number
 ): ProjectImage {
-  const imageUrl = urlForImage(image).width(1200).height(800).url();
+  // Generate base URL without fixed dimensions to allow Next.js Image responsive optimization
+  // Add auto format and quality settings for Sanity CDN
+  const imageUrl = urlForImage(image)
+    .auto('format') // Automatically serve WebP/AVIF when supported
+    .quality(80) // Optimized quality for web (80 is sweet spot for performance)
+    .url();
+  
   const blurDataURL = image.metadata?.lqip || undefined;
   
   // Format: "ProjectTitle-01"

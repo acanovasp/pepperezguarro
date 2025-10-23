@@ -13,10 +13,13 @@ const nextConfig: NextConfig = {
         hostname: 'cdn.sanity.io',
       },
     ],
-    // Image optimization
+    // Image optimization - optimized for 40dvh images
     formats: ['image/avif', 'image/webp'],
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    deviceSizes: [640, 750, 828, 1080, 1200], // Removed 1920+ (too large for 40dvh display)
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    dangerouslyAllowSVG: false,
+    contentDispositionType: 'attachment',
+    minimumCacheTTL: 60 * 60 * 24 * 365, // Cache for 1 year
   },
   
   // Performance optimizations

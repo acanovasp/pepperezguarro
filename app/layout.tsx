@@ -31,6 +31,11 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
+      <head>
+        {/* Preconnect to Sanity CDN for faster image loading */}
+        <link rel="preconnect" href="https://cdn.sanity.io" />
+        <link rel="dns-prefetch" href="https://cdn.sanity.io" />
+      </head>
       <body>
         <SiteHeader />
         <SiteFooter aboutInfo={aboutInfo} />
