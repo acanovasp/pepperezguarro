@@ -5,8 +5,8 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Keyboard, EffectFade } from 'swiper/modules';
 import type { Swiper as SwiperType } from 'swiper';
 import Image from 'next/image';
-import Link from 'next/link';
 import styles from './ProjectSlider.module.css';
+import TransitionLink from '@/components/transitions/TransitionLink';
 import { Project } from '@/lib/types';
 
 import 'swiper/css';
@@ -148,6 +148,8 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0 
                       width={1200}
                       height={800}
                       className={styles.slideImage}
+                      sizes="(max-width: 768px) 90vw, 50vw"
+                      loading="lazy"
                     />
                   </div>
                 )}
@@ -162,9 +164,11 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0 
                         width={1200}
                         height={800}
                         className={styles.slideImage}
-                        priority={index < 2}
-                        placeholder="blur"
-                        blurDataURL={image.blurDataURL}
+                        sizes="(max-width: 768px) 90vw, 50vw"
+                        priority={index === initialSlide}
+                        loading={index === initialSlide ? 'eager' : 'lazy'}
+                        placeholder={index === initialSlide ? 'blur' : 'empty'}
+                        blurDataURL={index === initialSlide ? image.blurDataURL : undefined}
                       />
                     </div>
                     {/* Caption always rendered, fades with parent slide */}
@@ -179,9 +183,9 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0 
                       >
                         {String(index + 1).padStart(2, '0')}/{String(project.images.length).padStart(2, '0')}
                       </button>
-                      <Link href="/" className={styles.closeProject} onClick={(e) => e.stopPropagation()}>
+                      <TransitionLink href="/" className={styles.closeProject} onClick={(e) => e.stopPropagation()}>
                         Close project
-                      </Link>
+                      </TransitionLink>
                     </div>
                   </div>
                 )}

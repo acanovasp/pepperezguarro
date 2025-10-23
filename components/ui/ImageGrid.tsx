@@ -1,6 +1,6 @@
 import Image from 'next/image';
-import Link from 'next/link';
 import styles from './ImageGrid.module.css';
+import TransitionLink from '@/components/transitions/TransitionLink';
 import { Project } from '@/lib/types';
 
 interface ImageGridProps {
@@ -40,9 +40,9 @@ export default function ImageGrid({ project, onImageClick, onToggleView }: Image
         >
           Slideshow view
         </button>
-        <Link href="/" className={styles.closeProject}>
+        <TransitionLink href="/" className={styles.closeProject}>
           Close project
-        </Link>
+        </TransitionLink>
       </div>
     </div>
   );
