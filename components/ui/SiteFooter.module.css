@@ -6,8 +6,27 @@
   display: flex;
   gap: 40px;
   font-size: 14px;
-  pointer-events: none;
   user-select: none;
+}
+
+.siteFooter::after {
+  content: '';
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--spacing-xxl);
+  background: linear-gradient(to top, var(--color-bg) 25%, transparent 100%);
+  pointer-events: none;
+  z-index: -1;
+  opacity: 1;
+  transition: opacity var(--transition-fast);
+}
+
+/* Hide gradient when in slideshow mode or on homepage */
+body[data-view-mode="slideshow"] .siteFooter::after,
+body[data-page="home"] .siteFooter::after {
+  opacity: 0;
 }
 
 .contactInfo {
@@ -24,9 +43,7 @@
 
 @media (max-width: 768px) {
   .siteFooter {
-    flex-direction: column;
-    gap: var(--spacing-sm);
-    font-size: 12px;
+    display: none;
   }
 }
 

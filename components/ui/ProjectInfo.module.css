@@ -6,33 +6,32 @@
   text-align: center;
   z-index: var(--z-base);
   transition: opacity var(--transition-fast);
+  view-transition-name: project-info;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .projectInfo:hover .link {
   opacity: 1;
 }
 
-.title {
-  font-size: 18px;
-  font-weight: 400;
-  margin-bottom: 4px;
-}
 
-.meta {
-  font-size: 14px;
-  opacity: 0.6;
+.details {
+  view-transition-name: project-details;
 }
 
 .link {
-  font-size: 14px;
-  text-decoration: underline;
-  opacity: 0;
+  font-family: 'Executive', sans-serif;
+  font-size: 0.75rem;
+  line-height: 1.1;
+  text-decoration: none;
+  opacity: 1;
   transition: opacity var(--transition-fast);
   margin-top: 8px;
   display: inline-block;
-}
-
-.link:hover {
-  opacity: 0.6 !important;
 }
 

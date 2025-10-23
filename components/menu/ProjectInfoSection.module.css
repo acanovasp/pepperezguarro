@@ -1,23 +1,15 @@
 .projectInfoSection {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: var(--spacing-md);
 }
 
 .title {
-  font-size: 24px;
   font-weight: 400;
 }
 
-.meta {
-  font-size: 14px;
-  opacity: 0.6;
-}
-
 .description {
-  font-size: 16px;
-  line-height: 1.6;
-  max-width: 600px;
+  max-width: 50%;
 }
 
 .stats {
@@ -33,21 +25,60 @@
   gap: 4px;
 }
 
-.statLabel {
-  opacity: 0.6;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-size: 12px;
+.projectInfoHeader {
+  display: flex;
+  gap: var(--spacing-xs);
+  align-items: flex-start;
 }
 
-.statValue {
-  font-size: 16px;
+.projectNumber {
+  padding-top: 4px;
 }
 
-.collaboration {
-  font-size: 14px;
-  font-style: italic;
-  opacity: 0.8;
-  margin-top: var(--spacing-sm);
+.projectInfoContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--project-title-meta-gap);
+  font-family: var(--project-font-family);
+  font-size: var(--project-font-size);
+  line-height: var(--project-line-height);
+} 
+
+.statsContainer {
+  display: flex;
+  flex-direction: row;
+  gap: var(--spacing-md);
+  align-items: flex-end;
 }
 
+.clientDateContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.imageCounter,
+.collaboration,
+.client,
+.date {
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .projectInfoSection {
+    flex-direction: column;
+  }
+
+  .description {
+    max-width: 100%;
+  }
+
+  .statsContainer {
+    flex-wrap: wrap;
+    row-gap: var(--spacing-xs);
+  }
+
+  .imageCounter {
+    text-wrap: nowrap;
+  }
+}

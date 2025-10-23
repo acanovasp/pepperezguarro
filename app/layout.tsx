@@ -6,11 +6,11 @@ import SiteFooter from "@/components/ui/SiteFooter";
 import { getProjects } from "@/lib/data";
 
 export const metadata: Metadata = {
-  title: "Pep Perez Guarro - Photography",
-  description: "Photography portfolio of Pep Perez Guarro. Based between Paris and Barcelona, exploring timelessness, texture and authenticity.",
+  title: "Pep Perez Guarro",
+  description: "Pep Perez Guarro — photographer based between Paris and Barcelona.",
   openGraph: {
-    title: "Pep Perez Guarro - Photography",
-    description: "Photography portfolio showcasing projects from around the world",
+    title: "Pep Perez Guarro",
+    description: "Pep Perez Guarro — photographer based between Paris and Barcelona.",
     type: "website",
   },
   viewport: {

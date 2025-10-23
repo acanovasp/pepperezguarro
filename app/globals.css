@@ -1,3 +1,20 @@
+/* Font Face Declarations */
+@font-face {
+  font-family: 'Executive';
+  src: url('/fonts/Executive-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Lector';
+  src: url('/fonts/LectorFSL-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* CSS Reset & Base Styles */
 *,
 *::before,
@@ -14,13 +31,15 @@
   --color-text: #000000;
   --color-menu-bg: #000000;
   --color-menu-text: #ffffff;
+  --color-grey: #E9E9E9;
   
   /* Spacing */
   --spacing-xs: 10px;
   --spacing-sm: 20px;
-  --spacing-md: 40px;
+  --spacing-md: 30px;
   --spacing-lg: 60px;
   --spacing-xl: 80px;
+  --spacing-xxl: 100px;
   
   /* Transitions */
   --transition-fast: 200ms;
@@ -40,6 +59,12 @@
   --z-base: 1;
   --z-menu: 100;
   --z-overlay: 50;
+  
+  /* Project Title/Meta Shared Styles */
+  --project-font-family: Lector, serif;
+  --project-font-size: 1rem;
+  --project-line-height: 1.3;
+  --project-title-meta-gap: 0px;
 }
 
 /* Base HTML/Body */
@@ -50,37 +75,51 @@ html {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: 'Lector', serif;
   background-color: var(--color-bg);
   color: var(--color-text);
   line-height: 1.5;
   font-size: 16px;
+  font-variant-numeric: lining-nums proportional-nums;
   overflow-x: hidden;
   min-height: 100dvh;
   -webkit-tap-highlight-color: transparent;
   touch-action: pan-y;
+  overscroll-behavior: none;
 }
 
 /* Typography */
 h1, h2, h3, h4, h5, h6 {
   font-weight: 400;
-  line-height: 1.2;
+  font-size: 1rem;
+  line-height: 1.3;
+}
+
+p {
+  font-family: 'Executive', sans-serif;
+  font-size: 0.75rem;
+  line-height: 1.1;
 }
 
 a {
+  font-family: 'Executive', sans-serif;
+  font-family: 'Executive', sans-serif;
+  font-size: 0.75rem;
+  line-height: 1.1;
   color: inherit;
   text-decoration: none;
   cursor: pointer;
 }
 
 button {
-  font-family: inherit;
-  font-size: inherit;
-  background: none;
+  font-family: Executive, sans-serif;
+  font-size: 0.75rem;
+  line-height: 1.1;
   border: none;
   cursor: pointer;
-  color: inherit;
+  color: var(--color-text);
   padding: 0;
+  background: none;
 }
 
 /* Image optimization */
@@ -163,6 +202,6 @@ main {
 /* Mobile optimizations */
 @media (max-width: 768px) {
   :root {
-    --image-height: 30dvh;
+    --image-height: 20dvh;
   }
 }

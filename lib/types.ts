@@ -19,15 +19,22 @@ export interface Project {
   description: string;
   images: ProjectImage[];
   collaboration?: string;
+  client?: string;
+  date?: string;
+}
+
+export interface ContactInfo {
+  display: string;
+  link: string;
 }
 
 export interface AboutInfo {
   name: string;
   bio: string;
   contact: {
-    email: string;
-    phone: string;
-    instagram: string;
+    email: ContactInfo;
+    phone: ContactInfo;
+    instagram: ContactInfo;
   };
   collaborators: string[];
   publications: string[];

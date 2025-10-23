@@ -16,25 +16,42 @@ export default function AboutSection() {
 
   return (
     <div className={styles.aboutSection}>
-      <h2 className={styles.name}>{aboutInfo.name}</h2>
+      <h1 className={styles.name}>{aboutInfo.name}</h1>
       <div className={styles.bioContainer}>
-        <p className={styles.bio}>{aboutInfo.bio}</p>
+        <h1 className={styles.bio}>{aboutInfo.bio}</h1>
         <div className={styles.collaborators}>
-          <div className={styles.contactLabel}>Projects and Collaborators</div>
-          <div className={styles.collaboratorsList}>
+          <p className={styles.contactLabel}>Projects and Collaborators</p>
+          <h1 className={styles.collaboratorsList}>
             {aboutInfo.collaborators.join(', ')}
-          </div>
+          </h1>
         </div>
       </div>
       <div className={styles.contact}>
-        <div className={styles.contactLabel}>Email</div>
-        <div className={styles.contactItem}>{aboutInfo.contact.email}</div>
-        
-        <div className={styles.contactLabel} style={{ marginTop: '12px' }}>Phone</div>
-        <div className={styles.contactItem}>{aboutInfo.contact.phone}</div>
-        
-        <div className={styles.contactLabel} style={{ marginTop: '12px' }}>Insta</div>
-        <div className={styles.contactItem}>{aboutInfo.contact.instagram}</div>
+        <div className={styles.contactItem}>
+          <p className={styles.contactLabel}>Email</p>
+          <h1>
+            <a href={aboutInfo.contact.email.link} className={styles.contactAnchor}>
+              {aboutInfo.contact.email.display}
+            </a>
+          </h1>  
+        </div>
+        <div className={styles.contactItem}>
+          <p className={styles.contactLabel}>Phone</p>
+          <a href={aboutInfo.contact.phone.link} className={styles.contactAnchor}>
+            {aboutInfo.contact.phone.display}
+          </a>
+        </div>
+        <div className={styles.contactItem}>
+          <p className={styles.contactLabel}>Insta</p>
+          <a 
+            href={aboutInfo.contact.instagram.link} 
+            className={styles.contactAnchor}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {aboutInfo.contact.instagram.display}
+          </a>
+        </div>
       </div>
     </div>
   );

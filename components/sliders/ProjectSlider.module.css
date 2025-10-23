@@ -42,10 +42,41 @@
 }
 
 .imageCaption {
+  position: relative;
   display: flex;
-  gap: var(--spacing-md);
-  font-size: 14px;
+  justify-content: center;
+  width: 100%;
   align-items: center;
+}
+
+.imageCounterWrapper {
+  position: absolute;
+  left: 0;
+  display: flex;
+  align-items: center;
+  transition: width 200ms ease-in-out;
+}
+
+.arrow {
+  font-size: 6px;
+  opacity: 0;
+  width: 0;
+  margin: 0;
+  transition: width 200ms ease-in-out, margin 200ms ease-in-out, opacity 200ms ease-in-out;
+  overflow: hidden;
+}
+
+.arrowVisible {
+  opacity: 1;
+  width: auto;
+}
+
+.arrowLeft.arrowVisible {
+  margin: 0 8px 3px 0;
+}
+
+.arrowRight.arrowVisible {
+  margin: 0 0 3px 8px;
 }
 
 .ghostImage {
@@ -69,24 +100,24 @@
   transform: translateX(-50%);
   display: flex;
   gap: var(--spacing-md);
-  font-size: 14px;
   align-items: center;
   z-index: var(--z-base);
 }
 
 .imageCounter {
-  opacity: 0.6;
+  font-family: 'Executive', sans-serif;
+  font-size: 0.75rem;
+  line-height: 1.1;
   cursor: pointer;
-  transition: opacity var(--transition-fast);
+  transition: opacity var(--transition-fast), transform 200ms ease-in-out;
 }
 
 .imageCounter:hover {
-  opacity: 1;
-  text-decoration: underline;
+  opacity: 0.6;
 }
 
 .closeProject {
-  text-decoration: underline;
+  text-decoration: none;
   transition: opacity var(--transition-fast);
 }
 
@@ -97,6 +128,27 @@
 /* Swiper styles moved to globals.css */
 
 @media (max-width: 768px) {
+  /* Center images on mobile like HomeSlider */
+  .slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .imageWithCaption {
+    position: static !important;
+    align-items: center;
+    padding-top: 25px;
+  }
+
+  .imageContainer {
+    position: relative !important;
+  }
+
+  .ghostImage {
+    display: none;
+  }
+
   .caption {
     flex-direction: column;
     gap: var(--spacing-sm);

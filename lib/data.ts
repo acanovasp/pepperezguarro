@@ -23,9 +23,11 @@ const projects: Project[] = [
     title: 'Ladakhi Bakers',
     location: 'India',
     year: '2025',
-    description: 'A photographic exploration of traditional bread-making practices in the Ladakh region of India, documenting the daily rituals and craftsmanship of local bakers.',
+    description: 'Last October, I traveled to India for a photography assignment for a brand. Taking advantage of the trip, I decided to explore the north of the country for a few days. Along the way, already in the Kashmir region, I saw a small oven where roti was being baked in a tandoor using a wood fire. The place, entirely made of wood, had beautiful lighting. I immediately approached and asked if I could photograph the process. Ana, my partner, is the biggest bread lover I know. Our travels revolve around it: we seek out bakeries, so that Ana can learn their techniques, share her love for bread, and photograph the processes. However, Ana wasn’t with me on this trip. When I found that oven, I felt her presence through my camera. I started photographing every bakery I came across. It was my way of stepping into her shoes, though I soon realized that without her curiosity and her need to understand every gram of the process, something was missing.',
     images: generateProjectImages('ladakhi-bakers', 17),
-    collaboration: 'In collaboration with Ana Gallart'
+    collaboration: 'In collaboration with Ana Gallart',
+    client: 'Personal Project',
+    date: 'Shot between April 12 - May 2'
   },
   {
     id: 'project-2',
@@ -34,7 +36,10 @@ const projects: Project[] = [
     location: 'Barcelona',
     year: 'Ongoing',
     description: 'An ongoing daily self-portrait project exploring identity, time, and self-perception through 366 different mirrors across Barcelona.',
-    images: generateProjectImages('366-miralls', 12)
+    images: generateProjectImages('366-miralls', 12),
+    collaboration: 'In collaboration with Ana Gallart',
+    client: 'Personal Project',
+    date: 'Shot between April 12 - May 2'
   },
   {
     id: 'project-3',
@@ -42,7 +47,7 @@ const projects: Project[] = [
     title: 'Moro(cc)o',
     location: 'Morocco',
     year: '2023',
-    description: 'Capturing the vibrant street life and architectural beauty of Morocco, this series explores the interplay of light and shadow in daily urban scenes.',
+    description: 'Morocco is written with two consecutive c’s. (Cc) Is a two-letter abbreviation for the term "cubic centimeters." Just as a car’s engine displacement is measured in liters, a motorcycle engine displacement is measured in cubic centimeters. Moro[cc]o is a project made for the joy of traveling and taking photos during two short trips in Morocco.',
     images: generateProjectImages('morocco', 15)
   },
   {
@@ -52,7 +57,9 @@ const projects: Project[] = [
     location: 'India',
     year: '2025',
     description: 'A documentary series showcasing sustainable fashion production in India, highlighting the ethical practices and craftsmanship of Thinking Mu factories.',
-    images: generateProjectImages('factory-thinking-mu', 20)
+    images: generateProjectImages('factory-thinking-mu', 20),
+    client: 'Thinking Mu',
+    date: 'Shot between April 12 - May 2'
   },
   {
     id: 'project-5',
@@ -62,7 +69,9 @@ const projects: Project[] = [
     year: '2024',
     description: 'A brief but intense visual journey through the spiritual heart of India, capturing the essence of Varanasi in just two days.',
     images: generateProjectImages('varanasi', 14),
-    collaboration: '95/98 Project Info'
+    collaboration: 'In collaboration with Marius Uhlig',
+    client: 'Personal Project',
+    date: 'Shot between April 12 - May 2'
   }
 ];
 
@@ -71,9 +80,18 @@ const aboutInfo: AboutInfo = {
   name: 'Pep Perez Guarro',
   bio: 'Pep is based between Paris and Barcelona. His approach to photography and directing is shaped by an exploration of timelessness, texture and authenticity.',
   contact: {
-    email: 'info@pepperezguarro.com',
-    phone: 'ES 0034 681 378 920',
-    instagram: '@pepperezguarro'
+    email: {
+      display: 'info@pepperezguarro.com',
+      link: 'mailto:info@pepperezguarro.com'
+    },
+    phone: {
+      display: 'ES +34 681 378 920',
+      link: 'tel:+34681378920'
+    },
+    instagram: {
+      display: '@pepperezguarro',
+      link: 'https://instagram.com/pepperezguarro'
+    }
   },
   collaborators: [
     'ARKET',
