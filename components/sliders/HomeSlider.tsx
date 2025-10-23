@@ -32,8 +32,7 @@ export default function HomeSlider({ projects, onActiveProjectChange }: HomeSlid
   const [activeIndex, setActiveIndex] = useState(0);
   const [cursorStyle, setCursorStyle] = useState<'w-resize' | 'e-resize'>('w-resize');
   const swiperRef = useRef<SwiperType | null>(null);
-  const prevIndexRef = useRef<number>(0);
-  const transitionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const prevIndexRef = useRef<number>(0); // Track previous index to detect actual changes
 
   // Generate random images ONCE when component mounts
   useEffect(() => {
@@ -47,40 +46,24 @@ export default function HomeSlider({ projects, onActiveProjectChange }: HomeSlid
   const handleSlideChange = (swiper: SwiperType) => {
     const newIndex = swiper.realIndex;
     
-    // Only update if index actually changed
+    // Only update if index actually changed (prevents flickering during drag/resize)
     if (prevIndexRef.current !== newIndex) {
       setActiveIndex(newIndex);
       prevIndexRef.current = newIndex;
       
-      // Notify parent of active project change immediately
+      // Notify parent of active project change
       const activeProject = projects[newIndex];
       if (activeProject && onActiveProjectChange) {
         onActiveProjectChange(activeProject);
       }
       
-      // Clear any existing timeout
-      if (transitionTimeoutRef.current) {
-        clearTimeout(transitionTimeoutRef.current);
+      // Generate new random image for the newly active slide
+      if (activeProject) {
+        const newRandom = getRandomImage(activeProject);
+        setRandomImages(prev => new Map(prev).set(activeProject.id, newRandom));
       }
-      
-      // Generate new random image AFTER the transition completes (800ms)
-      transitionTimeoutRef.current = setTimeout(() => {
-        if (activeProject) {
-          const newRandom = getRandomImage(activeProject);
-          setRandomImages(prev => new Map(prev).set(activeProject.id, newRandom));
-        }
-      }, 800); // Match Swiper speed
     }
   };
-
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (transitionTimeoutRef.current) {
-        clearTimeout(transitionTimeoutRef.current);
-      }
-    };
-  }, []);
 
   const handleMouseMove = (e: React.MouseEvent) => {
     const mouseX = e.clientX;
@@ -120,9 +103,6 @@ export default function HomeSlider({ projects, onActiveProjectChange }: HomeSlid
       <Swiper
         modules={[Keyboard, EffectFade]}
         effect="fade"
-        fadeEffect={{
-          crossFade: true
-        }}
         speed={800}
         loop={true}
         keyboard={{
