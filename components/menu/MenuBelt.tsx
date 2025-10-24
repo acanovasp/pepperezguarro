@@ -26,7 +26,6 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeSection, setActiveSection] = useState<MenuSection>('projects');
   const [detectedProject, setDetectedProject] = useState<Project | null>(currentProject || null);
-  const [isNavigating, setIsNavigating] = useState(false);
   const [hoveredProject, setHoveredProject] = useState<Project | null>(null);
   const [forceClose, setForceClose] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -97,20 +96,27 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
     return () => window.removeEventListener('openMenuSection', handleOpenSection);
   }, []);
 
-  // Listen for page transitions to keep menu open during navigation
+  // Listen for page transitions and close menu on all devices
   useEffect(() => {
     const handleTransitionStart = () => {
-      setIsNavigating(true);
+      setIsExpanded(false);
+      setForceClose(true);
     };
 
     window.addEventListener('startPageTransition', handleTransitionStart);
     return () => window.removeEventListener('startPageTransition', handleTransitionStart);
   }, []);
 
-  // Reset navigation state after route change
+  // Listen for grid view toggle and close menu (desktop and mobile)
   useEffect(() => {
-    setIsNavigating(false);
-  }, [params?.slug]);
+    const handleToggleGrid = () => {
+      setIsExpanded(false);
+      setForceClose(true);
+    };
+
+    window.addEventListener('toggleGridView', handleToggleGrid);
+    return () => window.removeEventListener('toggleGridView', handleToggleGrid);
+  }, []);
 
   // Reset to projects section when menu closes
   useEffect(() => {
@@ -244,10 +250,7 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
   };
 
   const handleMouseLeave = () => {
-    // Don't close menu if we're navigating to a new page
-    if (!isNavigating) {
-      setIsExpanded(false);
-    }
+    setIsExpanded(false);
     // Reset force close flag when mouse leaves
     setForceClose(false);
   };
@@ -262,8 +265,7 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
 
   const handleToggleThumbnails = () => {
     window.dispatchEvent(new CustomEvent('toggleGridView'));
-    setIsExpanded(false);
-    setForceClose(true); // Prevent menu from reopening while hovering
+    // Menu closing is handled by toggleGridView event listener
   };
 
   const handleMenuClick = (e: React.MouseEvent) => {
