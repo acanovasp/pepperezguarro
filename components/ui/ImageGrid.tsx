@@ -48,18 +48,6 @@ export default function ImageGrid({ project, onImageClick, onToggleView }: Image
             );
           })}
         </div>
-
-        <div className={styles.caption}>
-          <button 
-            className={styles.toggleView}
-            onClick={onToggleView}
-          >
-            Slideshow view
-          </button>
-          <TransitionLink href="/" className={styles.closeProject}>
-            Close project
-          </TransitionLink>
-        </div>
       </div>
 
       {/* Mobile gradient overlay - separate element for proper fixed positioning */}

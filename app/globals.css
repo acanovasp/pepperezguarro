@@ -150,9 +150,7 @@ img {
 }
 
 /* Layout optimization */
-main {
-  contain: layout style paint;
-}
+/* Removed contain property as it creates a new containing block for fixed elements */
 
 /* Smooth scrolling */
 @media (prefers-reduced-motion: no-preference) {

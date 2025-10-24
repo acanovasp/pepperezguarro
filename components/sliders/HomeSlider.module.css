@@ -62,5 +62,15 @@
     flex-direction: column;
     gap: var(--spacing-sm);
   }
+
+  /* .slideImage {
+    max-height: 40dvh;
+    max-width: 70vw;
+  }
+
+  .imageContainer {
+    max-height: 40dvh;
+    max-width: 70vw;
+  } */
 }
 
