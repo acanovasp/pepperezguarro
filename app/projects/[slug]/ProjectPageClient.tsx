@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import ProjectSlider from '@/components/sliders/ProjectSlider';
 import ImageGrid from '@/components/ui/ImageGrid';
 import ProjectInfo from '@/components/ui/ProjectInfo';
+import FadeTransition from '@/components/transitions/FadeTransition';
 import { Project } from '@/lib/types';
 import styles from './ProjectPageClient.module.css';
 
@@ -81,8 +82,8 @@ export default function ProjectPageClient({ project, projectNumber }: ProjectPag
   };
 
   return (
-    <div className={`${styles.viewContainer} ${isVisible ? styles.visible : styles.hidden}`}>
-      {/* ProjectInfo fades with the slider */}
+    <>
+      {/* ProjectInfo outside FadeTransition to work with View Transition API */}
       {showProjectInfo && viewMode === 'slideshow' && (
         <ProjectInfo 
           project={project}
@@ -90,23 +91,27 @@ export default function ProjectPageClient({ project, projectNumber }: ProjectPag
           onOpenProjectInfo={handleOpenProjectInfo}
         />
       )}
-      
-      {/* Main content */}
-      {viewMode === 'slideshow' ? (
-        <ProjectSlider 
-          project={project} 
-          onToggleGrid={handleToggleView}
-          initialSlide={initialSlide}
-          onNavigationArrowChange={handleNavigationArrowChange}
-          navigationArrow={navigationArrow}
-        />
-      ) : (
-        <ImageGrid 
-          project={project} 
-          onImageClick={handleImageClick}
-          onToggleView={handleToggleView}
-        />
-      )}
-    </div>
+
+      <FadeTransition>
+        <div className={`${styles.viewContainer} ${isVisible ? styles.visible : styles.hidden}`}>
+          {/* Main content */}
+          {viewMode === 'slideshow' ? (
+            <ProjectSlider 
+              project={project} 
+              onToggleGrid={handleToggleView}
+              initialSlide={initialSlide}
+              onNavigationArrowChange={handleNavigationArrowChange}
+              navigationArrow={navigationArrow}
+            />
+          ) : (
+            <ImageGrid 
+              project={project} 
+              onImageClick={handleImageClick}
+              onToggleView={handleToggleView}
+            />
+          )}
+        </div>
+      </FadeTransition>
+    </>
   );
 }

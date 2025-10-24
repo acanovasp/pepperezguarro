@@ -44,7 +44,7 @@
   /* Transitions */
   --transition-fast: 200ms;
   --transition-medium: 400ms;
-  --transition-slow: 800ms;
+  --transition-slow: 600ms;
   --transition-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --transition-ease: cubic-bezier(0.4, 0, 0.2, 1);
   
