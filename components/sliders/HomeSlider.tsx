@@ -67,12 +67,6 @@ export default function HomeSlider({ projects, onActiveProjectChange }: HomeSlid
       if (activeProject && onActiveProjectChange) {
         onActiveProjectChange(activeProject);
       }
-      
-      // Generate new random image for the newly active slide
-      if (activeProject) {
-        const newRandom = getRandomImage(activeProject);
-        setRandomImages(prev => new Map(prev).set(activeProject.id, newRandom));
-      }
     }
   };
 
