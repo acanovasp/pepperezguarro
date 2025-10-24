@@ -29,7 +29,6 @@ function getRandomImage(project: Project): { image: ProjectImage; index: number 
 
 export default function HomeSlider({ projects, onActiveProjectChange }: HomeSliderProps) {
   const [randomImages, setRandomImages] = useState<Map<string, { image: ProjectImage; index: number }>>(new Map());
-  const [activeIndex, setActiveIndex] = useState(0);
   const [navigationArrow, setNavigationArrow] = useState<'left' | 'right' | null>(null);
   const [isDesktop, setIsDesktop] = useState(false);
   const swiperRef = useRef<SwiperType | null>(null);
@@ -61,7 +60,6 @@ export default function HomeSlider({ projects, onActiveProjectChange }: HomeSlid
     
     // Only update if index actually changed (prevents flickering during drag/resize)
     if (prevIndexRef.current !== newIndex) {
-      setActiveIndex(newIndex);
       prevIndexRef.current = newIndex;
       
       // Notify parent of active project change
@@ -155,7 +153,6 @@ export default function HomeSlider({ projects, onActiveProjectChange }: HomeSlid
         onSwiper={(swiper) => {
           swiperRef.current = swiper;
           const initialIndex = swiper.realIndex;
-          setActiveIndex(initialIndex);
           prevIndexRef.current = initialIndex;
           // Notify parent of initial active project
           const initialProject = projects[initialIndex];

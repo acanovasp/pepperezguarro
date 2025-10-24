@@ -16,10 +16,12 @@ interface ProjectPageClientProps {
 export default function ProjectPageClient({ project, projectNumber }: ProjectPageClientProps) {
   const [viewMode, setViewMode] = useState<'slideshow' | 'grid'>('slideshow');
   const [initialSlide, setInitialSlide] = useState(0);
-  const [showProjectInfo, setShowProjectInfo] = useState(true);
   const [navigationArrow, setNavigationArrow] = useState<'left' | 'right' | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
+  
+  // Show project info only in slideshow mode
+  const showProjectInfo = viewMode === 'slideshow';
 
   // Set data attribute on body to control gradient visibility
   useEffect(() => {
@@ -33,16 +35,6 @@ export default function ProjectPageClient({ project, projectNumber }: ProjectPag
       document.body.removeAttribute('data-view-mode');
     };
   }, [viewMode]);
-
-  // Listen for toggle grid view event from menu belt
-  useEffect(() => {
-    const handleToggleGrid = () => {
-      handleToggleView();
-    };
-
-    window.addEventListener('toggleGridView', handleToggleGrid);
-    return () => window.removeEventListener('toggleGridView', handleToggleGrid);
-  }, [isTransitioning]);
 
   const handleToggleView = () => {
     if (isTransitioning) return;
@@ -80,6 +72,16 @@ export default function ProjectPageClient({ project, projectNumber }: ProjectPag
   const handleNavigationArrowChange = (direction: 'left' | 'right' | null) => {
     setNavigationArrow(direction);
   };
+
+  // Listen for toggle grid view event from menu belt
+  useEffect(() => {
+    const handleToggleGrid = () => {
+      handleToggleView();
+    };
+
+    window.addEventListener('toggleGridView', handleToggleGrid);
+    return () => window.removeEventListener('toggleGridView', handleToggleGrid);
+  }, [handleToggleView]);
 
   return (
     <>

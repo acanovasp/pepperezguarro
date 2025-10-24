@@ -26,7 +26,7 @@ interface ImagePosition {
 }
 
 // Calculate random position within center 50% of viewport
-function calculateRandomPosition(imageHeight: number, imageMargin: number = 20): ImagePosition {
+function calculateRandomPosition(imageHeight: number): ImagePosition {
   const viewportHeight = typeof window !== 'undefined' ? window.innerHeight : 1000;
   const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 1000;
   
@@ -76,7 +76,7 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
       const imageHeightPx = window.innerHeight * 0.4; // 40dvh = 40% of viewport height
       
       const newPositions = project.images.map(() => 
-        calculateRandomPosition(imageHeightPx, 20)
+        calculateRandomPosition(imageHeightPx)
       );
       setPositions(newPositions);
     };
