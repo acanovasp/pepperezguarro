@@ -59,6 +59,7 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
   const [hasInteracted, setHasInteracted] = useState(false);
   const swiperRef = useRef<SwiperType | null>(null);
   const inactivityTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const prevIndexRef = useRef<number>(initialSlide);
 
   // Generate random positions for all images (desktop only)
   useEffect(() => {
@@ -97,8 +98,39 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
   }, [project.images]);
 
   const handleSlideChange = (swiper: SwiperType) => {
-    setActiveIndex(swiper.realIndex);
+    const newIndex = swiper.realIndex;
+    const prevIndex = prevIndexRef.current;
+    
+    setActiveIndex(newIndex);
     setHasInteracted(true);
+    
+    // Detect swipe direction and show corresponding arrow
+    if (onNavigationArrowChange) {
+      let direction: 'left' | 'right' | null = null;
+      
+      // Calculate direction considering loop behavior
+      if (newIndex > prevIndex || (prevIndex === project.images.length - 1 && newIndex === 0)) {
+        // Swiped forward (show right arrow)
+        direction = 'right';
+      } else if (newIndex < prevIndex || (prevIndex === 0 && newIndex === project.images.length - 1)) {
+        // Swiped backward (show left arrow)
+        direction = 'left';
+      }
+      
+      if (direction) {
+        onNavigationArrowChange(direction);
+        
+        // Hide arrow after 1 second
+        if (inactivityTimeoutRef.current) {
+          clearTimeout(inactivityTimeoutRef.current);
+        }
+        inactivityTimeoutRef.current = setTimeout(() => {
+          onNavigationArrowChange(null);
+        }, 1000);
+      }
+    }
+    
+    prevIndexRef.current = newIndex;
   };
 
   // Handle mouse movement for navigation arrow display
