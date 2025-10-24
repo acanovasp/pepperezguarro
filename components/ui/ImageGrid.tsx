@@ -42,6 +42,7 @@ export default function ImageGrid({ project, onImageClick, onToggleView }: Image
                   />
                 </div>
                 <p className={styles.imageNumber}>
+                  <span className={styles.arrow}>●</span>
                   {String(index + 1).padStart(3, '0')}
                 </p>
               </div>

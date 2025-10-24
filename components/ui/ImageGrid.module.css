@@ -37,14 +37,9 @@
   display: flex;
   flex-direction: column;
   cursor: pointer;
-  transition: opacity var(--transition-fast);
   align-items: flex-start;
   content-visibility: auto;
   contain-intrinsic-size: 110px 100px;
-}
-
-.gridItem:hover {
-  opacity: 0.6;
 }
 
 .imageWrapper {
@@ -62,6 +57,23 @@
 
 .imageNumber {
   margin-top: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.arrow {
+  font-size: 6px;
+  opacity: 0;
+  width: 0;
+  margin: 0;
+  transition: width 200ms ease-in-out, margin 200ms ease-in-out, opacity 200ms ease-in-out;
+  overflow: hidden;
+}
+
+.gridItem:hover .arrow {
+  opacity: 1;
+  width: auto;
+  margin: 0 8px 3px 0;
 }
 
 .caption {

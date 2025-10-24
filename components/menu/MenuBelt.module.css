@@ -4,6 +4,7 @@
   top: 50%;
   transform: translateY(-50%);
   height: var(--menu-height);
+  max-height: 500px;
   background-color: var(--color-grey);
   color: var(--color-text);
   z-index: var(--z-menu);
@@ -144,6 +145,7 @@
     left: var(--edge-margin);
     top: auto;
     bottom: var(--edge-margin);
+    max-height: none;
     transform: none;
     height: var(--menu-collapsed-width);
     will-change: height;
@@ -154,21 +156,17 @@
     width: calc(100vw - (var(--edge-margin) * 2));
   }
 
-  .menuBelt.expanded {
-    height: auto;
-  }
-
-  /* Different max-heights for each section */
+  /* Different heights for each section */
   .menuBelt.expanded[data-section="projects"] {
-    height: 60vh;
+    height: 60vh !important;
   }
 
   .menuBelt.expanded[data-section="about"] {
-    height: 75vh;
+    height: 75vh !important;
   }
 
   .menuBelt.expanded[data-section="project-info"] {
-    height: 65vh;
+    height: 65vh !important;
   }
 
   .menuContent {

@@ -125,6 +125,12 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
 
     const handleClickOutside = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
+      
+      // Don't close if clicking a button that changes sections
+      if (target.closest('button')) {
+        return;
+      }
+      
       const menuElement = document.querySelector('[data-section]') as HTMLElement;
       
       if (menuElement && !menuElement.contains(target)) {
@@ -148,8 +154,23 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
     if (!isMobile) return;
 
     const handleTouchStart = (e: TouchEvent) => {
+      const touchY = e.touches[0].clientY;
+      const screenHeight = window.innerHeight;
+      
+      // Check if grid is visible (on project page with grid view)
+      const gridVisible = document.querySelector('[class*="ImageGrid_gridContainer"]') !== null;
+      
+      // If grid is visible, only detect swipes from bottom 150px
+      if (gridVisible && !isExpanded) {
+        const distanceFromBottom = screenHeight - touchY;
+        if (distanceFromBottom > 150) {
+          // Touch started too far from bottom, ignore it
+          return;
+        }
+      }
+      
       setTouchStart({
-        y: e.touches[0].clientY,
+        y: touchY,
         time: Date.now()
       });
     };
@@ -171,8 +192,14 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
           // Swipe up - open menu
           setIsExpanded(true);
         } else if (deltaY < 0 && isExpanded) {
-          // Swipe down - close menu
-          setIsExpanded(false);
+          // Swipe down - close menu (only if swipe started outside menu content)
+          const target = e.target as HTMLElement;
+          const menuContent = target.closest('[class*="MenuBelt_leftSection"]');
+          
+          // Only close if swipe was outside the scrollable content
+          if (!menuContent) {
+            setIsExpanded(false);
+          }
         }
       }
 
@@ -180,10 +207,22 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
     };
 
     const handleTouchMove = (e: TouchEvent) => {
-      // Prevent default scroll behavior during swipe to avoid page bounce
-      if (touchStart && Math.abs(touchStart.y - e.touches[0].clientY) > 10) {
-        e.preventDefault();
+      if (!touchStart) return;
+      
+      const deltaY = Math.abs(touchStart.y - e.touches[0].clientY);
+      if (deltaY <= 10) return; // Not a significant move yet
+      
+      // Check if touch is inside the menu content
+      const target = e.target as HTMLElement;
+      const menuContent = target.closest('[class*="MenuBelt_leftSection"]');
+      
+      // If menu is expanded and touch is inside scrollable content, allow scrolling
+      if (isExpanded && menuContent) {
+        return; // Don't preventDefault, allow native scroll
       }
+      
+      // Otherwise, prevent default to handle menu open/close gesture
+      e.preventDefault();
     };
 
     document.addEventListener('touchstart', handleTouchStart, { passive: true });
