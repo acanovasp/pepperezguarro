@@ -1,0 +1,266 @@
+[
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              },
+              {
+                "flag": "min",
+                "constraint": 0
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "Used for ordering projects (1, 2, 3, etc.)",
+        "name": "number",
+        "type": "number",
+        "title": "Project Number (Position)"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "options": {
+          "source": "title",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "Auto-generated from title. Used in URL.",
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "location",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "year",
+        "type": "string"
+      },
+      {
+        "rows": 6,
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "description",
+        "type": "text"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              },
+              {
+                "flag": "min",
+                "constraint": 1
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "Upload images in bulk. Alt text will be auto-generated as Title-01, Title-02, etc.",
+        "of": [
+          {
+            "options": {
+              "hotspot": true,
+              "metadata": [
+                "lqip",
+                "palette"
+              ]
+            },
+            "type": "image"
+          }
+        ],
+        "name": "images",
+        "type": "array"
+      },
+      {
+        "description": "Optional: e.g., \"In collaboration with Ana Gallart\"",
+        "name": "collaboration",
+        "type": "string"
+      },
+      {
+        "description": "Optional: e.g., \"Thinking Mu\" or \"Personal Project\"",
+        "name": "client",
+        "type": "string"
+      },
+      {
+        "description": "Optional: e.g., \"Shot between April 12 - May 2\"",
+        "name": "date",
+        "type": "string"
+      }
+    ],
+    "name": "project",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "rows": 4,
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "bio",
+        "type": "text"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "e.g., info@pepperezguarro.com",
+        "name": "email",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "e.g., +34 681 378 920",
+        "name": "phone",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "e.g., @pepperezguarro (include the @ symbol)",
+        "name": "instagram",
+        "type": "string",
+        "title": "Instagram Handle"
+      },
+      {
+        "description": "List of brands/companies collaborated with",
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "collaborators",
+        "type": "array"
+      },
+      {
+        "description": "List of publications featured in",
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "publications",
+        "type": "array"
+      }
+    ],
+    "name": "about",
+    "type": "document"
+  }
+]
