@@ -30,9 +30,22 @@ function getRandomImage(project: Project): { image: ProjectImage; index: number 
 export default function HomeSlider({ projects, onActiveProjectChange }: HomeSliderProps) {
   const [randomImages, setRandomImages] = useState<Map<string, { image: ProjectImage; index: number }>>(new Map());
   const [activeIndex, setActiveIndex] = useState(0);
-  const [cursorStyle, setCursorStyle] = useState<'w-resize' | 'e-resize'>('w-resize');
+  const [navigationArrow, setNavigationArrow] = useState<'left' | 'right' | null>(null);
+  const [isDesktop, setIsDesktop] = useState(false);
   const swiperRef = useRef<SwiperType | null>(null);
   const prevIndexRef = useRef<number>(0); // Track previous index to detect actual changes
+  const inactivityTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Detect if we're on desktop
+  useEffect(() => {
+    const checkDesktop = () => {
+      setIsDesktop(window.innerWidth > 768);
+    };
+    
+    checkDesktop();
+    window.addEventListener('resize', checkDesktop);
+    return () => window.removeEventListener('resize', checkDesktop);
+  }, []);
 
   // Generate random images ONCE when component mounts
   useEffect(() => {
@@ -70,11 +83,37 @@ export default function HomeSlider({ projects, onActiveProjectChange }: HomeSlid
     const screenWidth = window.innerWidth;
     
     if (mouseX < screenWidth / 2) {
-      setCursorStyle('w-resize');
+      setNavigationArrow('left');
     } else {
-      setCursorStyle('e-resize');
+      setNavigationArrow('right');
     }
+
+    // Clear existing timeout
+    if (inactivityTimeoutRef.current) {
+      clearTimeout(inactivityTimeoutRef.current);
+    }
+
+    // Set new timeout to hide arrow after 1000ms of inactivity
+    inactivityTimeoutRef.current = setTimeout(() => {
+      setNavigationArrow(null);
+    }, 1000);
   };
+
+  const handleMouseLeave = () => {
+    if (inactivityTimeoutRef.current) {
+      clearTimeout(inactivityTimeoutRef.current);
+    }
+    setNavigationArrow(null);
+  };
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (inactivityTimeoutRef.current) {
+        clearTimeout(inactivityTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     // Only trigger on actual clicks, not during drags or resizes
@@ -98,7 +137,7 @@ export default function HomeSlider({ projects, onActiveProjectChange }: HomeSlid
       aria-label="Project gallery"
       onClick={handleClick}
       onMouseMove={handleMouseMove}
-      style={{ cursor: cursorStyle }}
+      onMouseLeave={handleMouseLeave}
     >
       <Swiper
         modules={[Keyboard, EffectFade]}
@@ -136,20 +175,49 @@ export default function HomeSlider({ projects, onActiveProjectChange }: HomeSlid
             <SwiperSlide key={project.id}>
               <div className={styles.slide}>
                 <div className={styles.imageWithCaption}>
-                  <div className={styles.imageContainer}>
-                    <Image
-                      src={image.url}
-                      alt={image.alt}
-                      width={900}
-                      height={600}
-                      className={styles.slideImage}
-                      sizes="(max-width: 768px) 70vw, 55vw"
-                      priority={projects.indexOf(project) === 0}
-                      fetchPriority={projects.indexOf(project) === 0 ? 'high' : 'auto'}
-                      loading={projects.indexOf(project) === 0 ? 'eager' : 'lazy'}
-                      placeholder={projects.indexOf(project) === 0 ? 'blur' : 'empty'}
-                      blurDataURL={projects.indexOf(project) === 0 ? image.blurDataURL : undefined}
-                    />
+                  <div className={styles.imageContainerWrapper}>
+                    {/* Navigation arrows positioned next to image */}
+                    <span className={`${styles.arrow} ${styles.arrowLeft} ${navigationArrow === 'left' ? styles.arrowVisible : ''}`}>●</span>
+                    <span className={`${styles.arrow} ${styles.arrowRight} ${navigationArrow === 'right' ? styles.arrowVisible : ''}`}>●</span>
+                    
+                    {/* Conditionally wrap image in link on desktop only */}
+                    {isDesktop ? (
+                      <TransitionLink 
+                        href={`/projects/${project.slug}`} 
+                        className={styles.imageContainer}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Image
+                          src={image.url}
+                          alt={image.alt}
+                          width={900}
+                          height={600}
+                          className={styles.slideImage}
+                          sizes="(max-width: 768px) 70vw, 55vw"
+                          priority={projects.indexOf(project) === 0}
+                          fetchPriority={projects.indexOf(project) === 0 ? 'high' : 'auto'}
+                          loading={projects.indexOf(project) === 0 ? 'eager' : 'lazy'}
+                          placeholder={projects.indexOf(project) === 0 ? 'blur' : 'empty'}
+                          blurDataURL={projects.indexOf(project) === 0 ? image.blurDataURL : undefined}
+                        />
+                      </TransitionLink>
+                    ) : (
+                      <div className={styles.imageContainer}>
+                        <Image
+                          src={image.url}
+                          alt={image.alt}
+                          width={900}
+                          height={600}
+                          className={styles.slideImage}
+                          sizes="(max-width: 768px) 70vw, 55vw"
+                          priority={projects.indexOf(project) === 0}
+                          fetchPriority={projects.indexOf(project) === 0 ? 'high' : 'auto'}
+                          loading={projects.indexOf(project) === 0 ? 'eager' : 'lazy'}
+                          placeholder={projects.indexOf(project) === 0 ? 'blur' : 'empty'}
+                          blurDataURL={projects.indexOf(project) === 0 ? image.blurDataURL : undefined}
+                        />
+                      </div>
+                    )}
                   </div>
                   
                   <div className={styles.caption}>

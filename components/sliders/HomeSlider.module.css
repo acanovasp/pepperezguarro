@@ -4,6 +4,44 @@
   position: relative;
   transform: translateZ(0);
   will-change: contents;
+  cursor: pointer;
+}
+
+/* Wrapper for image and arrows - doesn't affect caption width */
+.imageContainerWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+/* Navigation arrows positioned next to image */
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 6px;
+  opacity: 0;
+  transition: opacity 200ms ease-in-out;
+  z-index: var(--z-base);
+  pointer-events: none;
+}
+
+.arrowVisible {
+  opacity: 1;
+}
+
+.arrowLeft {
+  right: calc(100% + 20px); /* 20px to the left of image */
+}
+
+.arrowRight {
+  left: calc(100% + 20px); /* 20px to the right of image */
+}
+
+/* Hide arrows on mobile */
+@media (max-width: 768px) {
+  .arrow {
+    display: none;
+  }
 }
 
 .slide {
@@ -27,6 +65,15 @@
   position: relative;
   width: var(--image-width, auto);
   height: var(--image-height);
+  display: block;
+  text-decoration: none;
+}
+
+/* Show pointer cursor when image is clickable (desktop) */
+@media (min-width: 769px) {
+  a.imageContainer {
+    cursor: pointer;
+  }
 }
 
 .slideImage {

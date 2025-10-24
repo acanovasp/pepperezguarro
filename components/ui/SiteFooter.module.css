@@ -35,10 +35,18 @@ body[data-page="home"] .siteFooter::after {
   gap: 2px;
 }
 
+.contactInfo a:hover {
+  opacity: 0.6;
+}
+
 .copyright {
   display: flex;
   flex-direction: column;
   gap: 2px;
+}
+
+.copyright a:hover {
+  opacity: 0.6;
 }
 
 @media (max-width: 768px) {

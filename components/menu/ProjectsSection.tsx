@@ -12,6 +12,10 @@ interface ProjectsSectionProps {
 export default function ProjectsSection({ projects, currentSlug, onOpenProjectInfo, onProjectHover }: ProjectsSectionProps) {
   const isActive = (slug: string) => currentSlug === slug;
 
+  const handleToggleThumbnails = () => {
+    window.dispatchEvent(new CustomEvent('toggleGridView'));
+  };
+
   return (
     <div className={styles.projectsSection}>
       <ul className={styles.projectList}>
@@ -43,9 +47,14 @@ export default function ProjectsSection({ projects, currentSlug, onOpenProjectIn
                 {/* Show extraInfo for active project */}
                 {active && (
                   <div className={styles.extraInfo}>
-                    <p className={styles.imageCount}>
+                    <button 
+                      className={styles.toggleButton}
+                      onClick={handleToggleThumbnails}
+                    >
+                      <p className={styles.imageCount}>
                       {String(project.images.length).padStart(2, '0')} Images
                     </p>
+                    </button>
                     <button 
                       className={styles.projectInfoLink}
                       onClick={(e) => {
