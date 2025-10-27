@@ -10,6 +10,14 @@
 
 .description {
   max-width: 50%;
+  transition: max-width 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Expanded width when content overflows - desktop only */
+@media (min-width: 769px) {
+  .descriptionExpanded {
+    max-width: 80%;
+  }
 }
 
 .stats {
