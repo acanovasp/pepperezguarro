@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useImperativeHandle, forwardRef } from 'react';
+import { useState, useEffect, useImperativeHandle, forwardRef, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import styles from './MenuBelt.module.css';
 import ProjectsSection from './ProjectsSection';
@@ -30,6 +30,7 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
   const [forceClose, setForceClose] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [touchStart, setTouchStart] = useState<{ y: number; time: number } | null>(null);
+  const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const params = useParams();
 
   // Detect mobile viewport
@@ -116,6 +117,15 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
 
     window.addEventListener('toggleGridView', handleToggleGrid);
     return () => window.removeEventListener('toggleGridView', handleToggleGrid);
+  }, []);
+
+  // Cleanup close timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (closeTimeoutRef.current) {
+        clearTimeout(closeTimeoutRef.current);
+      }
+    };
   }, []);
 
   // Reset to projects section when menu closes
@@ -243,6 +253,12 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
   }, [isMobile, isExpanded, touchStart]);
 
   const handleMouseEnter = () => {
+    // Clear any pending close timeout when mouse re-enters
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+    
     // Don't reopen if force close is active
     if (!forceClose) {
       setIsExpanded(true);
@@ -250,9 +266,12 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
   };
 
   const handleMouseLeave = () => {
-    setIsExpanded(false);
-    // Reset force close flag when mouse leaves
-    setForceClose(false);
+    // Delay closing by 250ms to prevent accidental closures
+    closeTimeoutRef.current = setTimeout(() => {
+      setIsExpanded(false);
+      // Reset force close flag when menu closes
+      setForceClose(false);
+    }, 250);
   };
 
   const toggleSection = (section: MenuSection) => {
