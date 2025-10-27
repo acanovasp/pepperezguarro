@@ -30,8 +30,8 @@ export default function ImageGrid({ project, onImageClick, onToggleView }: Image
                   <Image
                     src={image.url}
                     alt={image.alt}
-                    width={110}
-                    height={73}
+                    width={image.width}
+                    height={image.height}
                     className={styles.gridImage}
                     sizes="110px"
                     loading={isPriority ? 'eager' : 'lazy'}

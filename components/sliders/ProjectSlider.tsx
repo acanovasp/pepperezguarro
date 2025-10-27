@@ -247,11 +247,15 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
                     <Image
                       src={project.images[ghostIndex].url}
                       alt="Previous"
-                      width={900}
-                      height={600}
+                      width={project.images[ghostIndex].width}
+                      height={project.images[ghostIndex].height}
                       className={styles.slideImage}
                       sizes="(max-width: 768px) 70vw, 45vw"
-                      loading="lazy"
+                      priority={initialSlide === 0 && ghostIndex === project.images.length - 1}
+                      fetchPriority={initialSlide === 0 && ghostIndex === project.images.length - 1 ? 'high' : 'auto'}
+                      loading={initialSlide === 0 && ghostIndex === project.images.length - 1 ? 'eager' : 'lazy'}
+                      placeholder={initialSlide === 0 && ghostIndex === project.images.length - 1 ? 'blur' : 'empty'}
+                      blurDataURL={initialSlide === 0 && ghostIndex === project.images.length - 1 ? project.images[ghostIndex].blurDataURL : undefined}
                     />
                   </div>
                 )}
@@ -262,15 +266,15 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
                       <Image
                         src={image.url}
                         alt={image.alt}
-                        width={900}
-                        height={600}
+                        width={image.width}
+                        height={image.height}
                         className={styles.slideImage}
                         sizes="(max-width: 768px) 70vw, 45vw"
-                        priority={index === initialSlide}
-                        fetchPriority={index === initialSlide ? 'high' : 'auto'}
-                        loading={index === initialSlide ? 'eager' : 'lazy'}
-                        placeholder={index === initialSlide ? 'blur' : 'empty'}
-                        blurDataURL={index === initialSlide ? image.blurDataURL : undefined}
+                        priority={index === initialSlide || (initialSlide === 0 && index === project.images.length - 1)}
+                        fetchPriority={index === initialSlide || (initialSlide === 0 && index === project.images.length - 1) ? 'high' : 'auto'}
+                        loading={index === initialSlide || (initialSlide === 0 && index === project.images.length - 1) ? 'eager' : 'lazy'}
+                        placeholder={index === initialSlide || (initialSlide === 0 && index === project.images.length - 1) ? 'blur' : 'empty'}
+                        blurDataURL={index === initialSlide || (initialSlide === 0 && index === project.images.length - 1) ? image.blurDataURL : undefined}
                       />
                     </div>
                     {/* Caption always rendered, fades with parent slide */}

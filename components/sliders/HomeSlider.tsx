@@ -181,8 +181,8 @@ export default function HomeSlider({ projects, onActiveProjectChange }: HomeSlid
                         <Image
                           src={image.url}
                           alt={image.alt}
-                          width={900}
-                          height={600}
+                          width={image.width}
+                          height={image.height}
                           className={styles.slideImage}
                           sizes="(max-width: 768px) 70vw, 55vw"
                           priority={projects.indexOf(project) === 0}
@@ -197,8 +197,8 @@ export default function HomeSlider({ projects, onActiveProjectChange }: HomeSlid
                         <Image
                           src={image.url}
                           alt={image.alt}
-                          width={900}
-                          height={600}
+                          width={image.width}
+                          height={image.height}
                           className={styles.slideImage}
                           sizes="(max-width: 768px) 70vw, 55vw"
                           priority={projects.indexOf(project) === 0}

@@ -129,6 +129,18 @@ img {
   display: block;
 }
 
+/* Next.js Image blur-to-loaded fade transition */
+img[data-nimg] {
+  transition: opacity 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Smooth opacity transition when image loads */
+img[data-nimg="fill"],
+img[data-nimg="responsive"],
+img[data-nimg="intrinsic"] {
+  transition: opacity 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 /* Performance optimizations */
 .gpu-accelerated {
   transform: translateZ(0);

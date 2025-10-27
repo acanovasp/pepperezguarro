@@ -8,6 +8,8 @@ export interface ProjectImage {
   url: string;
   alt: string;
   blurDataURL?: string;
+  width: number;
+  height: number;
 }
 
 export interface Project {
