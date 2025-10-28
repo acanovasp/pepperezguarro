@@ -206,8 +206,8 @@
     flex: 1 1 auto;
     min-height: 0;
     overflow-y: auto;
-    -ms-overflow-style: none;       /* IE and old Edge */
-    scrollbar-width: none;          /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 
   .leftSection::-webkit-scrollbar {
