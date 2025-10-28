@@ -152,6 +152,18 @@
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
+  .menuBelt.expanded::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background: linear-gradient(to bottom, var(--color-grey) 0%, var(--color-grey) 30%, transparent 100%);
+    z-index: 1;
+  }
+
+  
   .menuBelt.collapsed {
     width: calc(100vw - (var(--edge-margin) * 2));
   }
@@ -183,6 +195,7 @@
     justify-content: space-between;
     align-items: flex-start;
     flex-shrink: 0;
+    z-index: 10;
   }
 
   /* Override SiteHeader fixed positioning when inside menu */
@@ -208,6 +221,7 @@
     overflow-y: auto;
     -ms-overflow-style: none;
     scrollbar-width: none;
+    margin: -40px 0 -20px 0;
   }
 
   .leftSection::-webkit-scrollbar {
@@ -218,9 +232,14 @@
     display: none;
   }
 
+  .toggleButton:hover {
+    opacity: 1;
+  }
+
   .mobileFooter {
     display: block;
     flex-shrink: 0;
+    z-index: 10;
   }
 
   /* Override all SiteFooter styles when inside menu */

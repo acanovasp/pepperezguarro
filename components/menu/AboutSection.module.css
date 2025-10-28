@@ -54,6 +54,7 @@
 @media (max-width: 768px) {
   .aboutSection {
     flex-direction: column;
+    padding: 60px 0 20px 0
   }
 
   .bioContainer {

@@ -75,6 +75,7 @@
 @media (max-width: 768px) {
   .projectInfoSection {
     flex-direction: column;
+    padding: 60px 0 20px 0
   }
 
   .description {
@@ -84,6 +85,7 @@
   .statsContainer {
     flex-wrap: wrap;
     row-gap: var(--spacing-xs);
+    padding-bottom: 20px;
   }
 
   .imageCounter {
