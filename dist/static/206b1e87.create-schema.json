@@ -2,6 +2,53 @@
   {
     "fields": [
       {
+        "options": {
+          "list": [
+            {
+              "title": "Project",
+              "value": "project"
+            },
+            {
+              "title": "Travel",
+              "value": "travel"
+            },
+            {
+              "title": "Commercial",
+              "value": "commercial"
+            },
+            {
+              "title": "Editorial",
+              "value": "editorial"
+            }
+          ],
+          "layout": "dropdown"
+        },
+        "initialValue": "project",
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "valid",
+                "constraint": [
+                  "project",
+                  "travel",
+                  "commercial",
+                  "editorial"
+                ]
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "Project category - affects numbering prefix (P01, T01, C01, E01)",
+        "name": "category",
+        "type": "string"
+      },
+      {
         "validation": [
           {
             "rules": [
@@ -17,10 +64,10 @@
             "level": "error"
           }
         ],
-        "description": "Used for ordering projects (1, 2, 3, etc.)",
+        "description": "Position within category (1, 2, 3, etc.). Each category has its own numbering.",
         "name": "number",
         "type": "number",
-        "title": "Project Number (Position)"
+        "title": "Number (within category)"
       },
       {
         "validation": [
