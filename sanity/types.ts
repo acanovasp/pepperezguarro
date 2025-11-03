@@ -48,6 +48,7 @@ export interface SanityAbout {
   bio: string;
   email: string;
   phone: string;
+  phone2?: string;
   instagram: string;
   collaborators: string[];
   publications: string[];

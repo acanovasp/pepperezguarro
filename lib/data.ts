@@ -1,4 +1,4 @@
-import { Project, ProjectImage, AboutInfo } from './types';
+import { Project, ProjectImage, AboutInfo, ContactInfo } from './types';
 import { client } from '../sanity/client';
 import { urlForImage } from '../sanity/client';
 import type { SanityProject, SanityAbout, SanityImageAsset } from '../sanity/types';
@@ -136,10 +136,16 @@ const placeholderAbout: AboutInfo = {
       display: 'info@pepperezguarro.com',
       link: 'mailto:info@pepperezguarro.com'
     },
-    phone: {
-      display: 'ES +34 681 378 920',
-      link: 'tel:+34681378920'
-    },
+    phone: [
+      {
+        display: '+34 666 18 13 48',
+        link: 'tel:+34666181348'
+      },
+      {
+        display: '+33 767 65 76 43',
+        link: 'tel:+33767657643'
+      }
+    ],
     instagram: {
       display: '@pepperezguarro',
       link: 'https://instagram.com/pepperezguarro'
@@ -263,6 +269,22 @@ function transformAbout(sanityAbout: SanityAbout): AboutInfo {
   
   const instagramUsername = instagramHandle.replace('@', '');
 
+  // Create array of phone ContactInfo objects
+  const phones: ContactInfo[] = [
+    {
+      display: sanityAbout.phone,
+      link: `tel:${sanityAbout.phone.replace(/\s+/g, '')}`,
+    }
+  ];
+
+  // Add second phone if it exists
+  if (sanityAbout.phone2) {
+    phones.push({
+      display: sanityAbout.phone2,
+      link: `tel:${sanityAbout.phone2.replace(/\s+/g, '')}`,
+    });
+  }
+
   return {
     name: sanityAbout.name,
     bio: sanityAbout.bio,
@@ -271,10 +293,7 @@ function transformAbout(sanityAbout: SanityAbout): AboutInfo {
         display: sanityAbout.email,
         link: `mailto:${sanityAbout.email}`,
       },
-      phone: {
-        display: sanityAbout.phone,
-        link: `tel:${sanityAbout.phone.replace(/\s+/g, '')}`,
-      },
+      phone: phones,
       instagram: {
         display: instagramHandle,
         link: `https://instagram.com/${instagramUsername}`,
@@ -399,6 +418,7 @@ export async function getAboutInfo(): Promise<AboutInfo> {
       bio,
       email,
       phone,
+      phone2,
       instagram,
       collaborators,
       publications

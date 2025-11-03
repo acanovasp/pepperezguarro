@@ -279,8 +279,14 @@
             "level": "error"
           }
         ],
-        "description": "e.g., +34 681 378 920",
+        "description": "e.g., +34 666 18 13 48",
         "name": "phone",
+        "type": "string",
+        "title": "Phone 1"
+      },
+      {
+        "description": "e.g., +33 767 65 76 43 (optional second phone number)",
+        "name": "phone2",
         "type": "string"
       },
       {

@@ -42,7 +42,7 @@ export interface AboutInfo {
   bio: string;
   contact: {
     email: ContactInfo;
-    phone: ContactInfo;
+    phone: ContactInfo[];
     instagram: ContactInfo;
   };
   collaborators: string[];
