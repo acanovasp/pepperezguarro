@@ -72,7 +72,7 @@
   transition: opacity var(--transition-fast);
 }
 
-.projectInfoLink:hover {
+.projectInfoLink:hover {  
   opacity: 0.6;
 }
 

@@ -14,6 +14,9 @@ Create a file named `.env.local` in your project root with this content:
 # Sanity CMS Configuration
 NEXT_PUBLIC_SANITY_PROJECT_ID=vynr1qpf
 NEXT_PUBLIC_SANITY_DATASET=production
+
+# Revalidation Secret (generate with: openssl rand -base64 32)
+REVALIDATION_SECRET=your_secure_random_string_here
 ```
 
 **Note:** This file is already in `.gitignore` and won't be committed to git.
@@ -29,8 +32,13 @@ NEXT_PUBLIC_SANITY_DATASET=production
    |------|-------|-------------|
    | `NEXT_PUBLIC_SANITY_PROJECT_ID` | `vynr1qpf` | ✅ Production, ✅ Preview, ✅ Development |
    | `NEXT_PUBLIC_SANITY_DATASET` | `production` | ✅ Production, ✅ Preview, ✅ Development |
+   | `REVALIDATION_SECRET` | (generate secure random string) | ✅ Production, ✅ Preview, ✅ Development |
+
+   💡 **Generate a secure secret with:** `openssl rand -base64 32`
 
 3. Click **"Save"** for each variable
+
+**⚠️ IMPORTANT:** After adding the `REVALIDATION_SECRET`, follow the **[SANITY_REVALIDATION_SETUP.md](./SANITY_REVALIDATION_SETUP.md)** guide to configure Sanity webhooks for instant content updates.
 
 ### Step 3: Redeploy Your Site
 
@@ -66,7 +74,9 @@ After redeploying:
 1. Visit your Vercel site: https://pepperezguarro.vercel.app
 2. You should see the **actual projects from Sanity** instead of placeholder data
 3. Check the browser console - you shouldn't see any Sanity errors
-4. Changes you make in Sanity Studio should appear on the site within seconds
+4. **Content updates:**
+   - With webhooks (see SANITY_REVALIDATION_SETUP.md): Changes appear **instantly**
+   - Without webhooks: Changes appear within **60 seconds** (ISR revalidation)
 
 ## 🐛 Troubleshooting
 

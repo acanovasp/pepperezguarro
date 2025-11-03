@@ -5,6 +5,9 @@ import SiteHeader from "@/components/ui/SiteHeader";
 import SiteFooter from "@/components/ui/SiteFooter";
 import { getProjects, getAboutInfo } from "@/lib/data";
 
+// Enable ISR: Revalidate every 60 seconds
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: "Pep Perez Guarro",
   description: "Pep Perez Guarro — photographer based between Paris and Barcelona.",
