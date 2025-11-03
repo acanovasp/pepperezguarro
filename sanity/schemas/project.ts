@@ -131,15 +131,7 @@ export default defineType({
   },
   orderings: [
     {
-      title: 'Category & Number',
-      name: 'categoryNumberAsc',
-      by: [
-        { field: 'category', direction: 'asc' },
-        { field: 'number', direction: 'asc' }
-      ],
-    },
-    {
-      title: 'Number Only',
+      title: 'By Number',
       name: 'numberAsc',
       by: [{ field: 'number', direction: 'asc' }],
     },

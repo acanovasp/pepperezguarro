@@ -266,7 +266,7 @@ export async function getProjects(): Promise<Project[]> {
   }
 
   try {
-    const query = `*[_type == "project"] | order(category asc, number asc) {
+    const query = `*[_type == "project"] {
       _id,
       _type,
       category,
@@ -282,8 +282,15 @@ export async function getProjects(): Promise<Project[]> {
       },
       collaboration,
       client,
-      date
-    }`;
+      date,
+      "sortOrder": select(
+        category == "project" => 1,
+        category == "travel" => 2,
+        category == "editorial" => 3,
+        category == "commercial" => 4,
+        5
+      )
+    } | order(sortOrder asc, number asc)`;
 
     const sanityProjects: SanityProject[] = await client.fetch(query);
     
