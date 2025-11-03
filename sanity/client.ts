@@ -10,13 +10,13 @@ import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
 
 /**
  * Server client for fetching data (used in server components)
- * Uses Sanity CDN for faster delivery and better performance
+ * Disabled CDN in production to ensure fresh content
  */
 export const client = createClient({
   projectId: config.projectId,
   dataset: config.dataset,
   apiVersion: config.apiVersion,
-  useCdn: true, // Enable CDN for faster image delivery
+  useCdn: false, // Disable CDN to get fresh data (ISR handles caching)
   // Token is optional for reading published content
   // Only needed if dataset is private
   ...(process.env.SANITY_API_TOKEN && { token: process.env.SANITY_API_TOKEN }),
