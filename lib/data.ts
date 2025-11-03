@@ -28,6 +28,9 @@ const placeholderProjects: Project[] = [
     id: 'project-1',
     slug: 'ladakhi-bakers',
     title: 'Ladakhi Bakers',
+    category: 'project',
+    number: 1,
+    formattedNumber: 'P01',
     location: 'India',
     year: '2025',
     description: 'Last October, I traveled to India for a photography assignment for a brand. Taking advantage of the trip, I decided to explore the north of the country for a few days. Along the way, already in the Kashmir region, I saw a small oven where roti was being baked in a tandoor using a wood fire. The place, entirely made of wood, had beautiful lighting. I immediately approached and asked if I could photograph the process. Ana, my partner, is the biggest bread lover I know. Our travels revolve around it: we seek out bakeries, so that Ana can learn their techniques, share her love for bread, and photograph the processes. However, Ana wasn\'t with me on this trip. When I found that oven, I felt her presence through my camera. I started photographing every bakery I came across. It was my way of stepping into her shoes, though I soon realized that without her curiosity and her need to understand every gram of the process, something was missing.',
@@ -40,6 +43,9 @@ const placeholderProjects: Project[] = [
     id: 'project-2',
     slug: '366-miralls',
     title: '366 Miralls',
+    category: 'project',
+    number: 2,
+    formattedNumber: 'P02',
     location: 'Barcelona',
     year: 'Ongoing',
     description: 'An ongoing daily self-portrait project exploring identity, time, and self-perception through 366 different mirrors across Barcelona.',
@@ -52,6 +58,9 @@ const placeholderProjects: Project[] = [
     id: 'project-3',
     slug: 'morocco',
     title: 'Moro(cc)o',
+    category: 'travel',
+    number: 1,
+    formattedNumber: 'T01',
     location: 'Morocco',
     year: '2023',
     description: 'Morocco is written with two consecutive c\'s. (Cc) Is a two-letter abbreviation for the term "cubic centimeters." Just as a car\'s engine displacement is measured in liters, a motorcycle engine displacement is measured in cubic centimeters. Moro[cc]o is a project made for the joy of traveling and taking photos during two short trips in Morocco.',
@@ -61,6 +70,9 @@ const placeholderProjects: Project[] = [
     id: 'project-4',
     slug: 'factory-x-thinking-mu',
     title: 'Factory x Thinking Mu',
+    category: 'commercial',
+    number: 1,
+    formattedNumber: 'C01',
     location: 'India',
     year: '2025',
     description: 'A documentary series showcasing sustainable fashion production in India, highlighting the ethical practices and craftsmanship of Thinking Mu factories.',
@@ -72,6 +84,9 @@ const placeholderProjects: Project[] = [
     id: 'project-5',
     slug: 'varanasi',
     title: 'Two days in Varanasi',
+    category: 'travel',
+    number: 2,
+    formattedNumber: 'T02',
     location: 'India',
     year: '2024',
     description: 'A brief but intense visual journey through the spiritual heart of India, capturing the essence of Varanasi in just two days.',
@@ -164,6 +179,27 @@ function transformSanityImage(
 }
 
 /**
+ * Get category prefix for formatted number
+ */
+function getCategoryPrefix(category: string): string {
+  const prefixMap: Record<string, string> = {
+    project: 'P',
+    travel: 'T',
+    commercial: 'C',
+    editorial: 'E',
+  };
+  return prefixMap[category] || 'P';
+}
+
+/**
+ * Create formatted number with category prefix (e.g., "P01", "T02")
+ */
+function formatProjectNumber(category: string, number: number): string {
+  const prefix = getCategoryPrefix(category);
+  return `${prefix}${String(number).padStart(2, '0')}`;
+}
+
+/**
  * Transform Sanity project to Project format
  */
 function transformProject(sanityProject: SanityProject): Project {
@@ -171,6 +207,9 @@ function transformProject(sanityProject: SanityProject): Project {
     id: sanityProject._id,
     slug: sanityProject.slug.current,
     title: sanityProject.title,
+    category: sanityProject.category,
+    number: sanityProject.number,
+    formattedNumber: formatProjectNumber(sanityProject.category, sanityProject.number),
     location: sanityProject.location,
     year: sanityProject.year,
     description: sanityProject.description,
@@ -227,9 +266,10 @@ export async function getProjects(): Promise<Project[]> {
   }
 
   try {
-    const query = `*[_type == "project"] | order(number asc) {
+    const query = `*[_type == "project"] | order(category asc, number asc) {
       _id,
       _type,
+      category,
       number,
       title,
       slug,
@@ -273,6 +313,7 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
     const query = `*[_type == "project" && slug.current == $slug][0] {
       _id,
       _type,
+      category,
       number,
       title,
       slug,

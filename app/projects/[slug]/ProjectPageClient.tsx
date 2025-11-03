@@ -10,10 +10,9 @@ import styles from './ProjectPageClient.module.css';
 
 interface ProjectPageClientProps {
   project: Project;
-  projectNumber: number;
 }
 
-export default function ProjectPageClient({ project, projectNumber }: ProjectPageClientProps) {
+export default function ProjectPageClient({ project }: ProjectPageClientProps) {
   const [viewMode, setViewMode] = useState<'slideshow' | 'grid'>('slideshow');
   const [initialSlide, setInitialSlide] = useState(0);
   const [navigationArrow, setNavigationArrow] = useState<'left' | 'right' | null>(null);
@@ -89,7 +88,6 @@ export default function ProjectPageClient({ project, projectNumber }: ProjectPag
       {showProjectInfo && viewMode === 'slideshow' && (
         <ProjectInfo 
           project={project}
-          projectNumber={projectNumber}
           onOpenProjectInfo={handleOpenProjectInfo}
         />
       )}

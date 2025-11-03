@@ -11,10 +11,27 @@ export default defineType({
   type: 'document',
   fields: [
     defineField({
+      name: 'category',
+      title: 'Category',
+      type: 'string',
+      description: 'Project category - affects numbering prefix (P01, T01, C01, E01)',
+      options: {
+        list: [
+          { title: 'Project', value: 'project' },
+          { title: 'Travel', value: 'travel' },
+          { title: 'Commercial', value: 'commercial' },
+          { title: 'Editorial', value: 'editorial' },
+        ],
+        layout: 'dropdown',
+      },
+      validation: (Rule) => Rule.required(),
+      initialValue: 'project',
+    }),
+    defineField({
       name: 'number',
-      title: 'Project Number (Position)',
+      title: 'Number (within category)',
       type: 'number',
-      description: 'Used for ordering projects (1, 2, 3, etc.)',
+      description: 'Position within category (1, 2, 3, etc.). Each category has its own numbering.',
       validation: (Rule) => Rule.required().integer().positive(),
     }),
     defineField({
@@ -92,18 +109,37 @@ export default defineType({
     select: {
       title: 'title',
       number: 'number',
+      category: 'category',
       media: 'images.0',
     },
-    prepare({ title, number, media }) {
+    prepare({ title, number, category, media }) {
+      // Get category prefix
+      const prefixMap: Record<string, string> = {
+        project: 'P',
+        travel: 'T',
+        commercial: 'C',
+        editorial: 'E',
+      };
+      const prefix = prefixMap[category as string] || 'P';
+      const formattedNumber = `${prefix}${String(number).padStart(2, '0')}`;
+      
       return {
-        title: `${number}. ${title}`,
+        title: `${formattedNumber}. ${title}`,
         media,
       };
     },
   },
   orderings: [
     {
-      title: 'Project Number',
+      title: 'Category & Number',
+      name: 'categoryNumberAsc',
+      by: [
+        { field: 'category', direction: 'asc' },
+        { field: 'number', direction: 'asc' }
+      ],
+    },
+    {
+      title: 'Number Only',
       name: 'numberAsc',
       by: [{ field: 'number', direction: 'asc' }],
     },

@@ -12,10 +12,15 @@ export interface ProjectImage {
   height: number;
 }
 
+export type ProjectCategory = 'project' | 'travel' | 'commercial' | 'editorial';
+
 export interface Project {
   id: string;
   slug: string;
   title: string;
+  category: ProjectCategory;
+  number: number; // Raw number (1, 2, 3, etc.)
+  formattedNumber: string; // Formatted with prefix (P01, T01, etc.)
   location: string;
   year: string;
   description: string;

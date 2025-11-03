@@ -4,10 +4,9 @@ import { useEffect, useRef, useState } from 'react';
 
 interface ProjectInfoSectionProps {
   project: Project;
-  projectNumber: number;
 }
 
-export default function ProjectInfoSection({ project, projectNumber }: ProjectInfoSectionProps) {
+export default function ProjectInfoSection({ project }: ProjectInfoSectionProps) {
   const descriptionRef = useRef<HTMLHeadingElement>(null);
   const [expandWidth, setExpandWidth] = useState(false);
 
@@ -55,7 +54,7 @@ export default function ProjectInfoSection({ project, projectNumber }: ProjectIn
       <div className={styles.projectInfoSection}>
         <div className={styles.projectInfoHeader}>
           <p className={styles.projectNumber}>
-            {String(projectNumber).padStart(2, '0')}
+            {project.formattedNumber}
           </p>
           <div className={styles.projectInfoContainer}>
             <h1 className={styles.title}>{project.title}</h1>

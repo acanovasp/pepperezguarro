@@ -19,9 +19,12 @@ export interface SanityImageAsset {
   };
 }
 
+export type ProjectCategory = 'project' | 'travel' | 'commercial' | 'editorial';
+
 export interface SanityProject {
   _id: string;
   _type: 'project';
+  category: ProjectCategory;
   number: number;
   title: string;
   slug: {

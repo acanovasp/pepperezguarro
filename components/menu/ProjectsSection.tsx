@@ -19,7 +19,7 @@ export default function ProjectsSection({ projects, currentSlug, onOpenProjectIn
   return (
     <div className={styles.projectsSection}>
       <ul className={styles.projectList}>
-        {projects.map((project, index) => {
+        {projects.map((project) => {
           const active = isActive(project.slug);
           
           return (
@@ -31,7 +31,7 @@ export default function ProjectsSection({ projects, currentSlug, onOpenProjectIn
             >
               <p className={styles.projectNumber}>
                 {active && <span className={styles.arrow}>● </span>}
-                {String(index + 1).padStart(2, '0')}
+                {project.formattedNumber}
               </p>
               <div className={styles.projectItemContent}>
                 <TransitionLink 
