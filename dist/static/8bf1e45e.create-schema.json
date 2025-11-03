@@ -138,7 +138,6 @@
         "type": "string"
       },
       {
-        "rows": 6,
         "validation": [
           {
             "rules": [
@@ -150,8 +149,23 @@
             "level": "error"
           }
         ],
+        "of": [
+          {
+            "marks": {
+              "annotations": []
+            },
+            "styles": [
+              {
+                "value": "normal",
+                "title": "Normal"
+              }
+            ],
+            "of": [],
+            "type": "block"
+          }
+        ],
         "name": "description",
-        "type": "text"
+        "type": "array"
       },
       {
         "validation": [

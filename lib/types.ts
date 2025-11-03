@@ -3,6 +3,8 @@
  * Designed to be CMS-agnostic for easy Sanity.io integration later
  */
 
+import { PortableTextBlock } from '@portabletext/react';
+
 export interface ProjectImage {
   id: string;
   url: string;
@@ -23,7 +25,7 @@ export interface Project {
   formattedNumber: string; // Formatted with prefix (P01, T01, etc.)
   location: string;
   year: string;
-  description: string;
+  description: PortableTextBlock[];
   images: ProjectImage[];
   collaboration?: string;
   client?: string;

@@ -1,6 +1,7 @@
 import styles from './ProjectInfoSection.module.css';
 import { Project } from '@/lib/types';
 import { useEffect, useRef, useState } from 'react';
+import { PortableText } from '@portabletext/react';
 
 interface ProjectInfoSectionProps {
   project: Project;
@@ -64,12 +65,19 @@ export default function ProjectInfoSection({ project }: ProjectInfoSectionProps)
           </div>
         </div>
 
-        <h1 
+        <div 
           ref={descriptionRef}
           className={`${styles.description} ${expandWidth ? styles.descriptionExpanded : ''}`}
         >
-          {project.description}
-        </h1>
+          <PortableText 
+            value={project.description}
+            components={{
+              block: {
+                normal: ({ children }) => <h1>{children}</h1>,
+              },
+            }}
+          />
+        </div>
       </div>
       
       <div className={styles.statsContainer}>

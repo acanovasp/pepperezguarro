@@ -3,6 +3,8 @@
  * These represent the raw data structure from Sanity
  */
 
+import { PortableTextBlock } from '@portabletext/react';
+
 export interface SanityImageAsset {
   _type: 'image';
   asset: {
@@ -32,7 +34,7 @@ export interface SanityProject {
   };
   location: string;
   year: string;
-  description: string;
+  description: PortableTextBlock[];
   images: SanityImageAsset[];
   collaboration?: string;
   client?: string;

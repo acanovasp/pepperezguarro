@@ -66,8 +66,20 @@ export default defineType({
     defineField({
       name: 'description',
       title: 'Description',
-      type: 'text',
-      rows: 6,
+      type: 'array',
+      of: [
+        {
+          type: 'block',
+          styles: [
+            { title: 'Normal', value: 'normal' }
+          ],
+          lists: [],
+          marks: {
+            decorators: [],
+            annotations: []
+          }
+        }
+      ],
       validation: (Rule) => Rule.required(),
     }),
     defineField({
