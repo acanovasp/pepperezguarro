@@ -18,6 +18,8 @@ interface ProjectSliderProps {
   initialSlide?: number;
   onNavigationArrowChange?: (direction: 'left' | 'right' | null) => void;
   navigationArrow?: 'left' | 'right' | null;
+  hideImages?: boolean;
+  onNextProject?: () => void;
 }
 
 interface ImagePosition {
@@ -53,7 +55,7 @@ function calculateRandomPosition(imageHeight: number): ImagePosition {
   };
 }
 
-export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0, onNavigationArrowChange, navigationArrow }: ProjectSliderProps) {
+export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0, onNavigationArrowChange, navigationArrow, hideImages = false, onNextProject }: ProjectSliderProps) {
   const [activeIndex, setActiveIndex] = useState(initialSlide);
   const [positions, setPositions] = useState<ImagePosition[]>([]);
   const [hasInteracted, setHasInteracted] = useState(false);
@@ -181,14 +183,22 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
 
   const handleGhostClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent triggering slide click
-    if (swiperRef.current) {
+    if (swiperRef.current && activeIndex > 0) {
       swiperRef.current.slidePrev();
     }
   };
 
   const handleSlideClick = () => {
     if (swiperRef.current) {
-      swiperRef.current.slideNext();
+      // Check if on last slide
+      if (activeIndex === project.images.length - 1) {
+        // Navigate to next project
+        if (onNextProject) {
+          onNextProject();
+        }
+      } else {
+        swiperRef.current.slideNext();
+      }
     }
     setHasInteracted(true);
   };
@@ -205,7 +215,7 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
           crossFade: true,
         }}
         speed={800}
-        loop={true}
+        loop={false}
         initialSlide={initialSlide}
         keyboard={{
           enabled: true,
@@ -222,7 +232,7 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
           const position = positions[index];
           
           // Calculate ghost image index (previous slide)
-          const ghostIndex = activeIndex === 0 ? project.images.length - 1 : activeIndex - 1;
+          const ghostIndex = activeIndex > 0 ? activeIndex - 1 : project.images.length - 1;
           const ghostPosition = positions[ghostIndex];
           const isActiveSlide = activeIndex === index;
           
@@ -234,8 +244,8 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
                 onMouseEnter={handleSlideMouseEnter}
                 onMouseMove={handleMouseMove}
               >
-                {/* Ghost image (previous slide) - only show on active slide after interaction */}
-                {isActiveSlide && ghostPosition && hasInteracted && (
+                {/* Ghost image (previous slide) - only show on active slide after interaction and not during presentation */}
+                {isActiveSlide && ghostPosition && hasInteracted && activeIndex > 0 && !hideImages && (
                   <div
                     className={styles.ghostImage}
                     style={ghostPosition}
@@ -261,7 +271,14 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
                 )}
 
                 {/* Image with caption - caption fades with image */}
-                <div className={styles.imageWithCaption} style={position || undefined}>
+                <div 
+                  className={styles.imageWithCaption} 
+                  style={{
+                    ...position, 
+                    opacity: hideImages ? 0 : 1, 
+                    transition: hideImages ? 'none' : 'opacity 800ms cubic-bezier(0.4, 0, 0.2, 1)'
+                  }}
+                >
                     <div className={styles.imageContainer}>
                       <Image
                         src={image.url}

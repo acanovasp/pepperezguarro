@@ -5,8 +5,17 @@
   transform: translateX(-50%);
   text-align: center;
   z-index: var(--z-base);
-  transition: opacity var(--transition-fast);
+  transition: top 600ms cubic-bezier(0.4, 0, 0.2, 1), opacity var(--transition-fast);
+}
+
+/* Only apply view-transition-name for home transitions */
+.projectInfo.withTransition {
   view-transition-name: project-info;
+}
+
+.projectInfo.presenting {
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .content {
@@ -19,8 +28,8 @@
   opacity: 0.6;
 }
 
-
-.details {
+/* Only apply view-transition-name for home transitions */
+.withTransition .details {
   view-transition-name: project-details;
 }
 

@@ -35,7 +35,7 @@ export default function ProjectsSection({ projects, currentSlug, onOpenProjectIn
               </p>
               <div className={styles.projectItemContent}>
                 <TransitionLink 
-                  href={`/projects/${project.slug}`}
+                  href={`/projects/${project.slug}?presentation=true`}
                   className={`${styles.projectInfoContainer} ${styles.projectLink}`}
                 >
                   {project.title}
@@ -70,7 +70,7 @@ export default function ProjectsSection({ projects, currentSlug, onOpenProjectIn
                 {/* Show openProject link on hover for non-active projects */}
                 {!active && (
                   <TransitionLink 
-                    href={`/projects/${project.slug}`}
+                    href={`/projects/${project.slug}?presentation=true`}
                     className={styles.openProjectLink}
                   >
                     Open project

@@ -1,4 +1,5 @@
-import { getProjectBySlug, getAllProjectSlugs } from '@/lib/data';
+import { Suspense } from 'react';
+import { getProjectBySlug, getAllProjectSlugs, getProjects } from '@/lib/data';
 import ProjectPageClient from '@/app/projects/[slug]/ProjectPageClient';
 
 interface ProjectPageProps {
@@ -21,6 +22,7 @@ export async function generateStaticParams() {
 export default async function ProjectPage({ params }: ProjectPageProps) {
   const { slug } = await params;
   const project = await getProjectBySlug(slug);
+  const allProjects = await getProjects();
 
   if (!project) {
     return <div>Project not found</div>;
@@ -28,7 +30,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
   return (
     <main>
-      <ProjectPageClient project={project} />
+      <Suspense fallback={null}>
+        <ProjectPageClient project={project} allProjects={allProjects} />
+      </Suspense>
     </main>
   );
 }

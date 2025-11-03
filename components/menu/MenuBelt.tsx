@@ -214,7 +214,7 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
           
           // Only close if swipe was outside the scrollable content
           if (!menuContent) {
-            setIsExpanded(false);
+          setIsExpanded(false);
           }
         }
       }
@@ -270,7 +270,7 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
     closeTimeoutRef.current = setTimeout(() => {
       setIsExpanded(false);
       // Reset force close flag when menu closes
-      setForceClose(false);
+    setForceClose(false);
     }, 250);
   };
 
@@ -367,7 +367,7 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
               
               {activeSection === 'project-info' && detectedProject && (
                 <ProjectInfoSection 
-                  project={detectedProject}
+                  project={detectedProject} 
                 />
               )}
             </div>

@@ -12,7 +12,7 @@ interface HomePageClientProps {
 
 export default function HomePageClient({ projects }: HomePageClientProps) {
   const [activeProject, setActiveProject] = useState<Project>(projects[0]);
-
+  
   // Set data attribute on body to hide gradients on homepage
   useEffect(() => {
     document.body.setAttribute('data-page', 'home');

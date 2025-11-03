@@ -4,11 +4,13 @@ import { Project } from '@/lib/types';
 interface ProjectInfoProps {
   project: Project;
   onOpenProjectInfo?: () => void;
+  isPresenting?: boolean;
+  useViewTransition?: boolean;
 }
 
-export default function ProjectInfo({ project, onOpenProjectInfo }: ProjectInfoProps) {
+export default function ProjectInfo({ project, onOpenProjectInfo, isPresenting = false, useViewTransition = true }: ProjectInfoProps) {
   return (
-    <div className={styles.projectInfo}>
+    <div className={`${styles.projectInfo} ${isPresenting ? styles.presenting : ''} ${useViewTransition ? styles.withTransition : ''}`}>
       <div className={styles.content}>
         <h1 className={styles.number}>
           {project.formattedNumber}
@@ -17,7 +19,7 @@ export default function ProjectInfo({ project, onOpenProjectInfo }: ProjectInfoP
           {project.title}. {project.location}, {project.year}
         </h1>
         
-        {onOpenProjectInfo && (
+        {onOpenProjectInfo && !isPresenting && (
           <button 
             className={styles.link}
             onClick={onOpenProjectInfo}

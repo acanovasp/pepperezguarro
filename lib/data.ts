@@ -313,7 +313,7 @@ export async function getProjects(): Promise<Project[]> {
 export async function getProjectBySlug(slug: string): Promise<Project | null> {
   if (!USE_SANITY) {
     const project = placeholderProjects.find(p => p.slug === slug);
-    return Promise.resolve(project || null);
+  return Promise.resolve(project || null);
   }
 
   try {
@@ -397,7 +397,7 @@ export async function getAboutInfo(): Promise<AboutInfo> {
 export async function getAllProjectSlugs(): Promise<string[]> {
   if (!USE_SANITY) {
     return Promise.resolve(placeholderProjects.map(p => p.slug));
-  }
+}
 
   try {
     const query = `*[_type == "project"].slug.current`;
