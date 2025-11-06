@@ -233,18 +233,47 @@ function parseVideoUrl(url: string): { provider: VideoProvider; videoId: string 
 }
 
 /**
+ * Parse aspect ratio string to number
+ */
+function parseAspectRatio(aspectRatioStr?: string, customAspectRatio?: string): number {
+  const ratioString = aspectRatioStr === 'custom' && customAspectRatio ? customAspectRatio : aspectRatioStr;
+  
+  if (!ratioString) return 16 / 9; // Default
+  
+  // Handle formats like "16:9" or "2.35:1"
+  const parts = ratioString.split(':').map(p => parseFloat(p.trim()));
+  
+  if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1]) && parts[1] !== 0) {
+    return parts[0] / parts[1];
+  }
+  
+  return 16 / 9; // Fallback to default
+}
+
+/**
  * Generate thumbnail URL for video based on provider
  */
-function getVideoThumbnail(provider: VideoProvider, videoId: string, customUrl?: string): string | undefined {
-  if (customUrl) return customUrl;
+function getVideoThumbnail(provider: VideoProvider, videoId: string, sanityThumbnail?: SanityImageAsset): string | undefined {
+  // If Sanity thumbnail exists, use it
+  if (sanityThumbnail) {
+    // Don't force dimensions - let the image maintain its original aspect ratio
+    // Just set max width for optimization
+    const thumbnailUrl = urlForImage(sanityThumbnail)
+      .width(1200) // Max width for quality, height calculated automatically
+      .auto('format')
+      .quality(80)
+      .url();
+    return thumbnailUrl;
+  }
   
+  // Fallback to provider thumbnails
   switch (provider) {
-    case 'vimeo':
-      // Vimeo thumbnails require API call, so we'll handle this client-side or leave undefined
-      return undefined;
     case 'youtube':
       // YouTube provides reliable thumbnail URLs
       return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+    case 'vimeo':
+      // Vimeo thumbnails require API call, so we leave undefined if no Sanity thumbnail
+      return undefined;
     default:
       return undefined;
   }
@@ -266,7 +295,8 @@ function transformSanityVideo(
   }
   
   const { provider, videoId } = parsed;
-  const thumbnailUrl = getVideoThumbnail(provider, videoId, video.thumbnailUrl);
+  const thumbnailUrl = getVideoThumbnail(provider, videoId, video.thumbnail);
+  const aspectRatio = parseAspectRatio(video.aspectRatio, video.customAspectRatio);
   
   return {
     id: `${projectTitle.toLowerCase().replace(/\s+/g, '-')}-video-${index + 1}`,
@@ -275,7 +305,7 @@ function transformSanityVideo(
     videoId,
     title: video.title,
     thumbnailUrl,
-    aspectRatio: 16 / 9, // Default to 16:9
+    aspectRatio,
   };
 }
 
@@ -462,7 +492,17 @@ export async function getProjects(): Promise<Project[]> {
         ...,
         "metadata": asset->metadata
       },
-      videos,
+      "videos": videos[]{
+        url,
+        title,
+        "thumbnail": thumbnail{
+          ...,
+          "metadata": asset->metadata
+        },
+        aspectRatio,
+        customAspectRatio,
+        position
+      },
       collaboration,
       client,
       date,
@@ -514,7 +554,17 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
         ...,
         "metadata": asset->metadata
       },
-      videos,
+      "videos": videos[]{
+        url,
+        title,
+        "thumbnail": thumbnail{
+          ...,
+          "metadata": asset->metadata
+        },
+        aspectRatio,
+        customAspectRatio,
+        position
+      },
       collaboration,
       client,
       date

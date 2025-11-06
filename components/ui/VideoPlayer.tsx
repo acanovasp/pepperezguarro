@@ -64,17 +64,20 @@ export default function VideoPlayer({ video, priority = false, isActive = false,
       case 'vimeo':
         // Vimeo embed parameters:
         // - dnt=1: Do not track (privacy)
-        // - title=0, byline=0, portrait=0: Minimal UI
+        // - title=0, byline=0, portrait=0: Hide all overlays
         // - autopause=0: Don't pause when another video plays
-        // - background=0: Allow controls
-        return `https://player.vimeo.com/video/${videoId}?dnt=1&title=0&byline=0&portrait=0&autopause=0&background=0`;
+        // - controls=0: Hide controls
+        // - autoplay=1: Autoplay when loaded
+        return `https://player.vimeo.com/video/${videoId}?dnt=1&title=0&byline=0&portrait=0&autopause=0&controls=0&autoplay=1`;
 
       case 'youtube':
         // YouTube embed parameters:
         // - rel=0: Show related videos from same channel only
         // - modestbranding=1: Minimal YouTube branding
         // - enablejsapi=1: Enable API for video control
-        return `https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1&enablejsapi=1`;
+        // - autoplay=1: Autoplay when active
+        // - controls=0: Hide controls
+        return `https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1&enablejsapi=1&autoplay=1&controls=0`;
 
       default:
         // For other providers, return the original URL
@@ -82,29 +85,37 @@ export default function VideoPlayer({ video, priority = false, isActive = false,
     }
   };
 
-  // Pause video when slide becomes inactive
+  // Control video playback based on active state
   useEffect(() => {
     if (!iframeRef.current || !isLoaded) return;
 
     const iframe = iframeRef.current;
 
-    if (!isActive) {
-      // Pause video when not active
-      try {
+    try {
+      if (isActive) {
+        // Play video when slide becomes active
         if (video.provider === 'vimeo') {
-          // Vimeo postMessage API
+          iframe.contentWindow?.postMessage('{"method":"play"}', '*');
+        } else if (video.provider === 'youtube') {
+          iframe.contentWindow?.postMessage(
+            '{"event":"command","func":"playVideo","args":""}',
+            '*'
+          );
+        }
+      } else {
+        // Pause video when slide becomes inactive
+        if (video.provider === 'vimeo') {
           iframe.contentWindow?.postMessage('{"method":"pause"}', '*');
         } else if (video.provider === 'youtube') {
-          // YouTube postMessage API
           iframe.contentWindow?.postMessage(
             '{"event":"command","func":"pauseVideo","args":""}',
             '*'
           );
         }
-      } catch (error) {
-        // Silently fail if postMessage is blocked
-        console.debug('Could not pause video:', error);
       }
+    } catch (error) {
+      // Silently fail if postMessage is blocked
+      console.debug('Could not control video playback:', error);
     }
   }, [isActive, isLoaded, video.provider]);
 
@@ -136,7 +147,7 @@ export default function VideoPlayer({ video, priority = false, isActive = false,
                 className={styles.thumbnailImage}
                 fill
                 sizes="(max-width: 768px) 70vw, 45vw"
-                style={{ objectFit: 'cover' }}
+                style={{ objectFit: 'contain' }}
               />
               <div className={styles.playButton}>▶</div>
             </div>
@@ -165,7 +176,7 @@ export default function VideoPlayer({ video, priority = false, isActive = false,
             className={styles.thumbnailImage}
             fill
             sizes="(max-width: 768px) 70vw, 45vw"
-            style={{ objectFit: 'cover' }}
+            style={{ objectFit: 'contain' }}
           />
         </div>
       )}

@@ -26,7 +26,9 @@ export type ProjectCategory = 'project' | 'travel' | 'commercial' | 'editorial';
 export interface SanityVideo {
   url: string;
   title?: string;
-  thumbnailUrl?: string;
+  thumbnail?: SanityImageAsset;
+  aspectRatio?: string;
+  customAspectRatio?: string;
   position?: number;
 }
 

@@ -28,19 +28,36 @@ export default function ImageGrid({ project, onImageClick, onToggleView }: Image
                 ? null 
                 : mediaItem.data.url;
             
+            // Calculate dimensions based on aspect ratio for videos
+            let width: number;
+            let height: number;
+            
+            if (mediaItem.type === 'image') {
+              width = mediaItem.data.width;
+              height = mediaItem.data.height;
+            } else {
+              // For videos: use aspect ratio to calculate dimensions
+              // Base height of 1000px, calculate width from aspect ratio
+              height = 1000;
+              width = Math.round(height * mediaItem.data.aspectRatio);
+            }
+            
             return (
               <div
                 key={mediaItem.type === 'image' ? mediaItem.data.id : mediaItem.data.id}
                 className={styles.gridItem}
                 onClick={() => onImageClick(index)}
               >
-                <div className={styles.imageWrapper}>
+                <div 
+                  className={styles.imageWrapper}
+                  style={isVideo ? { aspectRatio: `${mediaItem.data.aspectRatio}` } : undefined}
+                >
                   {thumbnailUrl ? (
                     <Image
                       src={thumbnailUrl}
                       alt={mediaItem.type === 'image' ? mediaItem.data.alt : (mediaItem.data.title || 'Video')}
-                      width={mediaItem.type === 'image' ? mediaItem.data.width : 1920}
-                      height={mediaItem.type === 'image' ? mediaItem.data.height : 1080}
+                      width={width}
+                      height={height}
                       className={styles.gridImage}
                       sizes="110px"
                       loading={isPriority ? 'eager' : 'lazy'}
@@ -48,6 +65,7 @@ export default function ImageGrid({ project, onImageClick, onToggleView }: Image
                       placeholder={mediaItem.type === 'image' && mediaItem.data.blurDataURL ? 'blur' : 'empty'}
                       blurDataURL={mediaItem.type === 'image' ? mediaItem.data.blurDataURL : undefined}
                       quality={75}
+                      style={isVideo ? { objectFit: 'cover' } : undefined}
                     />
                   ) : (
                     <div className={styles.videoPlaceholder}>

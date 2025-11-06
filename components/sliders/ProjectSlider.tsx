@@ -238,8 +238,8 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
                 onMouseEnter={handleSlideMouseEnter}
                 onMouseMove={handleMouseMove}
               >
-                {/* Ghost media (previous slide) - only show on active slide after interaction and only for images */}
-                {isActiveSlide && ghostPosition && hasInteracted && ghostMediaItem.type === 'image' && (
+                {/* Ghost media (previous slide) - show for both images and videos */}
+                {isActiveSlide && ghostPosition && hasInteracted && (
                   <div
                     className={styles.ghostImage}
                     style={ghostPosition}
@@ -248,19 +248,41 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
                     onMouseLeave={handleGhostMouseLeave}
                     onMouseMove={handleMouseMove}
                   >
-                    <Image
-                      src={ghostMediaItem.data.url}
-                      alt="Previous"
-                      width={ghostMediaItem.data.width}
-                      height={ghostMediaItem.data.height}
-                      className={styles.slideImage}
-                      sizes="(max-width: 768px) 70vw, 45vw"
-                      priority={initialSlide === 0 && ghostIndex === project.media.length - 1}
-                      fetchPriority={initialSlide === 0 && ghostIndex === project.media.length - 1 ? 'high' : 'auto'}
-                      loading={initialSlide === 0 && ghostIndex === project.media.length - 1 ? 'eager' : 'lazy'}
-                      placeholder={initialSlide === 0 && ghostIndex === project.media.length - 1 && ghostMediaItem.data.blurDataURL ? 'blur' : 'empty'}
-                      blurDataURL={initialSlide === 0 && ghostIndex === project.media.length - 1 ? ghostMediaItem.data.blurDataURL : undefined}
-                    />
+                    {ghostMediaItem.type === 'image' ? (
+                      <Image
+                        src={ghostMediaItem.data.url}
+                        alt="Previous"
+                        width={ghostMediaItem.data.width}
+                        height={ghostMediaItem.data.height}
+                        className={styles.slideImage}
+                        sizes="(max-width: 768px) 70vw, 45vw"
+                        priority={initialSlide === 0 && ghostIndex === project.media.length - 1}
+                        fetchPriority={initialSlide === 0 && ghostIndex === project.media.length - 1 ? 'high' : 'auto'}
+                        loading={initialSlide === 0 && ghostIndex === project.media.length - 1 ? 'eager' : 'lazy'}
+                        placeholder={initialSlide === 0 && ghostIndex === project.media.length - 1 && ghostMediaItem.data.blurDataURL ? 'blur' : 'empty'}
+                        blurDataURL={initialSlide === 0 && ghostIndex === project.media.length - 1 ? ghostMediaItem.data.blurDataURL : undefined}
+                      />
+                    ) : ghostMediaItem.data.thumbnailUrl ? (
+                      (() => {
+                        // Calculate dimensions based on video aspect ratio
+                        // Using 1000px as base height, calculate width
+                        const baseHeight = 1000;
+                        const videoWidth = Math.round(baseHeight * ghostMediaItem.data.aspectRatio);
+                        return (
+                          <Image
+                            src={ghostMediaItem.data.thumbnailUrl}
+                            alt="Previous video"
+                            width={videoWidth}
+                            height={baseHeight}
+                            className={styles.slideImage}
+                            sizes="(max-width: 768px) 70vw, 45vw"
+                            style={{ objectFit: 'cover' }}
+                          />
+                        );
+                      })()
+                    ) : (
+                      <div className={styles.slideImage} style={{ background: '#000' }} />
+                    )}
                   </div>
                 )}
 

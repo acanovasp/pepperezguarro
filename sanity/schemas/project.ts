@@ -123,10 +123,38 @@ export default defineType({
               description: 'Optional: Custom title for the video',
             },
             {
-              name: 'thumbnailUrl',
-              title: 'Custom Thumbnail URL',
-              type: 'url',
-              description: 'Optional: Custom thumbnail image URL. If not provided, will attempt to fetch from video provider.',
+              name: 'thumbnail',
+              title: 'Video Thumbnail',
+              type: 'image',
+              description: 'Thumbnail image for the video (shown in grid and as ghost image). If not provided, will use a placeholder.',
+              options: {
+                hotspot: true,
+                metadata: ['lqip', 'palette'],
+              },
+            },
+            {
+              name: 'aspectRatio',
+              title: 'Aspect Ratio',
+              type: 'string',
+              description: 'Video aspect ratio (e.g., "16:9", "4:3", "9:16", "1:1"). Default is 16:9 if not specified.',
+              options: {
+                list: [
+                  { title: '16:9 (Landscape)', value: '16:9' },
+                  { title: '9:16 (Portrait)', value: '9:16' },
+                  { title: '4:3 (Standard)', value: '4:3' },
+                  { title: '1:1 (Square)', value: '1:1' },
+                  { title: '21:9 (Ultrawide)', value: '21:9' },
+                  { title: 'Custom', value: 'custom' },
+                ],
+              },
+              initialValue: '16:9',
+            },
+            {
+              name: 'customAspectRatio',
+              title: 'Custom Aspect Ratio',
+              type: 'string',
+              description: 'If "Custom" is selected above, enter aspect ratio as "width:height" (e.g., "2.35:1")',
+              hidden: ({ parent }) => parent?.aspectRatio !== 'custom',
             },
             {
               name: 'position',
