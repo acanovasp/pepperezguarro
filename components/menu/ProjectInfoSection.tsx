@@ -82,7 +82,7 @@ export default function ProjectInfoSection({ project }: ProjectInfoSectionProps)
       
       <div className={styles.statsContainer}>
         <p className={styles.imageCounter}>
-          {String(project.images.length).padStart(2, '0')} Images 
+          {String(project.media.length).padStart(2, '0')} {project.media.length === 1 ? 'Item' : 'Items'}
         </p>
         {project.collaboration && (
           <p className={styles.collaboration}>

@@ -10,36 +10,51 @@ interface ImageGridProps {
 }
 
 export default function ImageGrid({ project, onImageClick, onToggleView }: ImageGridProps) {
-  // Calculate how many images to prioritize (first visible row = 6-8 images)
+  // Calculate how many media items to prioritize (first visible row = 6-8 items)
   const priorityCount = 8;
   
   return (
     <>
       <div className={styles.gridContainer}>
         <div className={styles.grid}>
-          {project.images.map((image, index) => {
+          {project.media.map((mediaItem, index) => {
             const isPriority = index < priorityCount;
+            const isVideo = mediaItem.type === 'video';
+            
+            // For videos, use thumbnail if available, otherwise show a placeholder
+            const thumbnailUrl = isVideo && mediaItem.data.thumbnailUrl 
+              ? mediaItem.data.thumbnailUrl 
+              : isVideo 
+                ? null 
+                : mediaItem.data.url;
             
             return (
               <div
-                key={image.id}
+                key={mediaItem.type === 'image' ? mediaItem.data.id : mediaItem.data.id}
                 className={styles.gridItem}
                 onClick={() => onImageClick(index)}
               >
                 <div className={styles.imageWrapper}>
-                  <Image
-                    src={image.url}
-                    alt={image.alt}
-                    width={image.width}
-                    height={image.height}
-                    className={styles.gridImage}
-                    sizes="110px"
-                    loading={isPriority ? 'eager' : 'lazy'}
-                    priority={isPriority}
-                    placeholder={image.blurDataURL ? 'blur' : 'empty'}
-                    blurDataURL={image.blurDataURL}
-                    quality={75}
-                  />
+                  {thumbnailUrl ? (
+                    <Image
+                      src={thumbnailUrl}
+                      alt={mediaItem.type === 'image' ? mediaItem.data.alt : (mediaItem.data.title || 'Video')}
+                      width={mediaItem.type === 'image' ? mediaItem.data.width : 1920}
+                      height={mediaItem.type === 'image' ? mediaItem.data.height : 1080}
+                      className={styles.gridImage}
+                      sizes="110px"
+                      loading={isPriority ? 'eager' : 'lazy'}
+                      priority={isPriority}
+                      placeholder={mediaItem.type === 'image' && mediaItem.data.blurDataURL ? 'blur' : 'empty'}
+                      blurDataURL={mediaItem.type === 'image' ? mediaItem.data.blurDataURL : undefined}
+                      quality={75}
+                    />
+                  ) : (
+                    <div className={styles.videoPlaceholder}>
+                      <span className={styles.videoIcon}>▶</span>
+                    </div>
+                  )}
+                  {isVideo && <div className={styles.videoIndicator}>▶</div>}
                 </div>
                 <p className={styles.imageNumber}>
                   <span className={styles.arrow}>●</span>

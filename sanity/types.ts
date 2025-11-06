@@ -23,6 +23,13 @@ export interface SanityImageAsset {
 
 export type ProjectCategory = 'project' | 'travel' | 'commercial' | 'editorial';
 
+export interface SanityVideo {
+  url: string;
+  title?: string;
+  thumbnailUrl?: string;
+  position?: number;
+}
+
 export interface SanityProject {
   _id: string;
   _type: 'project';
@@ -36,6 +43,7 @@ export interface SanityProject {
   year: string;
   description: PortableTextBlock[];
   images: SanityImageAsset[];
+  videos?: SanityVideo[];
   collaboration?: string;
   client?: string;
   date?: string;

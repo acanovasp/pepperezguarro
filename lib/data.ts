@@ -1,7 +1,7 @@
-import { Project, ProjectImage, AboutInfo, ContactInfo } from './types';
+import { Project, ProjectImage, ProjectVideo, MediaItem, AboutInfo, ContactInfo, VideoProvider } from './types';
 import { client } from '../sanity/client';
 import { urlForImage } from '../sanity/client';
-import type { SanityProject, SanityAbout, SanityImageAsset } from '../sanity/types';
+import type { SanityProject, SanityAbout, SanityImageAsset, SanityVideo } from '../sanity/types';
 
 /**
  * Data abstraction layer for portfolio content
@@ -20,6 +20,11 @@ function generateProjectImages(projectId: string, count: number): ProjectImage[]
     width: 1200,
     height: 800
   }));
+}
+
+// Helper to convert images array to media array
+function imagesToMedia(images: ProjectImage[]): MediaItem[] {
+  return images.map(image => ({ type: 'image' as const, data: image }));
 }
 
 // Placeholder projects data (fallback when Sanity is not configured)
@@ -41,6 +46,7 @@ const placeholderProjects: Project[] = [
       }
     ],
     images: generateProjectImages('ladakhi-bakers', 17),
+    get media() { return imagesToMedia(this.images); },
     collaboration: 'In collaboration with Ana Gallart',
     client: 'Personal Project',
     date: 'Shot between April 12 - May 2'
@@ -62,6 +68,7 @@ const placeholderProjects: Project[] = [
       }
     ],
     images: generateProjectImages('366-miralls', 12),
+    get media() { return imagesToMedia(this.images); },
     collaboration: 'In collaboration with Ana Gallart',
     client: 'Personal Project',
     date: 'Shot between April 12 - May 2'
@@ -82,7 +89,8 @@ const placeholderProjects: Project[] = [
         style: 'normal'
       }
     ],
-    images: generateProjectImages('morocco', 15)
+    images: generateProjectImages('morocco', 15),
+    get media() { return imagesToMedia(this.images); }
   },
   {
     id: 'project-4',
@@ -101,6 +109,7 @@ const placeholderProjects: Project[] = [
       }
     ],
     images: generateProjectImages('factory-thinking-mu', 20),
+    get media() { return imagesToMedia(this.images); },
     client: 'Thinking Mu',
     date: 'Shot between April 12 - May 2'
   },
@@ -121,6 +130,7 @@ const placeholderProjects: Project[] = [
       }
     ],
     images: generateProjectImages('varanasi', 14),
+    get media() { return imagesToMedia(this.images); },
     collaboration: 'In collaboration with Marius Uhlig',
     client: 'Personal Project',
     date: 'Shot between April 12 - May 2'
@@ -177,6 +187,97 @@ const placeholderAbout: AboutInfo = {
     'ZARA'
   ]
 };
+
+/**
+ * Parse video URL and extract provider info and video ID
+ */
+function parseVideoUrl(url: string): { provider: VideoProvider; videoId: string } | null {
+  try {
+    const urlObj = new URL(url);
+    
+    // Vimeo
+    if (urlObj.hostname.includes('vimeo.com')) {
+      const videoId = urlObj.pathname.split('/').filter(Boolean)[0];
+      if (videoId) {
+        return { provider: 'vimeo', videoId };
+      }
+    }
+    
+    // YouTube
+    if (urlObj.hostname.includes('youtube.com') || urlObj.hostname.includes('youtu.be')) {
+      let videoId: string | null = null;
+      
+      // Standard YouTube URL: youtube.com/watch?v=VIDEO_ID
+      if (urlObj.pathname === '/watch') {
+        videoId = urlObj.searchParams.get('v');
+      }
+      // Short URL: youtu.be/VIDEO_ID
+      else if (urlObj.hostname.includes('youtu.be')) {
+        videoId = urlObj.pathname.split('/').filter(Boolean)[0];
+      }
+      // Embed URL: youtube.com/embed/VIDEO_ID
+      else if (urlObj.pathname.startsWith('/embed/')) {
+        videoId = urlObj.pathname.split('/')[2];
+      }
+      
+      if (videoId) {
+        return { provider: 'youtube', videoId };
+      }
+    }
+    
+    return null;
+  } catch (error) {
+    console.error('Error parsing video URL:', url, error);
+    return null;
+  }
+}
+
+/**
+ * Generate thumbnail URL for video based on provider
+ */
+function getVideoThumbnail(provider: VideoProvider, videoId: string, customUrl?: string): string | undefined {
+  if (customUrl) return customUrl;
+  
+  switch (provider) {
+    case 'vimeo':
+      // Vimeo thumbnails require API call, so we'll handle this client-side or leave undefined
+      return undefined;
+    case 'youtube':
+      // YouTube provides reliable thumbnail URLs
+      return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+    default:
+      return undefined;
+  }
+}
+
+/**
+ * Transform Sanity video to ProjectVideo format
+ */
+function transformSanityVideo(
+  video: SanityVideo,
+  projectTitle: string,
+  index: number
+): ProjectVideo | null {
+  const parsed = parseVideoUrl(video.url);
+  
+  if (!parsed) {
+    console.warn(`Unable to parse video URL: ${video.url}`);
+    return null;
+  }
+  
+  const { provider, videoId } = parsed;
+  const thumbnailUrl = getVideoThumbnail(provider, videoId, video.thumbnailUrl);
+  
+  return {
+    id: `${projectTitle.toLowerCase().replace(/\s+/g, '-')}-video-${index + 1}`,
+    url: video.url,
+    provider,
+    videoId,
+    title: video.title,
+    thumbnailUrl,
+    aspectRatio: 16 / 9, // Default to 16:9
+  };
+}
 
 /**
  * Transform Sanity image to ProjectImage format
@@ -237,8 +338,41 @@ function formatProjectNumber(category: string, number: number): string {
 
 /**
  * Transform Sanity project to Project format
+ * Combines images and videos into a unified media array
  */
 function transformProject(sanityProject: SanityProject): Project {
+  // Transform all images
+  const images = sanityProject.images.map((img, index) =>
+    transformSanityImage(img, sanityProject.title, index)
+  );
+  
+  // Transform all videos (if any)
+  const videos = (sanityProject.videos || [])
+    .map((video, index) => transformSanityVideo(video, sanityProject.title, index))
+    .filter((video): video is ProjectVideo => video !== null);
+  
+  // Create media array with proper positioning
+  const media: MediaItem[] = [];
+  
+  // Start with all images
+  images.forEach((image) => {
+    media.push({ type: 'image', data: image });
+  });
+  
+  // Insert videos at specified positions or append at end
+  videos.forEach((video) => {
+    const videoData = sanityProject.videos?.find(v => v.url === video.url);
+    const position = videoData?.position;
+    
+    if (position && position > 0 && position <= media.length + 1) {
+      // Insert at specified position (1-based index)
+      media.splice(position - 1, 0, { type: 'video', data: video });
+    } else {
+      // Append at end if no position specified or invalid position
+      media.push({ type: 'video', data: video });
+    }
+  });
+  
   return {
     id: sanityProject._id,
     slug: sanityProject.slug.current,
@@ -249,9 +383,8 @@ function transformProject(sanityProject: SanityProject): Project {
     location: sanityProject.location,
     year: sanityProject.year,
     description: sanityProject.description,
-    images: sanityProject.images.map((img, index) =>
-      transformSanityImage(img, sanityProject.title, index)
-    ),
+    images, // Keep for backward compatibility
+    media, // New unified media array
     collaboration: sanityProject.collaboration,
     client: sanityProject.client,
     date: sanityProject.date,
@@ -329,6 +462,7 @@ export async function getProjects(): Promise<Project[]> {
         ...,
         "metadata": asset->metadata
       },
+      videos,
       collaboration,
       client,
       date,
@@ -380,6 +514,7 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
         ...,
         "metadata": asset->metadata
       },
+      videos,
       collaboration,
       client,
       date

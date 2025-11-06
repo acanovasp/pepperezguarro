@@ -52,7 +52,7 @@ export default function ProjectsSection({ projects, currentSlug, onOpenProjectIn
                       onClick={handleToggleThumbnails}
                     >
                       <p className={styles.imageCount}>
-                      {String(project.images.length).padStart(2, '0')} Images
+                      {String(project.media.length).padStart(2, '0')} {project.media.length === 1 ? 'Item' : 'Items'}
                     </p>
                     </button>
                     <button 

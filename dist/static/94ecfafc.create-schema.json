@@ -200,6 +200,100 @@
         "type": "array"
       },
       {
+        "description": "Add videos from Vimeo, YouTube, or other platforms. Videos will be displayed alongside images in the project slideshow.",
+        "of": [
+          {
+            "fields": [
+              {
+                "validation": [
+                  {
+                    "rules": [
+                      {
+                        "flag": "presence",
+                        "constraint": "required"
+                      },
+                      {
+                        "flag": "uri",
+                        "constraint": {
+                          "options": {
+                            "scheme": [
+                              "/^https$/",
+                              "/^http$/"
+                            ],
+                            "allowRelative": false,
+                            "relativeOnly": false,
+                            "allowCredentials": false
+                          }
+                        }
+                      }
+                    ],
+                    "level": "error"
+                  }
+                ],
+                "description": "Full URL from Vimeo (https://vimeo.com/...) or YouTube (https://www.youtube.com/watch?v=...)",
+                "name": "url",
+                "type": "url",
+                "title": "Video URL"
+              },
+              {
+                "description": "Optional: Custom title for the video",
+                "name": "title",
+                "type": "string",
+                "title": "Video Title"
+              },
+              {
+                "validation": [
+                  {
+                    "rules": [
+                      {
+                        "flag": "uri",
+                        "constraint": {
+                          "options": {
+                            "scheme": [
+                              "/^http$/",
+                              "/^https$/"
+                            ],
+                            "allowRelative": false,
+                            "relativeOnly": false,
+                            "allowCredentials": false
+                          }
+                        }
+                      }
+                    ],
+                    "level": "error"
+                  }
+                ],
+                "description": "Optional: Custom thumbnail image URL. If not provided, will attempt to fetch from video provider.",
+                "name": "thumbnailUrl",
+                "type": "url",
+                "title": "Custom Thumbnail URL"
+              },
+              {
+                "validation": [
+                  {
+                    "rules": [
+                      {
+                        "flag": "min",
+                        "constraint": 0
+                      }
+                    ],
+                    "level": "error"
+                  }
+                ],
+                "description": "Where to insert this video among the images (e.g., 3 = after the 3rd image). Leave empty to add at the end.",
+                "name": "position",
+                "type": "number",
+                "title": "Position in Gallery"
+              }
+            ],
+            "type": "object",
+            "name": "video"
+          }
+        ],
+        "name": "videos",
+        "type": "array"
+      },
+      {
         "description": "Optional: e.g., \"In collaboration with Ana Gallart\"",
         "name": "collaboration",
         "type": "string"

@@ -7,6 +7,7 @@ import type { Swiper as SwiperType } from 'swiper';
 import Image from 'next/image';
 import styles from './ProjectSlider.module.css';
 import TransitionLink from '@/components/transitions/TransitionLink';
+import VideoPlayer from '@/components/ui/VideoPlayer';
 import { Project } from '@/lib/types';
 
 import 'swiper/css';
@@ -34,10 +35,10 @@ function calculateRandomPosition(imageHeight: number): ImagePosition {
   const approximateImageWidth = (imageHeight * 3) / 2;
   
   // Center 50% zone: 25% to 75% of viewport
-  const centerZoneStartY = viewportHeight * 0.15;
-  const centerZoneEndY = viewportHeight * 0.85;
-  const centerZoneStartX = viewportWidth * 0.15;
-  const centerZoneEndX = viewportWidth * 0.85;
+  const centerZoneStartY = viewportHeight * 0.10;
+  const centerZoneEndY = viewportHeight * 0.90;
+  const centerZoneStartX = viewportWidth * 0.10;
+  const centerZoneEndX = viewportWidth * 0.90;
   
   // Calculate available space for image within center zone
   const availableHeight = centerZoneEndY - centerZoneStartY - imageHeight;
@@ -61,7 +62,7 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
   const inactivityTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const prevIndexRef = useRef<number>(initialSlide);
 
-  // Generate random positions for all images (desktop only)
+  // Generate random positions for all media items (desktop only)
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
@@ -75,7 +76,7 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
       // Calculate actual pixel value of 40dvh
       const imageHeightPx = window.innerHeight * 0.4; // 40dvh = 40% of viewport height
       
-      const newPositions = project.images.map(() => 
+      const newPositions = project.media.map(() => 
         calculateRandomPosition(imageHeightPx)
       );
       setPositions(newPositions);
@@ -95,7 +96,7 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
       window.removeEventListener('resize', handleResize);
       clearTimeout(resizeTimeout);
     };
-  }, [project.images]);
+  }, [project.media]);
 
   const handleSlideChange = (swiper: SwiperType) => {
     const newIndex = swiper.realIndex;
@@ -109,10 +110,10 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
       let direction: 'left' | 'right' | null = null;
       
       // Calculate direction considering loop behavior
-      if (newIndex > prevIndex || (prevIndex === project.images.length - 1 && newIndex === 0)) {
+      if (newIndex > prevIndex || (prevIndex === project.media.length - 1 && newIndex === 0)) {
         // Swiped forward (show right arrow)
         direction = 'right';
-      } else if (newIndex < prevIndex || (prevIndex === 0 && newIndex === project.images.length - 1)) {
+      } else if (newIndex < prevIndex || (prevIndex === 0 && newIndex === project.media.length - 1)) {
         // Swiped backward (show left arrow)
         direction = 'left';
       }
@@ -218,24 +219,27 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
         }}
         className="project-swiper"
       >
-        {project.images.map((image, index) => {
+        {project.media.map((mediaItem, index) => {
           const position = positions[index];
           
-          // Calculate ghost image index (previous slide)
-          const ghostIndex = activeIndex === 0 ? project.images.length - 1 : activeIndex - 1;
+          // Calculate ghost media index (previous slide)
+          const ghostIndex = activeIndex === 0 ? project.media.length - 1 : activeIndex - 1;
+          const ghostMediaItem = project.media[ghostIndex];
           const ghostPosition = positions[ghostIndex];
           const isActiveSlide = activeIndex === index;
           
+          const isPriority = index === initialSlide || (initialSlide === 0 && index === project.media.length - 1);
+          
           return (
-            <SwiperSlide key={image.id}>
+            <SwiperSlide key={mediaItem.type === 'image' ? mediaItem.data.id : mediaItem.data.id}>
               <div 
                 className={styles.slide} 
                 onClick={handleSlideClick}
                 onMouseEnter={handleSlideMouseEnter}
                 onMouseMove={handleMouseMove}
               >
-                {/* Ghost image (previous slide) - only show on active slide after interaction */}
-                {isActiveSlide && ghostPosition && hasInteracted && (
+                {/* Ghost media (previous slide) - only show on active slide after interaction and only for images */}
+                {isActiveSlide && ghostPosition && hasInteracted && ghostMediaItem.type === 'image' && (
                   <div
                     className={styles.ghostImage}
                     style={ghostPosition}
@@ -245,37 +249,45 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
                     onMouseMove={handleMouseMove}
                   >
                     <Image
-                      src={project.images[ghostIndex].url}
+                      src={ghostMediaItem.data.url}
                       alt="Previous"
-                      width={project.images[ghostIndex].width}
-                      height={project.images[ghostIndex].height}
+                      width={ghostMediaItem.data.width}
+                      height={ghostMediaItem.data.height}
                       className={styles.slideImage}
                       sizes="(max-width: 768px) 70vw, 45vw"
-                      priority={initialSlide === 0 && ghostIndex === project.images.length - 1}
-                      fetchPriority={initialSlide === 0 && ghostIndex === project.images.length - 1 ? 'high' : 'auto'}
-                      loading={initialSlide === 0 && ghostIndex === project.images.length - 1 ? 'eager' : 'lazy'}
-                      placeholder={initialSlide === 0 && ghostIndex === project.images.length - 1 ? 'blur' : 'empty'}
-                      blurDataURL={initialSlide === 0 && ghostIndex === project.images.length - 1 ? project.images[ghostIndex].blurDataURL : undefined}
+                      priority={initialSlide === 0 && ghostIndex === project.media.length - 1}
+                      fetchPriority={initialSlide === 0 && ghostIndex === project.media.length - 1 ? 'high' : 'auto'}
+                      loading={initialSlide === 0 && ghostIndex === project.media.length - 1 ? 'eager' : 'lazy'}
+                      placeholder={initialSlide === 0 && ghostIndex === project.media.length - 1 && ghostMediaItem.data.blurDataURL ? 'blur' : 'empty'}
+                      blurDataURL={initialSlide === 0 && ghostIndex === project.media.length - 1 ? ghostMediaItem.data.blurDataURL : undefined}
                     />
                   </div>
                 )}
 
-                {/* Image with caption - caption fades with image */}
+                {/* Media content with caption - caption fades with media */}
                 <div className={styles.imageWithCaption} style={position || undefined}>
                     <div className={styles.imageContainer}>
-                      <Image
-                        src={image.url}
-                        alt={image.alt}
-                        width={image.width}
-                        height={image.height}
-                        className={styles.slideImage}
-                        sizes="(max-width: 768px) 70vw, 45vw"
-                        priority={index === initialSlide || (initialSlide === 0 && index === project.images.length - 1)}
-                        fetchPriority={index === initialSlide || (initialSlide === 0 && index === project.images.length - 1) ? 'high' : 'auto'}
-                        loading={index === initialSlide || (initialSlide === 0 && index === project.images.length - 1) ? 'eager' : 'lazy'}
-                        placeholder={index === initialSlide || (initialSlide === 0 && index === project.images.length - 1) ? 'blur' : 'empty'}
-                        blurDataURL={index === initialSlide || (initialSlide === 0 && index === project.images.length - 1) ? image.blurDataURL : undefined}
-                      />
+                      {mediaItem.type === 'image' ? (
+                        <Image
+                          src={mediaItem.data.url}
+                          alt={mediaItem.data.alt}
+                          width={mediaItem.data.width}
+                          height={mediaItem.data.height}
+                          className={styles.slideImage}
+                          sizes="(max-width: 768px) 70vw, 45vw"
+                          priority={isPriority}
+                          fetchPriority={isPriority ? 'high' : 'auto'}
+                          loading={isPriority ? 'eager' : 'lazy'}
+                          placeholder={isPriority && mediaItem.data.blurDataURL ? 'blur' : 'empty'}
+                          blurDataURL={isPriority ? mediaItem.data.blurDataURL : undefined}
+                        />
+                      ) : (
+                        <VideoPlayer
+                          video={mediaItem.data}
+                          priority={isPriority}
+                          isActive={isActiveSlide}
+                        />
+                      )}
                     </div>
                     {/* Caption always rendered, fades with parent slide */}
                     <div className={styles.imageCaption}>
@@ -289,7 +301,7 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
                           }}
                           title="Toggle grid view"
                         >
-                          {String(index + 1).padStart(2, '0')}/{String(project.images.length).padStart(2, '0')}
+                          {String(index + 1).padStart(2, '0')}/{String(project.media.length).padStart(2, '0')}
                         </button>
                         <span className={`${styles.arrow} ${styles.arrowRight} ${navigationArrow === 'right' ? styles.arrowVisible : ''}`}>●</span>
                       </div>

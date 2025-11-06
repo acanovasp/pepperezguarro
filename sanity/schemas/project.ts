@@ -99,6 +99,66 @@ export default defineType({
       validation: (Rule) => Rule.required().min(1),
     }),
     defineField({
+      name: 'videos',
+      title: 'Videos',
+      type: 'array',
+      description: 'Add videos from Vimeo, YouTube, or other platforms. Videos will be displayed alongside images in the project slideshow.',
+      of: [
+        {
+          type: 'object',
+          name: 'video',
+          title: 'Video',
+          fields: [
+            {
+              name: 'url',
+              title: 'Video URL',
+              type: 'url',
+              description: 'Full URL from Vimeo (https://vimeo.com/...) or YouTube (https://www.youtube.com/watch?v=...)',
+              validation: (Rule) => Rule.required().uri({ scheme: ['https', 'http'] }),
+            },
+            {
+              name: 'title',
+              title: 'Video Title',
+              type: 'string',
+              description: 'Optional: Custom title for the video',
+            },
+            {
+              name: 'thumbnailUrl',
+              title: 'Custom Thumbnail URL',
+              type: 'url',
+              description: 'Optional: Custom thumbnail image URL. If not provided, will attempt to fetch from video provider.',
+            },
+            {
+              name: 'position',
+              title: 'Position in Gallery',
+              type: 'number',
+              description: 'Where to insert this video among the images (e.g., 3 = after the 3rd image). Leave empty to add at the end.',
+              validation: (Rule) => Rule.integer().positive(),
+            },
+          ],
+          preview: {
+            select: {
+              title: 'title',
+              url: 'url',
+            },
+            prepare({ title, url }) {
+              // Extract video ID for preview
+              let provider = 'Video';
+              if (url?.includes('vimeo.com')) {
+                provider = 'Vimeo';
+              } else if (url?.includes('youtube.com') || url?.includes('youtu.be')) {
+                provider = 'YouTube';
+              }
+              return {
+                title: title || 'Untitled Video',
+                subtitle: `${provider} - ${url || 'No URL'}`,
+              };
+            },
+          },
+        },
+      ],
+    }),
+    defineField({
       name: 'collaboration',
       title: 'Collaboration',
       type: 'string',

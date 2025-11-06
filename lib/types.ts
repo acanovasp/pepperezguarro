@@ -14,6 +14,22 @@ export interface ProjectImage {
   height: number;
 }
 
+export type VideoProvider = 'vimeo' | 'youtube' | 'other';
+
+export interface ProjectVideo {
+  id: string;
+  url: string;
+  provider: VideoProvider;
+  videoId: string;
+  title?: string;
+  thumbnailUrl?: string;
+  aspectRatio: number; // width / height (e.g., 16/9 = 1.777)
+}
+
+export type MediaItem = 
+  | { type: 'image'; data: ProjectImage }
+  | { type: 'video'; data: ProjectVideo };
+
 export type ProjectCategory = 'project' | 'travel' | 'commercial' | 'editorial';
 
 export interface Project {
@@ -26,7 +42,8 @@ export interface Project {
   location: string;
   year: string;
   description: PortableTextBlock[];
-  images: ProjectImage[];
+  images: ProjectImage[]; // Legacy: kept for backward compatibility
+  media: MediaItem[]; // New: combined images and videos in order
   collaboration?: string;
   client?: string;
   date?: string;
