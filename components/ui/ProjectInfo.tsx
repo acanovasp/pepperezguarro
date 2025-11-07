@@ -7,14 +7,18 @@ interface ProjectInfoProps {
 }
 
 export default function ProjectInfo({ project, onOpenProjectInfo }: ProjectInfoProps) {
+  const locationYear = [project.location, project.year].filter(Boolean).join(', ');
+  
   return (
     <div className={styles.projectInfo}>
       <div className={styles.content}>
-        <h1 className={styles.number}>
-          {project.formattedNumber}
-        </h1>
+        {project.formattedNumber && (
+          <h1 className={styles.number}>
+            {project.formattedNumber}
+          </h1>
+        )}
         <h1 className={styles.details}>
-          {project.title}. {project.location}, {project.year}
+          {project.title}{locationYear && `. ${locationYear}`}
         </h1>
         
         {onOpenProjectInfo && (

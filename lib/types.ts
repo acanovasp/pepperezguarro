@@ -36,11 +36,11 @@ export interface Project {
   id: string;
   slug: string;
   title: string;
-  category: ProjectCategory;
-  number: number; // Raw number (1, 2, 3, etc.)
+  category?: ProjectCategory;
+  number?: number; // Raw number (1, 2, 3, etc.)
   formattedNumber: string; // Formatted with prefix (P01, T01, etc.)
-  location: string;
-  year: string;
+  location?: string;
+  year?: string;
   description: PortableTextBlock[];
   images: ProjectImage[]; // Legacy: kept for backward compatibility
   media: MediaItem[]; // New: combined images and videos in order

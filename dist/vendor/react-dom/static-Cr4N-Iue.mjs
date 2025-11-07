@@ -1,15 +1,6 @@
 import ka from "react";
 import Fa from "react-dom";
 var $l = {};
-/**
- * @license React
- * react-dom-server.browser.production.js
- *
- * Copyright (c) Meta Platforms, Inc. and affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
 var nr = ka, Aa = Fa;
 function b(n) {
   var e = "https://react.dev/errors/" + n;

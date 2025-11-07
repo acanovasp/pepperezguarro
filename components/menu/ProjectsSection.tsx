@@ -29,19 +29,23 @@ export default function ProjectsSection({ projects, currentSlug, onOpenProjectIn
               onMouseEnter={() => onProjectHover?.(project)}
               onMouseLeave={() => onProjectHover?.(null)}
             >
-              <p className={styles.projectNumber}>
-                {active && <span className={styles.arrow}>● </span>}
-                {project.formattedNumber}
-              </p>
+              {project.formattedNumber && (
+                <p className={styles.projectNumber}>
+                  {active && <span className={styles.arrow}>● </span>}
+                  {project.formattedNumber}
+                </p>
+              )}
               <div className={styles.projectItemContent}>
                 <TransitionLink 
                   href={`/projects/${project.slug}`}
                   className={`${styles.projectInfoContainer} ${styles.projectLink}`}
                 >
                   {project.title}
-                  <span className={styles.projectMeta}>
-                    {project.location}, {project.year}
-                  </span>
+                  {(project.location || project.year) && (
+                    <span className={styles.projectMeta}>
+                      {[project.location, project.year].filter(Boolean).join(', ')}
+                    </span>
+                  )}
                 </TransitionLink>
                 
                 {/* Show extraInfo for active project */}

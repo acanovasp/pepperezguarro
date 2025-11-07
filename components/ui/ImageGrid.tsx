@@ -65,7 +65,7 @@ export default function ImageGrid({ project, onImageClick, onToggleView }: Image
                       placeholder={mediaItem.type === 'image' && mediaItem.data.blurDataURL ? 'blur' : 'empty'}
                       blurDataURL={mediaItem.type === 'image' ? mediaItem.data.blurDataURL : undefined}
                       quality={75}
-                      style={isVideo ? { objectFit: 'cover' } : undefined}
+                      style={isVideo ? { objectFit: 'contain' } : undefined}
                     />
                   ) : (
                     <div className={styles.videoPlaceholder}>

@@ -1,15 +1,6 @@
 import Wr from "react";
 import Ur from "react-dom";
 var Ne = {};
-/**
- * @license React
- * react-dom-server-legacy.browser.production.js
- *
- * Copyright (c) Meta Platforms, Inc. and affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
 var ar = Wr, Yr = Ur;
 function d(n) {
   var l = "https://react.dev/errors/" + n;

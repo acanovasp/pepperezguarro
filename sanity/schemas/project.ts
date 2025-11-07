@@ -18,13 +18,12 @@ export default defineType({
       options: {
         list: [
           { title: 'Project', value: 'project' },
-          { title: 'Travel', value: 'travel' },
           { title: 'Commercial', value: 'commercial' },
+          { title: 'Travel', value: 'travel' },
           { title: 'Editorial', value: 'editorial' },
         ],
         layout: 'dropdown',
       },
-      validation: (Rule) => Rule.required(),
       initialValue: 'project',
     }),
     defineField({
@@ -32,7 +31,6 @@ export default defineType({
       title: 'Number (within category)',
       type: 'number',
       description: 'Position within category (1, 2, 3, etc.). Each category has its own numbering.',
-      validation: (Rule) => Rule.required().integer().positive(),
     }),
     defineField({
       name: 'title',
@@ -55,13 +53,11 @@ export default defineType({
       name: 'location',
       title: 'Location',
       type: 'string',
-      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'year',
       title: 'Year',
       type: 'string',
-      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'description',
@@ -80,7 +76,6 @@ export default defineType({
           }
         }
       ],
-      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'images',

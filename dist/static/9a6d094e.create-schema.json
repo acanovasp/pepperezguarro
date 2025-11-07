@@ -24,46 +24,11 @@
           "layout": "dropdown"
         },
         "initialValue": "project",
-        "validation": [
-          {
-            "rules": [
-              {
-                "flag": "valid",
-                "constraint": [
-                  "project",
-                  "travel",
-                  "commercial",
-                  "editorial"
-                ]
-              },
-              {
-                "flag": "presence",
-                "constraint": "required"
-              }
-            ],
-            "level": "error"
-          }
-        ],
         "description": "Project category - affects numbering prefix (P01, T01, C01, E01)",
         "name": "category",
         "type": "string"
       },
       {
-        "validation": [
-          {
-            "rules": [
-              {
-                "flag": "presence",
-                "constraint": "required"
-              },
-              {
-                "flag": "min",
-                "constraint": 0
-              }
-            ],
-            "level": "error"
-          }
-        ],
         "description": "Position within category (1, 2, 3, etc.). Each category has its own numbering.",
         "name": "number",
         "type": "number",
@@ -108,32 +73,10 @@
         "type": "slug"
       },
       {
-        "validation": [
-          {
-            "rules": [
-              {
-                "flag": "presence",
-                "constraint": "required"
-              }
-            ],
-            "level": "error"
-          }
-        ],
         "name": "location",
         "type": "string"
       },
       {
-        "validation": [
-          {
-            "rules": [
-              {
-                "flag": "presence",
-                "constraint": "required"
-              }
-            ],
-            "level": "error"
-          }
-        ],
         "name": "year",
         "type": "string"
       },

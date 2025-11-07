@@ -34,9 +34,7 @@ export default function VideoPlayer({ video, priority = false, isActive = false,
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsInView(true);
-          }
+          setIsInView(entry.isIntersecting);
         });
       },
       {
@@ -67,17 +65,15 @@ export default function VideoPlayer({ video, priority = false, isActive = false,
         // - title=0, byline=0, portrait=0: Hide all overlays
         // - autopause=0: Don't pause when another video plays
         // - controls=0: Hide controls
-        // - autoplay=1: Autoplay when loaded
-        return `https://player.vimeo.com/video/${videoId}?dnt=1&title=0&byline=0&portrait=0&autopause=0&controls=0&autoplay=1`;
+        return `https://player.vimeo.com/video/${videoId}?dnt=1&title=0&byline=0&portrait=0&autopause=0&controls=0`;
 
       case 'youtube':
         // YouTube embed parameters:
         // - rel=0: Show related videos from same channel only
         // - modestbranding=1: Minimal YouTube branding
         // - enablejsapi=1: Enable API for video control
-        // - autoplay=1: Autoplay when active
         // - controls=0: Hide controls
-        return `https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1&enablejsapi=1&autoplay=1&controls=0`;
+        return `https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1&enablejsapi=1&controls=0`;
 
       default:
         // For other providers, return the original URL

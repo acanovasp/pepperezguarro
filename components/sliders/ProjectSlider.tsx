@@ -276,7 +276,7 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
                             height={baseHeight}
                             className={styles.slideImage}
                             sizes="(max-width: 768px) 70vw, 45vw"
-                            style={{ objectFit: 'cover' }}
+                            style={{ objectFit: 'contain' }}
                           />
                         );
                       })()

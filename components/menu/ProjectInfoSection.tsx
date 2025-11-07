@@ -54,14 +54,18 @@ export default function ProjectInfoSection({ project }: ProjectInfoSectionProps)
     <>
       <div className={styles.projectInfoSection}>
         <div className={styles.projectInfoHeader}>
-          <p className={styles.projectNumber}>
-            {project.formattedNumber}
-          </p>
+          {project.formattedNumber && (
+            <p className={styles.projectNumber}>
+              {project.formattedNumber}
+            </p>
+          )}
           <div className={styles.projectInfoContainer}>
             <h1 className={styles.title}>{project.title}</h1>
-            <h1 className={styles.meta}>
-              {project.location}, {project.year}
-            </h1>
+            {(project.location || project.year) && (
+              <h1 className={styles.meta}>
+                {[project.location, project.year].filter(Boolean).join(', ')}
+              </h1>
+            )}
           </div>
         </div>
 

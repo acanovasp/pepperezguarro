@@ -1,13 +1,4 @@
 var u = {};
-/**
- * @license React
- * react.production.js
- *
- * Copyright (c) Meta Platforms, Inc. and affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
 var E = Symbol.for("react.transitional.element"), I = Symbol.for("react.portal"), $ = Symbol.for("react.fragment"), M = Symbol.for("react.strict_mode"), L = Symbol.for("react.profiler"), U = Symbol.for("react.consumer"), Y = Symbol.for("react.context"), D = Symbol.for("react.forward_ref"), b = Symbol.for("react.suspense"), k = Symbol.for("react.memo"), h = Symbol.for("react.lazy"), C = Symbol.iterator;
 function x(e) {
   return e === null || typeof e != "object" ? null : (e = C && e[C] || e["@@iterator"], typeof e == "function" ? e : null);

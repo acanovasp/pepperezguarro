@@ -360,8 +360,12 @@ function getCategoryPrefix(category: string): string {
 
 /**
  * Create formatted number with category prefix (e.g., "P01", "T02")
+ * Returns empty string if category or number is missing
  */
-function formatProjectNumber(category: string, number: number): string {
+function formatProjectNumber(category?: string, number?: number): string {
+  if (!category || number == null) {
+    return '';
+  }
   const prefix = getCategoryPrefix(category);
   return `${prefix}${String(number).padStart(2, '0')}`;
 }
