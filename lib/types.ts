@@ -12,6 +12,7 @@ export interface ProjectImage {
   blurDataURL?: string;
   width: number;
   height: number;
+  featuredOnHomepage?: boolean;
 }
 
 export type VideoProvider = 'vimeo' | 'youtube' | 'other';

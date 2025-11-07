@@ -19,6 +19,7 @@ export interface SanityImageAsset {
       aspectRatio: number;
     };
   };
+  featuredOnHomepage?: boolean;
 }
 
 export type ProjectCategory = 'project' | 'travel' | 'commercial' | 'editorial';

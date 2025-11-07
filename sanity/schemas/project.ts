@@ -89,6 +89,15 @@ export default defineType({
             hotspot: true, // Enable image cropping
             metadata: ['lqip', 'palette'], // Generate low-quality placeholder and color palette
           },
+          fields: [
+            {
+              name: 'featuredOnHomepage',
+              title: 'Featured on Homepage',
+              type: 'boolean',
+              description: 'Check this to include this image in the homepage slider rotation. If no images are marked, all images will be eligible.',
+              initialValue: false,
+            },
+          ],
         },
       ],
       validation: (Rule) => Rule.required().min(1),

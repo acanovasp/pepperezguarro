@@ -9,12 +9,12 @@
               "value": "project"
             },
             {
-              "title": "Travel",
-              "value": "travel"
-            },
-            {
               "title": "Commercial",
               "value": "commercial"
+            },
+            {
+              "title": "Travel",
+              "value": "travel"
             },
             {
               "title": "Editorial",
@@ -81,17 +81,6 @@
         "type": "string"
       },
       {
-        "validation": [
-          {
-            "rules": [
-              {
-                "flag": "presence",
-                "constraint": "required"
-              }
-            ],
-            "level": "error"
-          }
-        ],
         "of": [
           {
             "marks": {
@@ -136,6 +125,15 @@
                 "palette"
               ]
             },
+            "fields": [
+              {
+                "initialValue": false,
+                "description": "Check this to include this image in the homepage slider rotation. If no images are marked, all images will be eligible.",
+                "name": "featuredOnHomepage",
+                "type": "boolean",
+                "title": "Featured on Homepage"
+              }
+            ],
             "type": "image"
           }
         ],

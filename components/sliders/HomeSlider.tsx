@@ -19,6 +19,7 @@ interface HomeSliderProps {
 }
 
 // Get random image from project (only images, not videos)
+// Prioritizes images marked as "Featured on Homepage" if any exist
 function getRandomImage(project: Project): { image: ProjectImage; index: number } {
   // Filter only images from media array
   const imageItems = project.media
@@ -33,8 +34,16 @@ function getRandomImage(project: Project): { image: ProjectImage; index: number 
     };
   }
   
-  const randomIndex = Math.floor(Math.random() * imageItems.length);
-  const selectedItem = imageItems[randomIndex];
+  // Check if there are any featured images
+  const featuredImages = imageItems.filter(
+    ({ item }) => (item.data as ProjectImage).featuredOnHomepage === true
+  );
+  
+  // Use featured images if available, otherwise use all images
+  const eligibleImages = featuredImages.length > 0 ? featuredImages : imageItems;
+  
+  const randomIndex = Math.floor(Math.random() * eligibleImages.length);
+  const selectedItem = eligibleImages[randomIndex];
   
   return {
     image: selectedItem.item.data as ProjectImage,

@@ -342,6 +342,7 @@ function transformSanityImage(
     blurDataURL,
     width,
     height,
+    featuredOnHomepage: image.featuredOnHomepage,
   };
 }
 
