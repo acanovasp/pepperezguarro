@@ -653,3 +653,26 @@ export async function getAllProjectSlugs(): Promise<string[]> {
     return placeholderProjects.map(p => p.slug);
   }
 }
+
+/**
+ * Get the next project slug in sequence
+ * Used for auto-advancing from last slide of current project
+ */
+export async function getNextProjectSlug(currentSlug: string): Promise<string | null> {
+  const projects = await getProjects();
+  
+  if (projects.length === 0) {
+    return null;
+  }
+  
+  const currentIndex = projects.findIndex(p => p.slug === currentSlug);
+  
+  if (currentIndex === -1) {
+    // Current project not found, return first project
+    return projects[0].slug;
+  }
+  
+  // Get next project, wrapping to first if at the end
+  const nextIndex = (currentIndex + 1) % projects.length;
+  return projects[nextIndex].slug;
+}

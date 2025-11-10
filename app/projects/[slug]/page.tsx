@@ -1,4 +1,4 @@
-import { getProjectBySlug, getAllProjectSlugs } from '@/lib/data';
+import { getProjectBySlug, getAllProjectSlugs, getProjects } from '@/lib/data';
 import ProjectPageClient from '@/app/projects/[slug]/ProjectPageClient';
 
 interface ProjectPageProps {
@@ -26,9 +26,20 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     return <div>Project not found</div>;
   }
 
+  // Get all projects to determine next project slug
+  const allProjects = await getProjects();
+  const allSlugs = allProjects.map(p => p.slug);
+  const currentIndex = allSlugs.indexOf(slug);
+  const nextSlug = currentIndex !== -1 && currentIndex < allSlugs.length - 1 
+    ? allSlugs[currentIndex + 1] 
+    : allSlugs[0]; // Wrap to first project
+
   return (
     <main>
-      <ProjectPageClient project={project} />
+      <ProjectPageClient 
+        project={project} 
+        nextProjectSlug={nextSlug}
+      />
     </main>
   );
 }

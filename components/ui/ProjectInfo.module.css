@@ -5,8 +5,13 @@
   transform: translateX(-50%);
   text-align: center;
   z-index: var(--z-base);
-  transition: opacity var(--transition-fast);
+  transition: top 800ms ease-in-out, transform 800ms ease-in-out, opacity var(--transition-fast);
   view-transition-name: project-info;
+}
+
+.projectInfo.centeredIntro {
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .content {

@@ -19,6 +19,7 @@ interface ProjectSliderProps {
   initialSlide?: number;
   onNavigationArrowChange?: (direction: 'left' | 'right' | null) => void;
   navigationArrow?: 'left' | 'right' | null;
+  onAdvanceToNextProject?: () => void;
 }
 
 interface ImagePosition {
@@ -54,13 +55,14 @@ function calculateRandomPosition(imageHeight: number): ImagePosition {
   };
 }
 
-export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0, onNavigationArrowChange, navigationArrow }: ProjectSliderProps) {
+export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0, onNavigationArrowChange, navigationArrow, onAdvanceToNextProject }: ProjectSliderProps) {
   const [activeIndex, setActiveIndex] = useState(initialSlide);
   const [positions, setPositions] = useState<ImagePosition[]>([]);
   const [hasInteracted, setHasInteracted] = useState(false);
   const swiperRef = useRef<SwiperType | null>(null);
   const inactivityTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const prevIndexRef = useRef<number>(initialSlide);
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
 
   // Generate random positions for all media items (desktop only)
   useEffect(() => {
@@ -99,7 +101,7 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
   }, [project.media]);
 
   const handleSlideChange = (swiper: SwiperType) => {
-    const newIndex = swiper.realIndex;
+    const newIndex = swiper.activeIndex;
     const prevIndex = prevIndexRef.current;
     
     setActiveIndex(newIndex);
@@ -109,11 +111,11 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
     if (onNavigationArrowChange) {
       let direction: 'left' | 'right' | null = null;
       
-      // Calculate direction considering loop behavior
-      if (newIndex > prevIndex || (prevIndex === project.media.length - 1 && newIndex === 0)) {
+      // Calculate direction (no loop behavior)
+      if (newIndex > prevIndex) {
         // Swiped forward (show right arrow)
         direction = 'right';
-      } else if (newIndex < prevIndex || (prevIndex === 0 && newIndex === project.media.length - 1)) {
+      } else if (newIndex < prevIndex) {
         // Swiped backward (show left arrow)
         direction = 'left';
       }
@@ -180,6 +182,22 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
     };
   }, []);
 
+  // Handle keyboard navigation for advancing to next project when on last slide
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Check if we're on the last slide and user presses right arrow or down arrow
+      if ((e.key === 'ArrowRight' || e.key === 'ArrowDown') && activeIndex === project.media.length - 1) {
+        e.preventDefault();
+        if (onAdvanceToNextProject) {
+          onAdvanceToNextProject();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [activeIndex, project.media.length, onAdvanceToNextProject]);
+
   const handleGhostClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent triggering slide click
     if (swiperRef.current) {
@@ -189,7 +207,15 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
 
   const handleSlideClick = () => {
     if (swiperRef.current) {
-      swiperRef.current.slideNext();
+      // Check if we're on the last slide
+      if (activeIndex === project.media.length - 1) {
+        // Advance to next project instead of looping
+        if (onAdvanceToNextProject) {
+          onAdvanceToNextProject();
+        }
+      } else {
+        swiperRef.current.slideNext();
+      }
     }
     setHasInteracted(true);
   };
@@ -206,7 +232,7 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
           crossFade: true,
         }}
         speed={800}
-        loop={true}
+        loop={false}
         initialSlide={initialSlide}
         keyboard={{
           enabled: true,
@@ -215,17 +241,44 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
         onSlideChange={handleSlideChange}
         onSwiper={(swiper) => {
           swiperRef.current = swiper;
-          setActiveIndex(swiper.realIndex);
+          setActiveIndex(swiper.activeIndex);
+        }}
+        onTouchStart={(swiper, event) => {
+          touchStartRef.current = {
+            x: event.touches[0].clientX,
+            y: event.touches[0].clientY
+          };
+        }}
+        onTouchEnd={(swiper, event) => {
+          if (!touchStartRef.current) return;
+          
+          const touchEnd = {
+            x: event.changedTouches[0].clientX,
+            y: event.changedTouches[0].clientY
+          };
+          
+          const deltaX = touchStartRef.current.x - touchEnd.x;
+          const deltaY = Math.abs(touchStartRef.current.y - touchEnd.y);
+          
+          // Check if it's a horizontal swipe (deltaX > deltaY) and swipe left (forward)
+          // and we're on the last slide
+          if (deltaX > 50 && deltaX > deltaY && swiper.activeIndex === project.media.length - 1) {
+            if (onAdvanceToNextProject) {
+              onAdvanceToNextProject();
+            }
+          }
+          
+          touchStartRef.current = null;
         }}
         className="project-swiper"
       >
         {project.media.map((mediaItem, index) => {
           const position = positions[index];
           
-          // Calculate ghost media index (previous slide)
-          const ghostIndex = activeIndex === 0 ? project.media.length - 1 : activeIndex - 1;
-          const ghostMediaItem = project.media[ghostIndex];
-          const ghostPosition = positions[ghostIndex];
+          // Calculate ghost media index (previous slide) - only if not on first slide
+          const ghostIndex = activeIndex > 0 ? activeIndex - 1 : -1;
+          const ghostMediaItem = ghostIndex >= 0 ? project.media[ghostIndex] : null;
+          const ghostPosition = ghostIndex >= 0 ? positions[ghostIndex] : null;
           const isActiveSlide = activeIndex === index;
           
           const isPriority = index === initialSlide || (initialSlide === 0 && index === project.media.length - 1);
@@ -239,7 +292,7 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
                 onMouseMove={handleMouseMove}
               >
                 {/* Ghost media (previous slide) - show for both images and videos */}
-                {isActiveSlide && ghostPosition && hasInteracted && (
+                {isActiveSlide && ghostPosition && ghostMediaItem && hasInteracted && (
                   <div
                     className={styles.ghostImage}
                     style={ghostPosition}

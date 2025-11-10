@@ -4,13 +4,15 @@ import { Project } from '@/lib/types';
 interface ProjectInfoProps {
   project: Project;
   onOpenProjectInfo?: () => void;
+  variant?: 'default' | 'centered-intro';
 }
 
-export default function ProjectInfo({ project, onOpenProjectInfo }: ProjectInfoProps) {
+export default function ProjectInfo({ project, onOpenProjectInfo, variant = 'default' }: ProjectInfoProps) {
   const locationYear = [project.location, project.year].filter(Boolean).join(', ');
+  const isCenteredIntro = variant === 'centered-intro';
   
   return (
-    <div className={styles.projectInfo}>
+    <div className={`${styles.projectInfo} ${isCenteredIntro ? styles.centeredIntro : ''}`}>
       <div className={styles.content}>
         {project.formattedNumber && (
           <h1 className={styles.number}>
@@ -21,7 +23,7 @@ export default function ProjectInfo({ project, onOpenProjectInfo }: ProjectInfoP
           {project.title}{locationYear && `. ${locationYear}`}
         </h1>
         
-        {onOpenProjectInfo && (
+        {onOpenProjectInfo && !isCenteredIntro && (
           <button 
             className={styles.link}
             onClick={onOpenProjectInfo}
