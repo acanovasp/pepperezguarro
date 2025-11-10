@@ -244,13 +244,16 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
           setActiveIndex(swiper.activeIndex);
         }}
         onTouchStart={(swiper, event) => {
-          touchStartRef.current = {
-            x: event.touches[0].clientX,
-            y: event.touches[0].clientY
-          };
+          if (event.touches && event.touches[0]) {
+            touchStartRef.current = {
+              x: event.touches[0].clientX,
+              y: event.touches[0].clientY
+            };
+          }
         }}
         onTouchEnd={(swiper, event) => {
           if (!touchStartRef.current) return;
+          if (!event.changedTouches || !event.changedTouches[0]) return;
           
           const touchEnd = {
             x: event.changedTouches[0].clientX,

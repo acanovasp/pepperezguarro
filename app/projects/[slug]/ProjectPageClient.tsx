@@ -28,6 +28,7 @@ export default function ProjectPageClient({ project, nextProjectSlug }: ProjectP
   const [projectInfoVariant, setProjectInfoVariant] = useState<'default' | 'centered-intro'>(
     isIntroMode ? 'centered-intro' : 'default'
   );
+  const [projectInfoVisible, setProjectInfoVisible] = useState(!isIntroMode);
   
   // Show project info only in slideshow mode
   const showProjectInfo = viewMode === 'slideshow';
@@ -48,12 +49,17 @@ export default function ProjectPageClient({ project, nextProjectSlug }: ProjectP
   // Handle intro mode transition sequence
   useEffect(() => {
     if (isIntroMode) {
-      // Step 1: Show centered ProjectInfo immediately
+      // Step 1: Show centered ProjectInfo with fade in
       setProjectInfoVariant('centered-intro');
       setIsVisible(false);
       
+      // Small delay to ensure fade in is visible
+      const fadeInTimer = setTimeout(() => {
+        setProjectInfoVisible(true);
+      }, 50);
+      
       // Step 2: After 3 seconds, slide ProjectInfo up and fade in slider
-      const timer = setTimeout(() => {
+      const slideUpTimer = setTimeout(() => {
         setProjectInfoVariant('default');
         setIsVisible(true);
         
@@ -61,7 +67,10 @@ export default function ProjectPageClient({ project, nextProjectSlug }: ProjectP
         window.history.replaceState({}, '', `/projects/${project.slug}`);
       }, 3000);
       
-      return () => clearTimeout(timer);
+      return () => {
+        clearTimeout(fadeInTimer);
+        clearTimeout(slideUpTimer);
+      };
     }
   }, [isIntroMode, project.slug]);
 
@@ -70,7 +79,8 @@ export default function ProjectPageClient({ project, nextProjectSlug }: ProjectP
     if (isAdvancingToNext) return; // Prevent multiple triggers
     
     setIsAdvancingToNext(true);
-    setIsVisible(false); // Start fade out
+    setProjectInfoVisible(false); // Fade out ProjectInfo
+    setIsVisible(false); // Fade out slider
     
     // After fade out completes (800ms), navigate to next project
     setTimeout(() => {
@@ -133,6 +143,7 @@ export default function ProjectPageClient({ project, nextProjectSlug }: ProjectP
           project={project}
           onOpenProjectInfo={handleOpenProjectInfo}
           variant={projectInfoVariant}
+          isVisible={projectInfoVisible}
         />
       )}
 

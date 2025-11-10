@@ -5,14 +5,15 @@ interface ProjectInfoProps {
   project: Project;
   onOpenProjectInfo?: () => void;
   variant?: 'default' | 'centered-intro';
+  isVisible?: boolean;
 }
 
-export default function ProjectInfo({ project, onOpenProjectInfo, variant = 'default' }: ProjectInfoProps) {
+export default function ProjectInfo({ project, onOpenProjectInfo, variant = 'default', isVisible = true }: ProjectInfoProps) {
   const locationYear = [project.location, project.year].filter(Boolean).join(', ');
   const isCenteredIntro = variant === 'centered-intro';
   
   return (
-    <div className={`${styles.projectInfo} ${isCenteredIntro ? styles.centeredIntro : ''}`}>
+    <div className={`${styles.projectInfo} ${isCenteredIntro ? styles.centeredIntro : ''} ${isVisible ? styles.visible : styles.hidden}`}>
       <div className={styles.content}>
         {project.formattedNumber && (
           <h1 className={styles.number}>
