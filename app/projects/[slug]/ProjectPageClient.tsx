@@ -92,12 +92,22 @@ export default function ProjectPageClient({ project, nextProjectSlug }: ProjectP
     if (isTransitioning) return;
     
     setIsTransitioning(true);
-    setIsVisible(false); // Start fade out immediately
+    setProjectInfoVisible(false); // Fade out ProjectInfo
+    setIsVisible(false); // Fade out slider/grid
     
     // After fade out completes (800ms), switch views
     setTimeout(() => {
       setViewMode(prev => prev === 'slideshow' ? 'grid' : 'slideshow');
       setIsVisible(true); // Trigger fade in
+      
+      // Fade in ProjectInfo if switching back to slideshow
+      if (viewMode === 'grid') {
+        // Small delay to let ProjectInfo mount, then fade it in
+        setTimeout(() => {
+          setProjectInfoVisible(true);
+        }, 50);
+      }
+      
       setIsTransitioning(false);
     }, 800);
   };
@@ -112,7 +122,14 @@ export default function ProjectPageClient({ project, nextProjectSlug }: ProjectP
     setTimeout(() => {
       setInitialSlide(index);
       setViewMode('slideshow');
-      setIsVisible(true); // Trigger fade in
+      setProjectInfoVisible(false); // Mount ProjectInfo hidden first
+      setIsVisible(true); // Trigger fade in slider
+      
+      // Small delay to let ProjectInfo mount, then fade it in
+      setTimeout(() => {
+        setProjectInfoVisible(true); // Fade in ProjectInfo
+      }, 50);
+      
       setIsTransitioning(false);
     }, 800);
   };
@@ -124,6 +141,16 @@ export default function ProjectPageClient({ project, nextProjectSlug }: ProjectP
   const handleNavigationArrowChange = (direction: 'left' | 'right' | null) => {
     setNavigationArrow(direction);
   };
+
+  // Listen for page transition event (from TransitionLink) to fade out ProjectInfo
+  useEffect(() => {
+    const handlePageTransition = () => {
+      setProjectInfoVisible(false);
+    };
+
+    window.addEventListener('startPageTransition', handlePageTransition);
+    return () => window.removeEventListener('startPageTransition', handlePageTransition);
+  }, []);
 
   // Listen for toggle grid view event from menu belt
   useEffect(() => {
