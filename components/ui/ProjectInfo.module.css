@@ -5,7 +5,7 @@
   transform: translateX(-50%);
   text-align: center;
   z-index: var(--z-base);
-  transition: top 800ms ease-in-out, transform 800ms ease-in-out, opacity 800ms ease-in-out;
+  transition: top 500ms ease-in-out, transform 800ms ease-in-out, opacity 800ms ease-in-out;
   view-transition-name: project-info;
   opacity: 1;
 }
