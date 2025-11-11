@@ -214,7 +214,7 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
           onAdvanceToNextProject();
         }
       } else {
-        swiperRef.current.slideNext();
+      swiperRef.current.slideNext();
       }
     }
     setHasInteracted(true);
@@ -244,7 +244,7 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
           setActiveIndex(swiper.activeIndex);
         }}
         onTouchStart={(swiper, event) => {
-          if (event.touches && event.touches[0]) {
+          if ('touches' in event && event.touches && event.touches[0]) {
             touchStartRef.current = {
               x: event.touches[0].clientX,
               y: event.touches[0].clientY
@@ -253,7 +253,7 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
         }}
         onTouchEnd={(swiper, event) => {
           if (!touchStartRef.current) return;
-          if (!event.changedTouches || !event.changedTouches[0]) return;
+          if (!('changedTouches' in event) || !event.changedTouches || !event.changedTouches[0]) return;
           
           const touchEnd = {
             x: event.changedTouches[0].clientX,

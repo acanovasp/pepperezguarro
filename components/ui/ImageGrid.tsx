@@ -1,15 +1,14 @@
 import Image from 'next/image';
 import styles from './ImageGrid.module.css';
-import TransitionLink from '@/components/transitions/TransitionLink';
 import { Project } from '@/lib/types';
 
 interface ImageGridProps {
   project: Project;
   onImageClick: (index: number) => void;
-  onToggleView: () => void;
+  onToggleView?: () => void;
 }
 
-export default function ImageGrid({ project, onImageClick, onToggleView }: ImageGridProps) {
+export default function ImageGrid({ project, onImageClick }: ImageGridProps) {
   // Calculate how many media items to prioritize (first visible row = 6-8 items)
   const priorityCount = 8;
   

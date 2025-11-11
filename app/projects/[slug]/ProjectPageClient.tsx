@@ -58,14 +58,14 @@ export default function ProjectPageClient({ project, nextProjectSlug }: ProjectP
         setProjectInfoVisible(true);
       }, 50);
       
-      // Step 2: After 3 seconds, slide ProjectInfo up and fade in slider
+      // Step 2: After 2 seconds, slide ProjectInfo up and fade in slider
       const slideUpTimer = setTimeout(() => {
         setProjectInfoVariant('default');
         setIsVisible(true);
         
         // Remove intro param from URL without navigation
         window.history.replaceState({}, '', `/projects/${project.slug}`);
-      }, 3000);
+      }, 2000);
       
       return () => {
         clearTimeout(fadeInTimer);
@@ -133,7 +133,7 @@ export default function ProjectPageClient({ project, nextProjectSlug }: ProjectP
 
     window.addEventListener('toggleGridView', handleToggleGrid);
     return () => window.removeEventListener('toggleGridView', handleToggleGrid);
-  }, []);
+  }, [handleToggleView]);
 
   return (
     <>

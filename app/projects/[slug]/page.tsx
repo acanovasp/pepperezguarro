@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { getProjectBySlug, getAllProjectSlugs, getProjects } from '@/lib/data';
 import ProjectPageClient from '@/app/projects/[slug]/ProjectPageClient';
 
@@ -36,10 +37,12 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
   return (
     <main>
-      <ProjectPageClient 
-        project={project} 
-        nextProjectSlug={nextSlug}
-      />
+      <Suspense fallback={null}>
+        <ProjectPageClient 
+          project={project} 
+          nextProjectSlug={nextSlug}
+        />
+      </Suspense>
     </main>
   );
 }
