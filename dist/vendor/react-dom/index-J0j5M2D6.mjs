@@ -1,14 +1,5 @@
 import y from "react";
 var i = {};
-/**
- * @license React
- * react-dom.production.js
- *
- * Copyright (c) Meta Platforms, Inc. and affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
 var s = y;
 function l(e) {
   var r = "https://react.dev/errors/" + e;

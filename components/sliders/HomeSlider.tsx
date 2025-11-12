@@ -18,12 +18,36 @@ interface HomeSliderProps {
   onActiveProjectChange?: (project: Project) => void;
 }
 
-// Get random image from project
+// Get random image from project (only images, not videos)
+// Prioritizes images marked as "Featured on Homepage" if any exist
 function getRandomImage(project: Project): { image: ProjectImage; index: number } {
-  const randomIndex = Math.floor(Math.random() * project.images.length);
+  // Filter only images from media array
+  const imageItems = project.media
+    .map((item, index) => ({ item, originalIndex: index }))
+    .filter(({ item }) => item.type === 'image');
+  
+  if (imageItems.length === 0) {
+    // Fallback: use first image from images array
+    return {
+      image: project.images[0],
+      index: 0
+    };
+  }
+  
+  // Check if there are any featured images
+  const featuredImages = imageItems.filter(
+    ({ item }) => (item.data as ProjectImage).featuredOnHomepage === true
+  );
+  
+  // Use featured images if available, otherwise use all images
+  const eligibleImages = featuredImages.length > 0 ? featuredImages : imageItems;
+  
+  const randomIndex = Math.floor(Math.random() * eligibleImages.length);
+  const selectedItem = eligibleImages[randomIndex];
+  
   return {
-    image: project.images[randomIndex],
-    index: randomIndex
+    image: selectedItem.item.data as ProjectImage,
+    index: selectedItem.originalIndex
   };
 }
 
@@ -213,7 +237,7 @@ export default function HomeSlider({ projects, onActiveProjectChange }: HomeSlid
                   
                   <div className={styles.caption}>
                     <p className={styles.imageCounter}>
-                      {String(index + 1).padStart(2, '0')}/{String(project.images.length).padStart(2, '0')}
+                      {String(index + 1).padStart(2, '0')}/{String(project.media.length).padStart(2, '0')}
                     </p>
                     <TransitionLink href={`/projects/${project.slug}`} className={styles.openProject} onClick={(e) => e.stopPropagation()}>
                       Open project

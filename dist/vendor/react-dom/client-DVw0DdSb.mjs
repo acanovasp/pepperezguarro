@@ -1,15 +1,6 @@
 import wv from "react";
 import Wv from "react-dom";
 var Wn = {}, y0 = { exports: {} }, h0 = {};
-/**
- * @license React
- * scheduler.production.js
- *
- * Copyright (c) Meta Platforms, Inc. and affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
 (function(l) {
   function a(T, q) {
     var N = T.length;
@@ -229,15 +220,6 @@ var Wn = {}, y0 = { exports: {} }, h0 = {};
 })(h0);
 y0.exports = h0;
 var $v = y0.exports;
-/**
- * @license React
- * react-dom-client.production.js
- *
- * Copyright (c) Meta Platforms, Inc. and affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
 var tl = $v, d0 = wv, kv = Wv;
 function z(l) {
   var a = "https://react.dev/errors/" + l;

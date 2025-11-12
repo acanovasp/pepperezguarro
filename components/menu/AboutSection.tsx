@@ -32,9 +32,16 @@ export default function AboutSection({ aboutInfo }: AboutSectionProps) {
         </div>
         <div className={styles.contactItem}>
           <p className={styles.contactLabel}>Phone</p>
-          <a href={aboutInfo.contact.phone.link} className={styles.contactAnchor}>
-            {aboutInfo.contact.phone.display}
-          </a>
+          <h1>
+            {aboutInfo.contact.phone.map((phone, index) => (
+              <span key={phone.link}>
+                <a href={phone.link} className={styles.contactAnchor}>
+                  {phone.display}
+                </a>
+                {index < aboutInfo.contact.phone.length - 1 && ' / '}
+              </span>
+            ))}
+          </h1>
         </div>
         <div className={styles.contactItem}>
           <p className={styles.contactLabel}>Insta</p>

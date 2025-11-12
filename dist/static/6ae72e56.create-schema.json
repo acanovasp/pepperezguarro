@@ -1,0 +1,394 @@
+[
+  {
+    "fields": [
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Project",
+              "value": "project"
+            },
+            {
+              "title": "Commercial",
+              "value": "commercial"
+            },
+            {
+              "title": "Travel",
+              "value": "travel"
+            },
+            {
+              "title": "Editorial",
+              "value": "editorial"
+            }
+          ],
+          "layout": "dropdown"
+        },
+        "initialValue": "project",
+        "description": "Project category - affects numbering prefix (P01, T01, C01, E01)",
+        "name": "category",
+        "type": "string"
+      },
+      {
+        "description": "Position within category (1, 2, 3, etc.). Each category has its own numbering.",
+        "name": "number",
+        "type": "number",
+        "title": "Number (within category)"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "options": {
+          "source": "title",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "Auto-generated from title. Used in URL.",
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "name": "location",
+        "type": "string"
+      },
+      {
+        "name": "year",
+        "type": "string"
+      },
+      {
+        "of": [
+          {
+            "marks": {
+              "annotations": []
+            },
+            "styles": [
+              {
+                "value": "normal",
+                "title": "Normal"
+              }
+            ],
+            "of": [],
+            "type": "block"
+          }
+        ],
+        "name": "description",
+        "type": "array"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              },
+              {
+                "flag": "min",
+                "constraint": 1
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "Upload images in bulk. Alt text will be auto-generated as Title-01, Title-02, etc.",
+        "of": [
+          {
+            "options": {
+              "hotspot": true,
+              "metadata": [
+                "lqip",
+                "palette"
+              ]
+            },
+            "fields": [
+              {
+                "initialValue": false,
+                "description": "Check this to include this image in the homepage slider rotation. If no images are marked, all images will be eligible.",
+                "name": "featuredOnHomepage",
+                "type": "boolean",
+                "title": "Featured on Homepage"
+              }
+            ],
+            "type": "image"
+          }
+        ],
+        "name": "images",
+        "type": "array"
+      },
+      {
+        "description": "Add videos from Vimeo, YouTube, or other platforms. Videos will be displayed alongside images in the project slideshow.",
+        "of": [
+          {
+            "fields": [
+              {
+                "validation": [
+                  {
+                    "rules": [
+                      {
+                        "flag": "presence",
+                        "constraint": "required"
+                      },
+                      {
+                        "flag": "uri",
+                        "constraint": {
+                          "options": {
+                            "scheme": [
+                              "/^https$/",
+                              "/^http$/"
+                            ],
+                            "allowRelative": false,
+                            "relativeOnly": false,
+                            "allowCredentials": false
+                          }
+                        }
+                      }
+                    ],
+                    "level": "error"
+                  }
+                ],
+                "description": "Full URL from Vimeo (https://vimeo.com/...) or YouTube (https://www.youtube.com/watch?v=...)",
+                "name": "url",
+                "type": "url",
+                "title": "Video URL"
+              },
+              {
+                "description": "Optional: Custom title for the video",
+                "name": "title",
+                "type": "string",
+                "title": "Video Title"
+              },
+              {
+                "options": {
+                  "hotspot": true,
+                  "metadata": [
+                    "lqip",
+                    "palette"
+                  ]
+                },
+                "description": "Thumbnail image for the video (shown in grid and as ghost image). If not provided, will use a placeholder.",
+                "name": "thumbnail",
+                "type": "image",
+                "title": "Video Thumbnail"
+              },
+              {
+                "options": {
+                  "list": [
+                    {
+                      "title": "16:9 (Landscape)",
+                      "value": "16:9"
+                    },
+                    {
+                      "title": "9:16 (Portrait)",
+                      "value": "9:16"
+                    },
+                    {
+                      "title": "4:3 (Standard)",
+                      "value": "4:3"
+                    },
+                    {
+                      "title": "1:1 (Square)",
+                      "value": "1:1"
+                    },
+                    {
+                      "title": "21:9 (Ultrawide)",
+                      "value": "21:9"
+                    },
+                    {
+                      "title": "Custom",
+                      "value": "custom"
+                    }
+                  ]
+                },
+                "initialValue": "16:9",
+                "description": "Video aspect ratio (e.g., \"16:9\", \"4:3\", \"9:16\", \"1:1\"). Default is 16:9 if not specified.",
+                "name": "aspectRatio",
+                "type": "string"
+              },
+              {
+                "description": "If \"Custom\" is selected above, enter aspect ratio as \"width:height\" (e.g., \"2.35:1\")",
+                "hidden": "conditional",
+                "name": "customAspectRatio",
+                "type": "string"
+              },
+              {
+                "validation": [
+                  {
+                    "rules": [
+                      {
+                        "flag": "min",
+                        "constraint": 0
+                      }
+                    ],
+                    "level": "error"
+                  }
+                ],
+                "description": "Where to insert this video among the images (e.g., 3 = after the 3rd image). Leave empty to add at the end.",
+                "name": "position",
+                "type": "number",
+                "title": "Position in Gallery"
+              }
+            ],
+            "type": "object",
+            "name": "video"
+          }
+        ],
+        "name": "videos",
+        "type": "array"
+      },
+      {
+        "description": "Optional: e.g., \"In collaboration with Ana Gallart\"",
+        "name": "collaboration",
+        "type": "string"
+      },
+      {
+        "description": "Optional: e.g., \"Thinking Mu\" or \"Personal Project\"",
+        "name": "client",
+        "type": "string"
+      },
+      {
+        "description": "Optional: e.g., \"Shot between April 12 - May 2\"",
+        "name": "date",
+        "type": "string"
+      }
+    ],
+    "name": "project",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "rows": 4,
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "bio",
+        "type": "text"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "e.g., info@pepperezguarro.com",
+        "name": "email",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "e.g., +34 666 18 13 48",
+        "name": "phone",
+        "type": "string",
+        "title": "Phone 1"
+      },
+      {
+        "description": "e.g., +33 767 65 76 43 (optional second phone number)",
+        "name": "phone2",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "e.g., @pepperezguarro (include the @ symbol)",
+        "name": "instagram",
+        "type": "string",
+        "title": "Instagram Handle"
+      },
+      {
+        "description": "List of brands/companies collaborated with",
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "collaborators",
+        "type": "array"
+      },
+      {
+        "description": "List of publications featured in",
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "publications",
+        "type": "array"
+      }
+    ],
+    "name": "about",
+    "type": "document"
+  }
+]

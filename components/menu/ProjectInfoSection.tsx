@@ -1,13 +1,13 @@
 import styles from './ProjectInfoSection.module.css';
 import { Project } from '@/lib/types';
 import { useEffect, useRef, useState } from 'react';
+import { PortableText } from '@portabletext/react';
 
 interface ProjectInfoSectionProps {
   project: Project;
-  projectNumber: number;
 }
 
-export default function ProjectInfoSection({ project, projectNumber }: ProjectInfoSectionProps) {
+export default function ProjectInfoSection({ project }: ProjectInfoSectionProps) {
   const descriptionRef = useRef<HTMLHeadingElement>(null);
   const [expandWidth, setExpandWidth] = useState(false);
 
@@ -54,28 +54,39 @@ export default function ProjectInfoSection({ project, projectNumber }: ProjectIn
     <>
       <div className={styles.projectInfoSection}>
         <div className={styles.projectInfoHeader}>
-          <p className={styles.projectNumber}>
-            {String(projectNumber).padStart(2, '0')}
-          </p>
+          {project.formattedNumber && (
+            <p className={styles.projectNumber}>
+              {project.formattedNumber}
+            </p>
+          )}
           <div className={styles.projectInfoContainer}>
             <h1 className={styles.title}>{project.title}</h1>
-            <h1 className={styles.meta}>
-              {project.location}, {project.year}
-            </h1>
+            {(project.location || project.year) && (
+              <h1 className={styles.meta}>
+                {[project.location, project.year].filter(Boolean).join(', ')}
+              </h1>
+            )}
           </div>
         </div>
 
-        <h1 
+        <div 
           ref={descriptionRef}
           className={`${styles.description} ${expandWidth ? styles.descriptionExpanded : ''}`}
         >
-          {project.description}
-        </h1>
+          <PortableText 
+            value={project.description}
+            components={{
+              block: {
+                normal: ({ children }) => <h1>{children}</h1>,
+              },
+            }}
+          />
+        </div>
       </div>
       
       <div className={styles.statsContainer}>
         <p className={styles.imageCounter}>
-          {String(project.images.length).padStart(2, '0')} Images 
+          {String(project.media.length).padStart(2, '0')} {project.media.length === 1 ? 'Item' : 'Items'}
         </p>
         {project.collaboration && (
           <p className={styles.collaboration}>

@@ -19,7 +19,7 @@ export default function ProjectsSection({ projects, currentSlug, onOpenProjectIn
   return (
     <div className={styles.projectsSection}>
       <ul className={styles.projectList}>
-        {projects.map((project, index) => {
+        {projects.map((project) => {
           const active = isActive(project.slug);
           
           return (
@@ -29,19 +29,23 @@ export default function ProjectsSection({ projects, currentSlug, onOpenProjectIn
               onMouseEnter={() => onProjectHover?.(project)}
               onMouseLeave={() => onProjectHover?.(null)}
             >
-              <p className={styles.projectNumber}>
-                {active && <span className={styles.arrow}>● </span>}
-                {String(index + 1).padStart(2, '0')}
-              </p>
+              {project.formattedNumber && (
+                <p className={styles.projectNumber}>
+                  {active && <span className={styles.arrow}>● </span>}
+                  {project.formattedNumber}
+                </p>
+              )}
               <div className={styles.projectItemContent}>
                 <TransitionLink 
-                  href={`/projects/${project.slug}`}
+                  href={`/projects/${project.slug}?intro=true`}
                   className={`${styles.projectInfoContainer} ${styles.projectLink}`}
                 >
                   {project.title}
-                  <span className={styles.projectMeta}>
-                    {project.location}, {project.year}
-                  </span>
+                  {(project.location || project.year) && (
+                    <span className={styles.projectMeta}>
+                      {[project.location, project.year].filter(Boolean).join(', ')}
+                    </span>
+                  )}
                 </TransitionLink>
                 
                 {/* Show extraInfo for active project */}
@@ -52,7 +56,7 @@ export default function ProjectsSection({ projects, currentSlug, onOpenProjectIn
                       onClick={handleToggleThumbnails}
                     >
                       <p className={styles.imageCount}>
-                      {String(project.images.length).padStart(2, '0')} Images
+                      {String(project.media.length).padStart(2, '0')} {project.media.length === 1 ? 'Item' : 'Items'}
                     </p>
                     </button>
                     <button 
@@ -70,7 +74,7 @@ export default function ProjectsSection({ projects, currentSlug, onOpenProjectIn
                 {/* Show openProject link on hover for non-active projects */}
                 {!active && (
                   <TransitionLink 
-                    href={`/projects/${project.slug}`}
+                    href={`/projects/${project.slug}?intro=true`}
                     className={styles.openProjectLink}
                   >
                     Open project

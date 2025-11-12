@@ -3,6 +3,8 @@
  * These represent the raw data structure from Sanity
  */
 
+import { PortableTextBlock } from '@portabletext/react';
+
 export interface SanityImageAsset {
   _type: 'image';
   asset: {
@@ -17,11 +19,24 @@ export interface SanityImageAsset {
       aspectRatio: number;
     };
   };
+  featuredOnHomepage?: boolean;
+}
+
+export type ProjectCategory = 'project' | 'travel' | 'commercial' | 'editorial';
+
+export interface SanityVideo {
+  url: string;
+  title?: string;
+  thumbnail?: SanityImageAsset;
+  aspectRatio?: string;
+  customAspectRatio?: string;
+  position?: number;
 }
 
 export interface SanityProject {
   _id: string;
   _type: 'project';
+  category: ProjectCategory;
   number: number;
   title: string;
   slug: {
@@ -29,8 +44,9 @@ export interface SanityProject {
   };
   location: string;
   year: string;
-  description: string;
+  description: PortableTextBlock[];
   images: SanityImageAsset[];
+  videos?: SanityVideo[];
   collaboration?: string;
   client?: string;
   date?: string;
@@ -43,6 +59,7 @@ export interface SanityAbout {
   bio: string;
   email: string;
   phone: string;
+  phone2?: string;
   instagram: string;
   collaborators: string[];
   publications: string[];

@@ -12,9 +12,6 @@ interface HomePageClientProps {
 
 export default function HomePageClient({ projects }: HomePageClientProps) {
   const [activeProject, setActiveProject] = useState<Project>(projects[0]);
-  
-  // Get the active project number (index + 1)
-  const activeProjectNumber = projects.findIndex(p => p.id === activeProject.id) + 1;
 
   // Set data attribute on body to hide gradients on homepage
   useEffect(() => {
@@ -27,7 +24,7 @@ export default function HomePageClient({ projects }: HomePageClientProps) {
 
   return (
     <main>
-      <ProjectInfo project={activeProject} projectNumber={activeProjectNumber} />
+      <ProjectInfo project={activeProject} />
       <FadeTransition>
         <HomeSlider 
           projects={projects} 

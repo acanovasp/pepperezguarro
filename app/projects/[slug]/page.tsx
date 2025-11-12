@@ -1,4 +1,5 @@
-import { getProjectBySlug, getProjects, getAllProjectSlugs } from '@/lib/data';
+import { Suspense } from 'react';
+import { getProjectBySlug, getAllProjectSlugs, getProjects } from '@/lib/data';
 import ProjectPageClient from '@/app/projects/[slug]/ProjectPageClient';
 
 interface ProjectPageProps {
@@ -21,18 +22,27 @@ export async function generateStaticParams() {
 export default async function ProjectPage({ params }: ProjectPageProps) {
   const { slug } = await params;
   const project = await getProjectBySlug(slug);
-  const projects = await getProjects();
 
   if (!project) {
     return <div>Project not found</div>;
   }
 
-  // Find project number (index + 1)
-  const projectNumber = projects.findIndex(p => p.id === project.id) + 1;
+  // Get all projects to determine next project slug
+  const allProjects = await getProjects();
+  const allSlugs = allProjects.map(p => p.slug);
+  const currentIndex = allSlugs.indexOf(slug);
+  const nextSlug = currentIndex !== -1 && currentIndex < allSlugs.length - 1 
+    ? allSlugs[currentIndex + 1] 
+    : allSlugs[0]; // Wrap to first project
 
   return (
     <main>
-      <ProjectPageClient project={project} projectNumber={projectNumber} />
+      <Suspense fallback={null}>
+        <ProjectPageClient 
+          project={project} 
+          nextProjectSlug={nextSlug}
+        />
+      </Suspense>
     </main>
   );
 }

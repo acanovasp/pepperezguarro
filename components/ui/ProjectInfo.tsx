@@ -3,24 +3,28 @@ import { Project } from '@/lib/types';
 
 interface ProjectInfoProps {
   project: Project;
-  projectNumber?: number;
   onOpenProjectInfo?: () => void;
+  variant?: 'default' | 'centered-intro';
+  isVisible?: boolean;
 }
 
-export default function ProjectInfo({ project, projectNumber, onOpenProjectInfo }: ProjectInfoProps) {
+export default function ProjectInfo({ project, onOpenProjectInfo, variant = 'default', isVisible = true }: ProjectInfoProps) {
+  const locationYear = [project.location, project.year].filter(Boolean).join(', ');
+  const isCenteredIntro = variant === 'centered-intro';
+  
   return (
-    <div className={styles.projectInfo}>
+    <div className={`${styles.projectInfo} ${isCenteredIntro ? styles.centeredIntro : ''} ${isVisible ? styles.visible : styles.hidden}`}>
       <div className={styles.content}>
-        {projectNumber && (
+        {project.formattedNumber && (
           <h1 className={styles.number}>
-            {String(projectNumber).padStart(2, '0')}
+            {project.formattedNumber}
           </h1>
         )}
         <h1 className={styles.details}>
-          {project.title}. {project.location}, {project.year}
+          {project.title}{locationYear && `. ${locationYear}`}
         </h1>
         
-        {onOpenProjectInfo && (
+        {onOpenProjectInfo && !isCenteredIntro && (
           <button 
             className={styles.link}
             onClick={onOpenProjectInfo}

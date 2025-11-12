@@ -15,9 +15,6 @@ export default function SiteFooter({ aboutInfo }: SiteFooterProps) {
         <p>
           <a href={aboutInfo.contact.email.link}>{aboutInfo.contact.email.display}</a>
           {' / '}
-          <a href={aboutInfo.contact.phone.link}>{aboutInfo.contact.phone.display}</a>
-        </p>
-        <p>
           <a 
             href={aboutInfo.contact.instagram.link} 
             target="_blank" 
@@ -25,6 +22,14 @@ export default function SiteFooter({ aboutInfo }: SiteFooterProps) {
           >
             {aboutInfo.contact.instagram.display}
           </a>
+        </p>
+        <p>
+          {aboutInfo.contact.phone.map((phone, index) => (
+            <span key={phone.link}>
+              <a href={phone.link}>{phone.display}</a>
+              {index < aboutInfo.contact.phone.length - 1 && ' / '}
+            </span>
+          ))}
         </p>
       </div>
       

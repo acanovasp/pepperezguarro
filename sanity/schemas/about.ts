@@ -32,10 +32,16 @@ export default defineType({
     }),
     defineField({
       name: 'phone',
-      title: 'Phone',
+      title: 'Phone 1',
       type: 'string',
-      description: 'e.g., +34 681 378 920',
+      description: 'e.g., +34 666 18 13 48',
       validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'phone2',
+      title: 'Phone 2',
+      type: 'string',
+      description: 'e.g., +33 767 65 76 43 (optional second phone number)',
     }),
     defineField({
       name: 'instagram',
