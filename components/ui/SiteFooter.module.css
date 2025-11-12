@@ -53,5 +53,9 @@ body[data-page="home"] .siteFooter::after {
   .siteFooter {
     display: none;
   }
+
+  .contactInfo {
+    display: none;
+  }
 }
 

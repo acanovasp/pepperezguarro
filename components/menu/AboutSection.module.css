@@ -64,6 +64,10 @@
     max-width: 100%;
   }
 
+  .contactItem a{
+    text-wrap: nowrap;
+  }
+
   .name {
     display: none;
   }
