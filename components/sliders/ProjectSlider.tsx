@@ -62,6 +62,8 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
   const inactivityTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const prevIndexRef = useRef<number>(initialSlide);
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  // Track consecutive clicks on last slide - if we start on last slide, allow immediate advance
+  const lastSlideClickCountRef = useRef<number>(initialSlide === project.media.length - 1 ? 1 : 0);
 
   // Generate random positions for all media items (desktop only)
   useEffect(() => {
@@ -105,6 +107,11 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
     
     setActiveIndex(newIndex);
     setHasInteracted(true);
+    
+    // Reset last slide click count when moving away from last slide
+    if (newIndex !== project.media.length - 1) {
+      lastSlideClickCountRef.current = 0;
+    }
     
     // Detect swipe direction and show corresponding arrow
     if (onNavigationArrowChange) {
@@ -187,8 +194,14 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
       // Check if we're on the last slide and user presses right arrow or down arrow
       if ((e.key === 'ArrowRight' || e.key === 'ArrowDown') && activeIndex === project.media.length - 1) {
         e.preventDefault();
-        if (onAdvanceToNextProject) {
-          onAdvanceToNextProject();
+        // Only advance if we've already been on the last slide
+        if (lastSlideClickCountRef.current > 0) {
+          if (onAdvanceToNextProject) {
+            onAdvanceToNextProject();
+          }
+        } else {
+          // First keypress on last slide - just register it
+          lastSlideClickCountRef.current++;
         }
       }
     };
@@ -208,12 +221,18 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
     if (swiperRef.current) {
       // Check if we're on the last slide
       if (activeIndex === project.media.length - 1) {
-        // Advance to next project instead of looping
-        if (onAdvanceToNextProject) {
-          onAdvanceToNextProject();
+        // Only advance to next project if we've already been on the last slide
+        // (user has clicked at least once while on last slide)
+        if (lastSlideClickCountRef.current > 0) {
+          if (onAdvanceToNextProject) {
+            onAdvanceToNextProject();
+          }
+        } else {
+          // First click on last slide - just register it, don't advance
+          lastSlideClickCountRef.current++;
         }
       } else {
-      swiperRef.current.slideNext();
+        swiperRef.current.slideNext();
       }
     }
     setHasInteracted(true);
@@ -265,8 +284,14 @@ export default function ProjectSlider({ project, onToggleGrid, initialSlide = 0,
           // Check if it's a horizontal swipe (deltaX > deltaY) and swipe left (forward)
           // and we're on the last slide
           if (deltaX > 50 && deltaX > deltaY && swiper.activeIndex === project.media.length - 1) {
-            if (onAdvanceToNextProject) {
-              onAdvanceToNextProject();
+            // Only advance if we've already been on the last slide
+            if (lastSlideClickCountRef.current > 0) {
+              if (onAdvanceToNextProject) {
+                onAdvanceToNextProject();
+              }
+            } else {
+              // First swipe on last slide - just register it
+              lastSlideClickCountRef.current++;
             }
           }
           
