@@ -28,8 +28,9 @@ export default function FadeTransition({ children }: FadeTransitionProps) {
       setIsVisible(false);
     };
 
-    window.addEventListener('startPageTransition', handleTransition);
-    return () => window.removeEventListener('startPageTransition', handleTransition);
+    // Use 'any' type to handle both Event and CustomEvent
+    window.addEventListener('startPageTransition', handleTransition as EventListener);
+    return () => window.removeEventListener('startPageTransition', handleTransition as EventListener);
   }, []);
 
   return (

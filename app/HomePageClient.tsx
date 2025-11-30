@@ -12,6 +12,7 @@ interface HomePageClientProps {
 
 export default function HomePageClient({ projects }: HomePageClientProps) {
   const [activeProject, setActiveProject] = useState<Project>(projects[0]);
+  const [projectInfoVisible, setProjectInfoVisible] = useState(true);
 
   // Set data attribute on body to hide gradients on homepage
   useEffect(() => {
@@ -22,9 +23,22 @@ export default function HomePageClient({ projects }: HomePageClientProps) {
     };
   }, []);
 
+  // Listen for page transition event from menu to fade out ProjectInfo
+  useEffect(() => {
+    const handleTransition = (e: Event) => {
+      const customEvent = e as CustomEvent<{ fadeOutProjectInfo?: boolean }>;
+      if (customEvent.detail?.fadeOutProjectInfo) {
+        setProjectInfoVisible(false);
+      }
+    };
+
+    window.addEventListener('startPageTransition', handleTransition as EventListener);
+    return () => window.removeEventListener('startPageTransition', handleTransition as EventListener);
+  }, []);
+
   return (
     <main>
-      <ProjectInfo project={activeProject} />
+      <ProjectInfo project={activeProject} isVisible={projectInfoVisible} />
       <FadeTransition>
         <HomeSlider 
           projects={projects} 

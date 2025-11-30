@@ -39,6 +39,7 @@ export default function ProjectsSection({ projects, currentSlug, onOpenProjectIn
                 <TransitionLink 
                   href={`/projects/${project.slug}?intro=true`}
                   className={`${styles.projectInfoContainer} ${styles.projectLink}`}
+                  fadeOutProjectInfo={true}
                 >
                   {project.title}
                   {(project.location || project.year) && (
@@ -76,6 +77,7 @@ export default function ProjectsSection({ projects, currentSlug, onOpenProjectIn
                   <TransitionLink 
                     href={`/projects/${project.slug}?intro=true`}
                     className={styles.openProjectLink}
+                    fadeOutProjectInfo={true}
                   >
                     Open project
                   </TransitionLink>

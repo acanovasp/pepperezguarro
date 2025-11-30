@@ -9,9 +9,10 @@ interface TransitionLinkProps {
   children: React.ReactNode;
   className?: string;
   onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
+  fadeOutProjectInfo?: boolean; // Optional flag to fade out ProjectInfo on homepage
 }
 
-export default function TransitionLink({ href, children, className, onClick }: TransitionLinkProps) {
+export default function TransitionLink({ href, children, className, onClick, fadeOutProjectInfo = false }: TransitionLinkProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -25,8 +26,10 @@ export default function TransitionLink({ href, children, className, onClick }: T
 
     // Check if browser supports View Transition API
     if ('startViewTransition' in document) {
-      // Trigger fade out event for slider
-      window.dispatchEvent(new Event('startPageTransition'));
+      // Trigger fade out event for slider (with optional ProjectInfo fade flag)
+      window.dispatchEvent(new CustomEvent('startPageTransition', { 
+        detail: { fadeOutProjectInfo } 
+      }));
 
       // Wait for slider fade out (800ms) then use View Transition API
       setTimeout(() => {
@@ -39,8 +42,10 @@ export default function TransitionLink({ href, children, className, onClick }: T
       }, 800);
     } else {
       // Fallback for browsers without View Transition API
-      // Trigger fade out by dispatching custom event
-      window.dispatchEvent(new Event('startPageTransition'));
+      // Trigger fade out by dispatching custom event (with optional ProjectInfo fade flag)
+      window.dispatchEvent(new CustomEvent('startPageTransition', { 
+        detail: { fadeOutProjectInfo } 
+      }));
 
       // Wait for fade out animation (800ms) then navigate
       setTimeout(() => {
