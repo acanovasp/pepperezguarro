@@ -35,11 +35,10 @@ function calculateRandomPosition(imageHeight: number): ImagePosition {
   // Approximate image width based on 3:2 aspect ratio
   const approximateImageWidth = (imageHeight * 3) / 2;
   
-  // Center 50% zone: 25% to 75% of viewport
-  const centerZoneStartY = viewportHeight * 0.15;
-  const centerZoneEndY = viewportHeight * 0.85;
-  const centerZoneStartX = viewportWidth * 0.15;
-  const centerZoneEndX = viewportWidth * 0.85;
+  const centerZoneStartY = viewportHeight * 0.20;
+  const centerZoneEndY = viewportHeight * 0.80;
+  const centerZoneStartX = viewportWidth * 0.12;
+  const centerZoneEndX = viewportWidth * 0.88;
   
   // Calculate available space for image within center zone
   const availableHeight = centerZoneEndY - centerZoneStartY - imageHeight;

@@ -54,21 +54,9 @@ function getRandomImage(project: Project): { image: ProjectImage; index: number 
 export default function HomeSlider({ projects, onActiveProjectChange }: HomeSliderProps) {
   const [randomImages, setRandomImages] = useState<Map<string, { image: ProjectImage; index: number }>>(new Map());
   const [navigationArrow, setNavigationArrow] = useState<'left' | 'right' | null>(null);
-  const [isDesktop, setIsDesktop] = useState(false);
   const swiperRef = useRef<SwiperType | null>(null);
   const prevIndexRef = useRef<number>(0); // Track previous index to detect actual changes
   const inactivityTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Detect if we're on desktop
-  useEffect(() => {
-    const checkDesktop = () => {
-      setIsDesktop(window.innerWidth > 768);
-    };
-    
-    checkDesktop();
-    window.addEventListener('resize', checkDesktop);
-    return () => window.removeEventListener('resize', checkDesktop);
-  }, []);
 
   // Generate random images ONCE when component mounts
   useEffect(() => {
@@ -195,44 +183,26 @@ export default function HomeSlider({ projects, onActiveProjectChange }: HomeSlid
                     <span className={`${styles.arrow} ${styles.arrowLeft} ${navigationArrow === 'left' ? styles.arrowVisible : ''}`}>●</span>
                     <span className={`${styles.arrow} ${styles.arrowRight} ${navigationArrow === 'right' ? styles.arrowVisible : ''}`}>●</span>
                     
-                    {/* Conditionally wrap image in link on desktop only */}
-                    {isDesktop ? (
-                      <TransitionLink 
-                        href={`/projects/${project.slug}`} 
-                        className={styles.imageContainer}
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <Image
-                          src={image.url}
-                          alt={image.alt}
-                          width={image.width}
-                          height={image.height}
-                          className={styles.slideImage}
-                          sizes="(max-width: 768px) 70vw, 55vw"
-                          priority={projects.indexOf(project) === 0}
-                          fetchPriority={projects.indexOf(project) === 0 ? 'high' : 'auto'}
-                          loading={projects.indexOf(project) === 0 ? 'eager' : 'lazy'}
-                          placeholder={projects.indexOf(project) === 0 ? 'blur' : 'empty'}
-                          blurDataURL={projects.indexOf(project) === 0 ? image.blurDataURL : undefined}
-                        />
-                      </TransitionLink>
-                    ) : (
-                      <div className={styles.imageContainer}>
-                        <Image
-                          src={image.url}
-                          alt={image.alt}
-                          width={image.width}
-                          height={image.height}
-                          className={styles.slideImage}
-                          sizes="(max-width: 768px) 70vw, 55vw"
-                          priority={projects.indexOf(project) === 0}
-                          fetchPriority={projects.indexOf(project) === 0 ? 'high' : 'auto'}
-                          loading={projects.indexOf(project) === 0 ? 'eager' : 'lazy'}
-                          placeholder={projects.indexOf(project) === 0 ? 'blur' : 'empty'}
-                          blurDataURL={projects.indexOf(project) === 0 ? image.blurDataURL : undefined}
-                        />
-                      </div>
-                    )}
+                    {/* Image always wrapped in link */}
+                    <TransitionLink 
+                      href={`/projects/${project.slug}`} 
+                      className={styles.imageContainer}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Image
+                        src={image.url}
+                        alt={image.alt}
+                        width={image.width}
+                        height={image.height}
+                        className={styles.slideImage}
+                        sizes="(max-width: 768px) 70vw, 55vw"
+                        priority={projects.indexOf(project) === 0}
+                        fetchPriority={projects.indexOf(project) === 0 ? 'high' : 'auto'}
+                        loading={projects.indexOf(project) === 0 ? 'eager' : 'lazy'}
+                        placeholder={projects.indexOf(project) === 0 ? 'blur' : 'empty'}
+                        blurDataURL={projects.indexOf(project) === 0 ? image.blurDataURL : undefined}
+                      />
+                    </TransitionLink>
                   </div>
                   
                   <div className={styles.caption}>
