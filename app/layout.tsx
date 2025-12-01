@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import "./globals.css";
 import MenuBelt from "@/components/menu/MenuBelt";
 import SiteHeader from "@/components/ui/SiteHeader";
-import SiteFooter from "@/components/ui/SiteFooter";
 import { getProjects, getAboutInfo } from "@/lib/data";
 
 // Enable ISR: Revalidate every 60 seconds
@@ -41,7 +40,6 @@ export default async function RootLayout({
       </head>
       <body>
         <SiteHeader />
-        <SiteFooter aboutInfo={aboutInfo} />
         <MenuBelt projects={projects} aboutInfo={aboutInfo} />
         {children}
       </body>

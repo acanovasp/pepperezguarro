@@ -7,7 +7,6 @@ import ProjectsSection from './ProjectsSection';
 import AboutSection from './AboutSection';
 import ProjectInfoSection from './ProjectInfoSection';
 import SiteHeader from '@/components/ui/SiteHeader';
-import SiteFooter from '@/components/ui/SiteFooter';
 import { Project, AboutInfo } from '@/lib/types';
 
 type MenuSection = 'projects' | 'about' | 'project-info';
@@ -400,11 +399,6 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
                 Thumbnails
               </button>
             )}
-          </div>
-
-          {/* Mobile-only footer */}
-          <div className={styles.mobileFooter} data-section={activeSection}>
-            <SiteFooter aboutInfo={aboutInfo} />
           </div>
         </div>
       )}

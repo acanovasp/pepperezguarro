@@ -49,7 +49,7 @@
   --transition-ease: cubic-bezier(0.4, 0, 0.2, 1);
   
   /* Layout */
-  --image-height: 48dvh;
+  --image-height: 47dvh;
   --menu-height: 35dvh;
   --menu-collapsed-width: 6px;
   --edge-margin: 20px;

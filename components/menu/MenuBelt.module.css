@@ -88,8 +88,7 @@
   align-items: flex-start;
 }
 
-.mobileHeader,
-.mobileFooter {
+.mobileHeader {
   display: none;
 }
 
@@ -234,36 +233,6 @@
 
   .toggleButton:hover {
     opacity: 1;
-  }
-
-  .mobileFooter {
-    display: block;
-    flex-shrink: 0;
-    z-index: 10;
-  }
-
-  /* Override all SiteFooter styles when inside menu */
-  .mobileFooter > div {
-    position: static !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: var(--spacing-sm) !important;
-    font-size: 12px !important;
-    bottom: auto !important;
-    left: auto !important;
-    z-index: auto !important;
-  }
-
-  /* Hide gradient pseudo-element */
-  .mobileFooter > div::after {
-    display: none !important;
-  }
-
-  /* Hide copyright on specific sections - target second div child */
-  .mobileFooter[data-section="projects"],
-  .mobileFooter[data-section="project-info"] > div > div:last-child,
-  .mobileFooter[data-section="project-info"] {
-    display: none;
   }
 
   .imageCounter {
