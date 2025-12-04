@@ -184,25 +184,25 @@ export default function HomeSlider({ projects, onActiveProjectChange }: HomeSlid
                     <span className={`${styles.arrow} ${styles.arrowRight} ${navigationArrow === 'right' ? styles.arrowVisible : ''}`}>●</span>
                     
                     {/* Image always wrapped in link */}
-                    <TransitionLink 
-                      href={`/projects/${project.slug}`} 
-                      className={styles.imageContainer}
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <Image
-                        src={image.url}
-                        alt={image.alt}
-                        width={image.width}
-                        height={image.height}
-                        className={styles.slideImage}
-                        sizes="(max-width: 768px) 70vw, 55vw"
-                        priority={projects.indexOf(project) === 0}
-                        fetchPriority={projects.indexOf(project) === 0 ? 'high' : 'auto'}
-                        loading={projects.indexOf(project) === 0 ? 'eager' : 'lazy'}
-                        placeholder={projects.indexOf(project) === 0 ? 'blur' : 'empty'}
-                        blurDataURL={projects.indexOf(project) === 0 ? image.blurDataURL : undefined}
-                      />
-                    </TransitionLink>
+                      <TransitionLink 
+                        href={`/projects/${project.slug}`} 
+                        className={styles.imageContainer}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Image
+                          src={image.url}
+                          alt={image.alt}
+                          width={image.width}
+                          height={image.height}
+                          className={styles.slideImage}
+                          sizes="(max-width: 768px) 70vw, 55vw"
+                          priority={projects.indexOf(project) === 0}
+                          fetchPriority={projects.indexOf(project) === 0 ? 'high' : 'auto'}
+                          loading={projects.indexOf(project) === 0 ? 'eager' : 'lazy'}
+                          placeholder={projects.indexOf(project) === 0 ? 'blur' : 'empty'}
+                          blurDataURL={projects.indexOf(project) === 0 ? image.blurDataURL : undefined}
+                        />
+                      </TransitionLink>
                   </div>
                   
                   <div className={styles.caption}>
