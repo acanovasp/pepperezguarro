@@ -21,20 +21,32 @@
   background-color: var(--color-menu-bg);
 }
 
-/* Desktop only - extend hover detection area for collapsed menu */
+/* Desktop only - extend hover detection area for menu */
 @media (min-width: 769px) {
-  .menuBelt.collapsed {
+  .menuBelt {
     overflow: visible;
   }
   
-  .menuBelt.collapsed::after {
+  /* Invisible hover zone - extends around the menu */
+  .menuBelt::after {
     content: '';
     position: absolute;
     top: -40px;
     left: -20px;
     height: calc(100% + 80px);
+    z-index: -1;
+  }
+  
+  /* When collapsed: small hover zone, in front */
+  .menuBelt.collapsed::after {
     width: calc(var(--menu-collapsed-width) + 48px);
     cursor: pointer;
+    z-index: 1;
+  }
+  
+  /* When expanded: full-width hover zone, behind content */
+  .menuBelt.expanded::after {
+    width: calc(100% + 40px);
   }
 }
 
@@ -52,6 +64,7 @@
   display: flex;
   gap: var(--spacing-lg);
   position: relative;
+  overflow: hidden;
 }
 
 .menuBelt.expanded .menuContent {
