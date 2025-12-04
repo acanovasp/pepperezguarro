@@ -21,6 +21,23 @@
   background-color: var(--color-menu-bg);
 }
 
+/* Desktop only - extend hover detection area for collapsed menu */
+@media (min-width: 769px) {
+  .menuBelt.collapsed {
+    overflow: visible;
+  }
+  
+  .menuBelt.collapsed::after {
+    content: '';
+    position: absolute;
+    top: -40px;
+    left: -20px;
+    height: calc(100% + 80px);
+    width: calc(var(--menu-collapsed-width) + 48px);
+    cursor: pointer;
+  }
+}
+
 .menuBelt.expanded {
   width: calc(100vw - (var(--edge-margin) * 2));
   cursor: default;
