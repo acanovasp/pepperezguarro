@@ -4,6 +4,12 @@
   gap: var(--spacing-md);
 }
 
+.aboutSectionSeparator {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
 .contact {
   display: flex;
   flex-direction: column;
@@ -51,7 +57,6 @@
 }
 
 .contactLabel {
-  display: none;
   min-width: 35px;
 }
 

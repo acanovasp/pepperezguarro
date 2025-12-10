@@ -16,16 +16,10 @@ export default function AboutSection({ aboutInfo }: AboutSectionProps) {
         <div className={styles.aboutSectionSeparator}>
           <div className={styles.bioContainer}>
             <h1 className={styles.bio}>{aboutInfo.bio}</h1>
-            <div className={styles.collaborators}>
-              <p className={styles.contactLabel}>Projects and Collaborators</p>
-              <h1 className={styles.collaboratorsList}>
-                {aboutInfo.collaborators.join(', ')}
-              </h1>
-            </div>
+            
           </div>
           <div className={styles.contact}>
             <div className={styles.contactItem}>
-              <p className={styles.contactLabel}>Email</p>
               <h1>
                 <a href={aboutInfo.contact.email.link} className={styles.contactAnchor}>
                   {aboutInfo.contact.email.display}
@@ -33,7 +27,6 @@ export default function AboutSection({ aboutInfo }: AboutSectionProps) {
               </h1>  
             </div>
             <div className={styles.contactItem}>
-              <p className={styles.contactLabel}>Phone</p>
               <h1>
                 {aboutInfo.contact.phone.map((phone, index) => (
                   <span key={phone.link}>
@@ -46,7 +39,6 @@ export default function AboutSection({ aboutInfo }: AboutSectionProps) {
               </h1>
             </div>
             <div className={styles.contactItem}>
-              <p className={styles.contactLabel}>Insta</p>
               <a 
                 href={aboutInfo.contact.instagram.link} 
                 className={styles.contactAnchor}
@@ -57,6 +49,12 @@ export default function AboutSection({ aboutInfo }: AboutSectionProps) {
               </a>
             </div>
           </div>
+          <div className={styles.collaborators}>
+              <p className={styles.contactLabel}>Limited edition prints, signed and numbered, available on request</p>
+              <h1 className={styles.collaboratorsList}>
+                {aboutInfo.collaborators.join(', ')}
+              </h1>
+            </div>
         </div>
       </div>
       
