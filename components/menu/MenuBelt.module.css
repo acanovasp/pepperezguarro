@@ -21,6 +21,35 @@
   background-color: var(--color-menu-bg);
 }
 
+/* Desktop only - extend hover detection area for menu */
+@media (min-width: 769px) {
+  .menuBelt {
+    overflow: visible;
+  }
+  
+  /* Invisible hover zone - extends around the menu */
+  .menuBelt::after {
+    content: '';
+    position: absolute;
+    top: -40px;
+    left: -20px;
+    height: calc(100% + 80px);
+    z-index: -1;
+  }
+  
+  /* When collapsed: small hover zone, in front */
+  .menuBelt.collapsed::after {
+    width: calc(var(--menu-collapsed-width) + 48px);
+    cursor: pointer;
+    z-index: 1;
+  }
+  
+  /* When expanded: full-width hover zone, behind content */
+  .menuBelt.expanded::after {
+    width: calc(100% + 40px);
+  }
+}
+
 .menuBelt.expanded {
   width: calc(100vw - (var(--edge-margin) * 2));
   cursor: default;
@@ -35,6 +64,7 @@
   display: flex;
   gap: var(--spacing-lg);
   position: relative;
+  overflow: hidden;
 }
 
 .menuBelt.expanded .menuContent {
@@ -50,6 +80,12 @@
   height: 100%;
   justify-content: space-between;
   position: relative;
+  overflow-y: auto; /* scroll container for sticky children */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.leftSection::-webkit-scrollbar {
+  display: none; /* WebKit */
 }
 
 .sectionContent {
@@ -88,8 +124,7 @@
   align-items: flex-start;
 }
 
-.mobileHeader,
-.mobileFooter {
+.mobileHeader {
   display: none;
 }
 
@@ -234,36 +269,6 @@
 
   .toggleButton:hover {
     opacity: 1;
-  }
-
-  .mobileFooter {
-    display: block;
-    flex-shrink: 0;
-    z-index: 10;
-  }
-
-  /* Override all SiteFooter styles when inside menu */
-  .mobileFooter > div {
-    position: static !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: var(--spacing-sm) !important;
-    font-size: 12px !important;
-    bottom: auto !important;
-    left: auto !important;
-    z-index: auto !important;
-  }
-
-  /* Hide gradient pseudo-element */
-  .mobileFooter > div::after {
-    display: none !important;
-  }
-
-  /* Hide copyright on specific sections - target second div child */
-  .mobileFooter[data-section="projects"],
-  .mobileFooter[data-section="project-info"] > div > div:last-child,
-  .mobileFooter[data-section="project-info"] {
-    display: none;
   }
 
   .imageCounter {

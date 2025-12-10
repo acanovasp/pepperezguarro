@@ -7,7 +7,6 @@ import ProjectsSection from './ProjectsSection';
 import AboutSection from './AboutSection';
 import ProjectInfoSection from './ProjectInfoSection';
 import SiteHeader from '@/components/ui/SiteHeader';
-import SiteFooter from '@/components/ui/SiteFooter';
 import { Project, AboutInfo } from '@/lib/types';
 
 type MenuSection = 'projects' | 'about' | 'project-info';
@@ -23,7 +22,7 @@ export interface MenuBeltRef {
 }
 
 const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ projects, aboutInfo, currentProject }, ref) {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true); // start open to show affordance
   const [activeSection, setActiveSection] = useState<MenuSection>('projects');
   const [detectedProject, setDetectedProject] = useState<Project | null>(currentProject || null);
   const [hoveredProject, setHoveredProject] = useState<Project | null>(null);
@@ -31,6 +30,7 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
   const [isMobile, setIsMobile] = useState(false);
   const [touchStart, setTouchStart] = useState<{ y: number; time: number } | null>(null);
   const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const initialAutoCloseHandled = useRef(false);
   const params = useParams();
 
   // Detect mobile viewport
@@ -51,6 +51,27 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
     return () => {
       window.removeEventListener('resize', handleResize);
       clearTimeout(resizeTimeout);
+    };
+  }, []);
+
+  // Auto-close once the page has finished loading (after showing the open state)
+  useEffect(() => {
+    if (initialAutoCloseHandled.current) return;
+    initialAutoCloseHandled.current = true;
+
+    const scheduleClose = () => {
+      // delay so users can notice the open state
+      setTimeout(() => setIsExpanded(false), 1000);
+    };
+
+    if (document.readyState === 'complete') {
+      scheduleClose();
+    } else {
+      window.addEventListener('load', scheduleClose, { once: true });
+    }
+
+    return () => {
+      window.removeEventListener('load', scheduleClose);
     };
   }, []);
 
@@ -400,11 +421,6 @@ const MenuBelt = forwardRef<MenuBeltRef, MenuBeltProps>(function MenuBelt({ proj
                 Thumbnails
               </button>
             )}
-          </div>
-
-          {/* Mobile-only footer */}
-          <div className={styles.mobileFooter} data-section={activeSection}>
-            <SiteFooter aboutInfo={aboutInfo} />
           </div>
         </div>
       )}

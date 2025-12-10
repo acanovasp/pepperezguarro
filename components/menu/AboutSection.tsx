@@ -10,52 +10,59 @@ interface AboutSectionProps {
 export default function AboutSection({ aboutInfo }: AboutSectionProps) {
 
   return (
-    <div className={styles.aboutSection}>
-      <h1 className={styles.name}>{aboutInfo.name}</h1>
-      <div className={styles.bioContainer}>
-        <h1 className={styles.bio}>{aboutInfo.bio}</h1>
-        <div className={styles.collaborators}>
-          <p className={styles.contactLabel}>Projects and Collaborators</p>
-          <h1 className={styles.collaboratorsList}>
-            {aboutInfo.collaborators.join(', ')}
-          </h1>
-        </div>
-      </div>
-      <div className={styles.contact}>
-        <div className={styles.contactItem}>
-          <p className={styles.contactLabel}>Email</p>
-          <h1>
-            <a href={aboutInfo.contact.email.link} className={styles.contactAnchor}>
-              {aboutInfo.contact.email.display}
-            </a>
-          </h1>  
-        </div>
-        <div className={styles.contactItem}>
-          <p className={styles.contactLabel}>Phone</p>
-          <h1>
-            {aboutInfo.contact.phone.map((phone, index) => (
-              <span key={phone.link}>
-                <a href={phone.link} className={styles.contactAnchor}>
-                  {phone.display}
+    <>
+      <div className={styles.aboutSection}>
+        <h1 className={styles.name}>{aboutInfo.name}</h1>
+        <div className={styles.aboutSectionSeparator}>
+          <div className={styles.bioContainer}>
+            <h1 className={styles.bio}>{aboutInfo.bio}</h1>
+            
+          </div>
+          <div className={styles.contact}>
+            <div className={styles.contactItem}>
+              <h1>
+                <a href={aboutInfo.contact.email.link} className={styles.contactAnchor}>
+                  {aboutInfo.contact.email.display}
                 </a>
-                {index < aboutInfo.contact.phone.length - 1 && ' / '}
-              </span>
-            ))}
-          </h1>
-        </div>
-        <div className={styles.contactItem}>
-          <p className={styles.contactLabel}>Insta</p>
-          <a 
-            href={aboutInfo.contact.instagram.link} 
-            className={styles.contactAnchor}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {aboutInfo.contact.instagram.display}
-          </a>
+              </h1>  
+            </div>
+            <div className={styles.contactItem}>
+              <h1>
+                {aboutInfo.contact.phone.map((phone, index) => (
+                  <span key={phone.link}>
+                    <a href={phone.link} className={styles.contactAnchor}>
+                      {phone.display}
+                    </a>
+                    {index < aboutInfo.contact.phone.length - 1 && ' / '}
+                  </span>
+                ))}
+              </h1>
+            </div>
+            <div className={styles.contactItem}>
+              <a 
+                href={aboutInfo.contact.instagram.link} 
+                className={styles.contactAnchor}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {aboutInfo.contact.instagram.display}
+              </a>
+            </div>
+          </div>
+          <div className={styles.collaborators}>
+              <p className={styles.contactLabel}>Limited edition prints, signed and numbered, available on request</p>
+              <h1 className={styles.collaboratorsList}>
+                {aboutInfo.collaborators.join(', ')}
+              </h1>
+            </div>
         </div>
       </div>
-    </div>
+      
+      <div className={styles.footerContainer}>
+        <p>All rights reserved. ©Pep Perez Guarro, {new Date().getFullYear()}</p>
+        <p>Design & Code by <a href="https://www.acanovas.info" target="_blank" rel="noopener noreferrer">Alvaro Canovas</a></p>
+      </div>
+    </>
   );
 }
 
